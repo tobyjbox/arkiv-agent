@@ -9,8 +9,10 @@ export const HISTORY_BLOCKS = 7 * 43_200;
 /** High-volume owners, as in the indexer (packages/indexer/src/enrich.ts). */
 const BUSY_OWNER_CREATES = 5_000;
 const I64_MAX = 2n ** 63n - 1n;
-/** Rebuild at most this often; the UI polls every 5 s. */
-const MIN_REBUILD_MS = 4_000;
+/** Rebuild at most this often; the UI polls every 5 s and shows the index block it is from. */
+const MIN_REBUILD_MS = 10_000;
+/** High-volume owners change slowly and the query scans a week of creates (~1.7 s): cache it. */
+const BUSY_TTL_MS = 5 * 60_000;
 
 type Row = { key: string; owner: string; status: Member["status"]; createdAtBlock: bigint; updatedAtBlock: bigint; expiresAt: bigint; contentType: string | null; payloadBytes: bigint | null };
 
@@ -26,16 +28,41 @@ const db = (): Database.Database => {
 };
 
 export type Loaded = Catalogue & { membersById: Map<string, Member[]> };
-let cache: { stamp: string; at: number; value: Loaded } | null = null;
+let cache: { at: number; value: Loaded } | null = null;
+let isRebuilding = false;
+let busy: { at: number; since: number; owners: Set<string> } | null = null;
 
-/** The whole catalogue, rebuilt when the index moves (and at most every few seconds). */
+/**
+ * The whole catalogue. The first call builds it; later calls return the last build at once and,
+ * when it is over 10 s old, rebuild after the response (stale-while-revalidate).
+ */
 export function loadCatalogue(): Loaded {
+  if (!cache) cache = { at: Date.now(), value: build() };
+  else if (Date.now() - cache.at > MIN_REBUILD_MS && !isRebuilding) {
+    isRebuilding = true;
+    setImmediate(() => {
+      try {
+        cache = { at: Date.now(), value: build() };
+      } finally {
+        isRebuilding = false;
+      }
+    });
+  }
+  return cache.value;
+}
+
+function busyOwners(d: Database.Database, since: number): Set<string> {
+  if (!busy || Date.now() - busy.at > BUSY_TTL_MS) {
+    const owners = d.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck().all(since, BUSY_OWNER_CREATES) as string[];
+    busy = { at: Date.now(), since, owners: new Set(owners) };
+  }
+  return busy.owners;
+}
+
+function build(): Loaded {
   const d = db();
   const state = d.prepare(`SELECT indexedBlock, chainHead, syncedAtMs FROM "SyncState" WHERE id = 1`).safeIntegers().get() as
     { indexedBlock: bigint; chainHead: bigint; syncedAtMs: bigint } | undefined;
-  const decoded = d.prepare(`SELECT MAX(decodedBlock) AS b, COUNT(decodedBlock) AS n FROM "Entity" WHERE decodedBlock > 0`).get() as { b: number | null; n: number };
-  const stamp = `${state?.indexedBlock}:${decoded.n}:${decoded.b}`;
-  if (cache && (cache.stamp === stamp || Date.now() - cache.at < MIN_REBUILD_MS)) return cache.value;
 
   const indexed = Number(state?.indexedBlock ?? 0n);
   const since = Math.max(0, indexed - HISTORY_BLOCKS);
@@ -50,11 +77,11 @@ export function loadCatalogue(): Loaded {
     expiresAt: r.expiresAt >= I64_MAX ? null : Number(r.expiresAt), contentType: r.contentType,
     payloadBytes: r.payloadBytes === null ? null : Number(r.payloadBytes), attrs: attrs.get(r.key) ?? new Map(),
   }));
-  const busyOwners = new Set(d.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck().all(since, BUSY_OWNER_CREATES) as string[]);
-  const { datasets, membersById } = buildDatasets(members, { indexedBlock: indexed, busyOwners });
+  const busyOwnerSet = busyOwners(d, since);
+  const { datasets, membersById } = buildDatasets(members, { indexedBlock: indexed, busyOwners: busyOwnerSet });
 
   const counts = d.prepare(`SELECT COUNT(*) AS live, SUM(decodedBlock IS NULL) AS undecoded FROM "Entity" WHERE status = 'live'`).get() as { live: number; undecoded: number | null };
-  const recent = d.prepare(`SELECT createdAtBlock FROM "Entity" WHERE createdAtBlock > ? AND owner NOT IN (SELECT value FROM json_each(?))`).pluck().all(indexed - 24 * 1_800, JSON.stringify([...busyOwners])) as number[];
+  const recent = d.prepare(`SELECT createdAtBlock FROM "Entity" WHERE createdAtBlock > ? AND owner NOT IN (SELECT value FROM json_each(?))`).pluck().all(indexed - 24 * 1_800, JSON.stringify([...busyOwnerSet])) as number[];
   const hourlyWrites24h = hourlySeries(recent, indexed, 24);
   const value: Loaded = {
     summary: {
@@ -67,6 +94,5 @@ export function loadCatalogue(): Loaded {
     },
     datasets, membersById,
   };
-  cache = { stamp, at: Date.now(), value };
   return value;
 }
