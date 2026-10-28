@@ -46,3 +46,4 @@ Setup: fresh clone, `cp .env.example .env` (no keys), DB = read-only `.backup` o
 
 Judging: Q4 (OR) and Q13 (absence) count as passes because the unsupported part is listed as Not used. Q9 and Q12 returned 0 rows with correct queries.
 Next owner: Orchestrator (route R1-R3 to coder; R4-R6 at your call).
+- 2026-10-28T23:01:26Z notify intent: T15 review candidate=d7ef2276ec24143304c52cb30bcef5626bf59a9d to Orchestrator local_<session> via ccd send_message; attempt 1.
