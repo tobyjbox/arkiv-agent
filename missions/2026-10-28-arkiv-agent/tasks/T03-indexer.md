@@ -10,9 +10,9 @@
 - ../BRIEF.md, ../PLAN.md, docs/PLAN.md (technical design)
 
 ## Milestones
-- [ ] Prisma schema
+- [x] Prisma schema
 - [ ] backfill + incremental sync
-- [ ] live/expired/deleted + fixtures
+- [x] live/expired/deleted + fixtures
 - [ ] watch mode + change feed
 
 ## Acceptance criteria
@@ -22,5 +22,6 @@
 - [ ] Vitest on recorded fixtures, no live-chain calls
 
 ## Progress log
+- 2026-10-28T17:43:22Z Claimed on feat/indexer (d4dc1ce; branch board copy was stale, T03 showed draft while main's canonical row was ready), in-progress (30399eb). Schema, log replay, enrichment and 18 Vitest tests committed (5e15276). Node caps eth_getLogs at 20,000 results (not 5,000 blocks); reads now split on its retry hint. Full rebuild from genesis running.
 
 ## Handoff
