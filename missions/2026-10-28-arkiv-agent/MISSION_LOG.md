@@ -8,3 +8,4 @@
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 detected: row review 4/4 by arkiv-agent_ux_designer_claude-code_opus-5.5-med; handoff design/visual-system@dc160e1:missions/2026-10-28-arkiv-agent/tasks/T02-visual-system.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 adjudicated: accepted; integrated dc89dc9; row -> merged 285dd84
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 dispatched: T09 (draft -> ready, UX nudged). T04 still waits on T03.
+- 2026-10-28T17:08:33Z HANDOFF T02@dc160e1 adjudicated: accepted; canonical row flip re-applied 5426f84 (prior commit missed the row)
