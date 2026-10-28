@@ -115,7 +115,10 @@ function NoResults({ view, onClear, isEmpty }: { view: View; onClear: () => void
   return (
     <div className="space-y-3 p-10 text-center">
       <p className="text-text-primary">No datasets match{view.q ? ` '${view.q}'` : " these filters"}.</p>
-      <button type="button" onClick={onClear} className="text-accent hover:underline">Clear filters</button>
+      <div className="flex items-center justify-center gap-4">
+        <button type="button" onClick={onClear} className="text-accent hover:underline">Clear filters</button>
+        {view.q && <a href={`/ask?q=${encodeURIComponent(view.q)}`} className="text-ai hover:underline">Ask Arkiv instead</a>}
+      </div>
     </div>
   );
 }
