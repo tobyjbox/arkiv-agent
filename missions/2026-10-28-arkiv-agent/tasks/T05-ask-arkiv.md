@@ -41,7 +41,8 @@
   not-understood/invalid/no-results/timeout states), `/api/ask` + `/api/ask/run`, nav link, "Ask about this dataset"
   on dataset pages, ⌘K "Ask Arkiv:" and the catalogue's "Ask Arkiv instead". Checked in the browser at 1280 and 375
   px (no sideways scroll). Vitest 52, Playwright 7. Candidate 12bdf9c.
-- 2026-10-28T22:32:00Z Flipped to review (60d217b), candidate 12bdf9c. Notification intent: key `2026-10-28-arkiv-agent:T05@12bdf9c:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
+- 2026-10-28T22:31:42Z Flipped to review (60d217b), candidate 12bdf9c. Notification intent: key `2026-10-28-arkiv-agent:T05@12bdf9c:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
+- 2026-10-28T22:32:00Z Notification result for `2026-10-28-arkiv-agent:T05@12bdf9c:review`: sent once via SendMessage to local_<session>; tool reported delivered, message_id <id>. Do not resend.
 
 ## Handoff
 
