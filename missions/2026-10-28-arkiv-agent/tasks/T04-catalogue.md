@@ -31,10 +31,15 @@
 - 2026-10-28T20:02:12Z The owner, directly: "no I am not doing that now. We need to finish without this." (re adding ANTHROPIC_API_KEY). Finishing T04 without live AI descriptions: the code stays in, off without a key; pages show the design's no-key state. Flipping blocked -> review, candidate 6027a1c.
 - 2026-10-28T20:02:29Z Decode complete (738 datasets, 288 projects). Flipped to review, candidate 6027a1c. Notification intent: key `2026-10-28-arkiv-agent:T04@6027a1c:review`; recipient Orchestrator thread local_<session>; route Claude Code session message; state: pending.
 - 2026-10-28T21:31:50Z Notification result for `2026-10-28-arkiv-agent:T04@6027a1c:review`: sent once via SendMessage to local_<session>; tool reported delivery: delivered (turn started), message_id <id>; read not confirmed. Do not resend.
+- 2026-10-28T22:00:00Z History rewrite, at the owner's direct request: personal references and job-application
+  details removed from every commit on all 7 branches (git filter-repo; names -> "the owner", local home paths -> `~`,
+  author email -> GitHub noreply). Force-pushed atomically with leases; local branches and worktrees realigned; old
+  objects pruned locally. All SHAs changed: T04 candidate 6027a1c is now 8b764dd (same tree content apart from the
+  cleaned docs). Old -> new map and a local backup bundle: `<checkpoints>/arkiv-agent/history-rewrite-2026-10-28-*`.
 
 ## Handoff
 
-**Candidate:** `6027a1c` on `feat/catalogue` (worktree `worktrees/arkiv-agent-catalogue`). Not merged.
+**Candidate:** `8b764dd` (was `6027a1c` before the history rewrite) on `feat/catalogue` (worktree `worktrees/arkiv-agent-catalogue`). Not merged.
 Finished without live AI descriptions at the owner's direction (no ANTHROPIC_API_KEY): see the first deviation.
 
 **What changed**
@@ -74,4 +79,5 @@ Finished without live AI descriptions at the owner's direction (no ANTHROPIC_API
 - Decode finished: 738 datasets from 288 projects (load generators excluded); 790 of 37,186 live records are undecoded (recent creates the watch indexer picks up within seconds).
 
 **Pre-publication note (from the owner, 2026-10-28):** keep the repo private until the mission is complete.
-Before it goes public, the history needs a rewrite: mission files and docs/PLAN.md mention personal references. No secrets were found in history (checked all branches).
+History rewritten 2026-10-28T22:00Z at the owner's request (see the progress log). Commits made after that can
+reintroduce personal references, so re-check before the repo goes public. No secrets were found in history (checked all branches).
