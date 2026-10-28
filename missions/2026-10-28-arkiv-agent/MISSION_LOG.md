@@ -39,3 +39,4 @@
 - 2026-10-28T22:34:47Z HANDOFF T07@0f57bd0 adjudicated: accepted (report: 0 High, 1 Medium, 3 Low, 2 Info; static only); integrated bc63385; row -> merged 5b60cc8; findings M1+L1-L3 -> T13
 - 2026-10-28T22:34:47Z HANDOFF T07@0f57bd0 dispatched: T13 (new, ready, coder nudged). T08 waits on T06, T13.
 - 2026-10-28T22:34:58Z NUDGE T13 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message sent
+- 2026-10-28T22:37:00Z HANDOFF T06@7e89549 detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-slice@7e89549:missions/2026-10-28-arkiv-agent/tasks/T06-qa-slice.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
