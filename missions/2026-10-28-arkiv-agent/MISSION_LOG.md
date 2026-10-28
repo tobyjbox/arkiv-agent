@@ -28,3 +28,4 @@
 - 2026-10-28T22:03:02Z HANDOFF T04@8b764dd adjudicated: accepted (34 tests verified; no-key descriptions per A01); integrated 91b4069; row -> merged 83a7a92
 - 2026-10-28T22:03:02Z HANDOFF T04@8b764dd dispatched: T05 (draft -> ready, coder nudged)
 - 2026-10-28T22:03:14Z NUDGE T05 -> arkiv-agent_coder_claude-code_opus-5.5-extra no-watcher; session message sent
+- 2026-10-28T22:32:23Z HANDOFF T05@12bdf9c detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-arkiv@12bdf9c:missions/2026-10-28-arkiv-agent/tasks/T05-ask-arkiv.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low

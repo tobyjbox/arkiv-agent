@@ -11,7 +11,7 @@
 
 ## Milestones
 - [ ] run locally from scratch
-- [ ] check acceptance of T01-T05
+- [ ] check acceptance of T01-T05 (incl. attr spot-check `pnpm index:verify --attrs 20` and a fresh blind Ask Arkiv question set on the no-key path)
 - [ ] file findings
 
 ## Acceptance criteria
