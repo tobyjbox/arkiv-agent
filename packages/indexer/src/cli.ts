@@ -16,7 +16,7 @@ const MAX_BACKOFF_MS = 30_000;
 /** Recent history that gets attributes (activity charts): 7 days of 2 s blocks. */
 const HISTORY_BLOCKS = 7n * 43_200n;
 /** Public RPC allows 600 requests/min; leave headroom for sync. Raise with an access key. */
-const RPS = Number(process.env.ARKIV_RPS ?? (process.env.ARKIV_API_KEY ? 25 : 8));
+const RPS = Number(process.env.ARKIV_RPS) || (process.env.ARKIV_API_KEY ? 25 : 8);
 
 mkdirSync(dirname(databasePath()), { recursive: true });
 acquireIndexerLock(databasePath());
