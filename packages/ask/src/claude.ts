@@ -71,7 +71,7 @@ export function answerToPlan(a: Answer, candidates: Dataset[]): Result<AskPlan, 
     leaves.push(c.negate ? { op: "not", term: leaf } : leaf);
   }
   const where = leaves.length === 0 ? null : leaves.length === 1 ? leaves[0]! : { op: a.match === "any" ? ("or" as const) : ("and" as const), terms: leaves };
-  const plan = { datasetId: d?.id ?? null, where, limit: Math.min(MAX_RESULTS, Math.max(1, a.limit || MAX_RESULTS)), explain: a.explain.slice(0, 3).map((e) => cleanModelText(e, 300)) };
+  const plan = { datasetId: d?.id ?? null, where, limit: Math.min(MAX_RESULTS, Math.max(1, a.limit || MAX_RESULTS)), explain: a.explain.slice(0, 3).map((e) => cleanModelText(e, 300)), ignored: [] };
   const parsed = AskPlanSchema.safeParse(plan);
   return parsed.success ? ok(parsed.data) : err({ kind: "invalid", message: parsed.error.issues[0]?.message ?? "Invalid plan." });
 }

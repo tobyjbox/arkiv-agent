@@ -1,6 +1,6 @@
 import { toHex } from "viem";
 import { describe, expect, it } from "vitest";
-import { applyWire, emptyState, payloadPreview, schemaSig, valueText } from "../src/attributes.ts";
+import { applyWire, attributeDiff, emptyState, payloadPreview, schemaSig, valueText } from "../src/attributes.ts";
 import { name32, str, u64, unset } from "./helpers.ts";
 
 const word = (n: bigint) => toHex(BigInt.asUintN(256, n), { size: 32 });
@@ -38,5 +38,23 @@ describe("payloadPreview", () => {
     const long = payloadPreview(new TextEncoder().encode(`${"a".repeat(255)}é tail`));
     expect(long).toBe("a".repeat(255));
     expect(payloadPreview(new Uint8Array([0xff, 0xfe, 0x00]))).toBe("0xfffe00");
+  });
+});
+
+describe("attributeDiff (index:verify --attrs)", () => {
+  const chain = { attributes: { city: { type: "str", value: "noida" }, ctc: { type: "i32", value: 1500000 }, owner: { type: "addr", value: "0xAbC0000000000000000000000000000000000001" } } };
+  const ours = [
+    { name: "city", type: "str", value: "noida" },
+    { name: "ctc", type: "i32", value: "1500000" },
+    { name: "owner", type: "addr", value: "0xabc0000000000000000000000000000000000001" },
+  ];
+
+  it("matches when names, types and values agree (addresses compared lowercased)", () => {
+    expect(attributeDiff(chain, ours)).toEqual({ chainOnly: [], indexOnly: [] });
+  });
+
+  it("catches a value the decoder got wrong even when name and type are right", () => {
+    const corrupted = ours.map((a) => (a.name === "ctc" ? { ...a, value: "1500001" } : a));
+    expect(attributeDiff(chain, corrupted)).toEqual({ chainOnly: ["ctc:i32=1500000"], indexOnly: ["ctc:i32=1500001"] });
   });
 });

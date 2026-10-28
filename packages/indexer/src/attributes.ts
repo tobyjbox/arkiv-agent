@@ -86,3 +86,13 @@ export function stateFromSdk(entity: { attributes?: Readonly<Record<string, { ty
   }
   return { attrs, contentType: entity.contentType ?? null, payload: entity.payload ?? null };
 }
+
+/**
+ * Where the index's attributes differ from the chain's for one entity, as `name:type=value` lines,
+ * with chain values normalized as the indexer stores them. Both empty when they match.
+ */
+export function attributeDiff(chain: Parameters<typeof stateFromSdk>[0], ours: readonly { name: string; type: string; value: string }[]) {
+  const theirs = [...stateFromSdk(chain).attrs].map(([name, a]) => `${name}:${a.type}=${a.value}`);
+  const mine = ours.map((a) => `${a.name}:${a.type}=${a.value}`);
+  return { chainOnly: theirs.filter((c) => !mine.includes(c)).sort(), indexOnly: mine.filter((o) => !theirs.includes(o)).sort() };
+}

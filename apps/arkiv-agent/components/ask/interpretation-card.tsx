@@ -22,6 +22,12 @@ export function InterpretationCard({ result, onEdit, isBusy }: { result: Interpr
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         {plan.where ? <Node q={plan.where} path={[]} negated={false} onEdit={onEdit} isBusy={isBusy} /> : <span className="caption text-text-secondary">Every record in this dataset.</span>}
       </div>
+      {plan.ignored?.length > 0 && (
+        <p className="mt-3 rounded-sm px-2.5 py-1.5 caption tint-warn">
+          Not used: {plan.ignored.map((w) => `“${w}”`).join(", ")}. The results are not filtered by {plan.ignored.length === 1 ? "it" : "them"}; name
+          the attribute to filter (for example “city Pune”).
+        </p>
+      )}
       {(plan.explain.length > 0 || result.note) && (
         <ul className="mt-3 space-y-0.5 caption text-text-secondary">
           {plan.explain.map((e) => <li key={e}>{e}</li>)}

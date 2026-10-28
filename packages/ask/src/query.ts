@@ -19,6 +19,8 @@ export type AskPlan = {
   limit: number;
   /** Short notes for the reader: dataset choice, unit conversions, assumptions. */
   explain: string[];
+  /** Words in the question that the plan does not use: shown, never dropped silently. */
+  ignored: string[];
 };
 
 const attrName = z.string().min(1).max(64);
@@ -40,6 +42,7 @@ export const AskPlanSchema = z.object({
   where: AskQuerySchema.nullable(),
   limit: z.number().int().min(1).max(MAX_RESULTS),
   explain: z.array(z.string().max(300)).max(6),
+  ignored: z.array(z.string().max(60)).max(12).default([]),
 });
 
 /** Order-insensitive form, for comparing plans: nested groups flattened, terms sorted. */

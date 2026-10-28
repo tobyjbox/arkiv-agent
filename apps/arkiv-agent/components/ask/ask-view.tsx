@@ -74,7 +74,8 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
     }
     const { ok: _, ...result } = r;
     update(id, () => ({ result }));
-    setAnnouncement(`Interpreted as ${leafPaths(result.plan.where).length || "no"} conditions.`);
+    const unused = result.plan.ignored?.length ?? 0;
+    setAnnouncement(`Interpreted as ${leafPaths(result.plan.where).length || "no"} conditions.${unused ? ` ${unused} ${unused === 1 ? "word" : "words"} not used.` : ""}`);
     void run(id, result);
   }, [turns, scope, update, run]);
 

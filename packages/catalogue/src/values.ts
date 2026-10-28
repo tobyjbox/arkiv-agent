@@ -7,10 +7,13 @@ export type ValueHit = { field: string; value: string; count: number };
  * keeps three examples per field; this looks in the whole index, so "Pune" is found even when it
  * isn't an example. Exact matches only: no guessing.
  */
+const keySets = new WeakMap<readonly { key: string }[], Set<string>>();
+
 export function findValues(datasetId: string, text: string, fields: readonly string[]): ValueHit[] {
   const members = loadCatalogue().membersById.get(datasetId);
   if (!members?.length || !fields.length || !text.trim()) return [];
-  const keys = new Set(members.map((m) => m.key));
+  let keys = keySets.get(members);
+  if (!keys) keySets.set(members, (keys = new Set(members.map((m) => m.key))));
   const rows = catalogueDb()
     .prepare(`SELECT entityKey, name, value FROM "Attribute" WHERE name IN (${fields.map(() => "?").join(",")}) AND type = 'str' AND value = ? COLLATE NOCASE LIMIT 5000`)
     .all(...fields, text.trim()) as { entityKey: string; name: string; value: string }[];
