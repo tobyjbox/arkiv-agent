@@ -10,7 +10,7 @@
 | T05 | Ask Arkiv + eval | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T04 | 2026-10-28T22:32:23Z |
 | T06 | QA review of slice | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T05 | 2026-10-28T22:37:00Z |
 | T07 | Security review of slice | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T05 | 2026-10-28T22:34:47Z |
-| T08 | README, friction log, demo script | coder | fast | ready | 0/3 | | T06, T07, T13, T16 | 2026-10-28T23:11:09Z |
+| T08 | README, friction log, demo script | coder | fast | claimed | 0/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T06, T07, T13, T16 | 2026-10-28T23:11:36Z |
 | T09 | Stretch: pulse + cost specs | ux_designer | fast | merged | 3/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:10:46Z |
 | T10 | Stretch: ecosystem pulse | coder | frontier | draft | 0/4 | | T08, T09 | 2026-10-28T17:02:27Z |
 | T11 | Stretch: cost view | coder | frontier | draft | 0/4 | | T10 | 2026-10-28T17:02:27Z |
