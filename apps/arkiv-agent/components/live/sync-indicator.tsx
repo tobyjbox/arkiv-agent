@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ago, formatCount } from "../../lib/format";
 import { RollingNumber } from "../ui/rolling-number";
-import { LIVE_UNDER_S, OFFLINE_AFTER_S, useLive, useSecondsSince } from "./live-provider";
+import { type SyncState as State, syncState } from "../../lib/sync-state";
+import { useLive, useSecondsSince } from "./live-provider";
 
-type State = "live" | "delayed" | "stale" | "offline" | "behind";
 
 /** Pattern 1: `● Synced 3 s ago · block 1,204,331`. Age is the index's own heartbeat, not ours. */
 export function SyncIndicator() {
@@ -15,8 +15,7 @@ export function SyncIndicator() {
   // index stops moving (stale: `pnpm index` ran once, no --watch). Only the first is "can't reach".
   const [mountedAt] = useState(() => new Date().toISOString());
   const sinceOk = useSecondsSince(live.lastOkAt === null ? mountedAt : new Date(live.lastOkAt).toISOString());
-  const isReachable = sinceOk === null || sinceOk <= OFFLINE_AFTER_S;
-  const state: State = !isReachable || age === null ? "offline" : age > OFFLINE_AFTER_S ? "stale" : age >= LIVE_UNDER_S ? "delayed" : live.isBehind ? "behind" : "live";
+  const state = syncState(age, sinceOk, live.isBehind);
   const announced = useAnnouncement(state);
   const dot = { live: "bg-live", behind: "bg-warn", delayed: "bg-warn", stale: "bg-warn", offline: "bg-danger" }[state];
   const tooltip = `Last index sync ${live.syncedAt ?? "never"} · block ${formatCount(Number(live.indexedBlock))} · checks every 5 s · source: ArkivAgent index${

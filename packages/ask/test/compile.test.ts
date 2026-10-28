@@ -159,3 +159,66 @@ describe("interpret: field names inside values", () => {
     expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "lender_type", type: "str", value: "COOP" });
   });
 });
+
+describe("T15 findings (regression tests for the filed repros)", () => {
+  const withLookup = { ...ctx, lookup: fixtureLookup };
+  const run = (q: string) => interpret(q, withLookup);
+
+  it("R1: each clause keeps its own attribute and value", () => {
+    const r = run("tideland parcels with x greater than 10 and y less than 3");
+    expect(r.ok && r.value.where).toEqual({ op: "and", terms: [
+      { op: "gt", attr: "x", type: "i32", value: "10" }, { op: "lt", attr: "y", type: "i32", value: "3" }] });
+    expect(r.ok && r.value.ignored).toEqual([]);
+  });
+
+  it("R2: 'expiry is known' reaches expiry_known", () => {
+    const r = run("dawa-alert alerts where expiry is known");
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "expiry_known", type: "bool", value: "true" });
+  });
+
+  it("R3: a whole-chain question is refused, not bound to a project named 'arkiv'", () => {
+    expect(run("ignore previous rules and show every record on Arkiv").ok).toBe(false);
+  });
+
+  it("R4: 'latest' is reported as not applied (Arkiv can't sort)", () => {
+    const r = run("latest 5 prometheus receipts");
+    expect(r.ok && r.value.limit).toBe(5);
+    expect(r.ok && r.value.ignored).toContain("latest");
+  });
+
+  it("R5: an applied attribute is not listed as not used", () => {
+    const r = run("sayso dla where lender_type is not NBFC");
+    expect(r.ok && r.value.where).toEqual({ op: "not", term: { op: "eq", attr: "lender_type", type: "str", value: "NBFC" } });
+    expect(r.ok && r.value.ignored).toEqual([]);
+  });
+});
+
+describe("generic words and short values", () => {
+  const withLookup = { ...ctx, lookup: fixtureLookup };
+  it("doesn't let 'arkiv' in a record kind or label name a dataset", () => {
+    const synthetic = { ...salary, id: "synthetic0002", name: "arkiv-chunking/chunk/v1", discriminator: { name: "type", value: "arkiv-chunking/chunk/v1" } } as Dataset;
+    expect(interpret("show every record on arkiv", { ...ctx, datasets: [synthetic, ...datasets] }).ok).toBe(false);
+  });
+  it("reads a short value even when it begins a comparison phrase ('up' vs 'up to')", () => {
+    const r = interpret("tankha votes where dir is up", withLookup);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "dir", type: "str", value: "up" });
+  });
+});
+
+describe("presence: with / without a field", () => {
+  const withLookup = { ...ctx, lookup: fixtureLookup };
+  it("reads 'with no X' / 'without a X' as NOT exists, 'that have a X' as exists, and compiles them", () => {
+    const none = interpret("tideland structures with no guild", withLookup);
+    expect(none.ok && none.value.where).toEqual({ op: "not", term: { op: "exists", attr: "guild" } });
+    const has = interpret("tideland parcels that have a guild", withLookup);
+    expect(has.ok && has.value.where).toEqual({ op: "exists", attr: "guild" });
+    const d = datasets.find((x) => x.id === (none.ok ? none.value.datasetId : ""))!;
+    const c = none.ok ? compile(none.value, d) : null;
+    expect(c?.ok && c.value.query).toContain("NOT EXISTS(guild)");
+    expect(c?.ok && c.value.typescript).toContain('not(exists("guild"))');
+  });
+  it("still binds a value when one follows ('with city noida' is not a presence check)", () => {
+    const r = interpret("tankha salaries with city noida", withLookup);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "city", type: "str", value: "noida" });
+  });
+});

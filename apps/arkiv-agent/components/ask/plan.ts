@@ -1,9 +1,9 @@
 // Client-side plan helpers. Types only from @arkiv-agent/ask: the package itself is server code.
-import type { AskPlan, AskQuery, AskRow, AttrType, Comparison, Prefix } from "@arkiv-agent/ask";
+import type { AskPlan, AskQuery, AskRow, AttrType, Comparison, Exists, Prefix } from "@arkiv-agent/ask";
 import type { DatasetBrief } from "../../lib/ask";
 
 export type { AskPlan, AskQuery, AskRow, AttrType };
-export type Leaf = Comparison | Prefix;
+export type Leaf = Comparison | Prefix | Exists;
 
 export type Interpreted = {
   engine: "rules" | "claude";
@@ -17,11 +17,11 @@ export type Interpreted = {
 
 export type Failure = { kind: "not-understood" | "invalid" | "refused" | "timeout" | "rpc"; message: string };
 
-export const OP_SYMBOL: Record<Leaf["op"], string> = { eq: "=", ne: "≠", gt: ">", gte: "≥", lt: "<", lte: "≤", startsWith: "starts with" };
-export const OP_WORDS: Record<Leaf["op"], string> = { eq: "equals", ne: "is not", gt: "greater than", gte: "at least", lt: "less than", lte: "at most", startsWith: "starts with" };
+export const OP_SYMBOL: Record<Leaf["op"], string> = { eq: "=", ne: "≠", gt: ">", gte: "≥", lt: "<", lte: "≤", startsWith: "starts with", exists: "has" };
+export const OP_WORDS: Record<Leaf["op"], string> = { eq: "equals", ne: "is not", gt: "greater than", gte: "at least", lt: "less than", lte: "at most", startsWith: "starts with", exists: "is set" };
 const ORDERED = new Set<string>(["i32", "u64", "u256", "dec"]);
 
-export const typeOf = (l: Leaf): AttrType => (l.op === "startsWith" ? "str" : l.type);
+export const typeOf = (l: Leaf): AttrType | "any" => (l.op === "startsWith" ? "str" : l.op === "exists" ? "any" : l.type);
 
 export function opsFor(type: AttrType): Leaf["op"][] {
   if (ORDERED.has(type)) return ["eq", "ne", "gt", "gte", "lt", "lte"];
@@ -66,7 +66,8 @@ export function leafPaths(q: AskQuery | null, path: number[] = [], negated = fal
   return [{ path, leaf: q as Leaf, negated }];
 }
 
-export const chipText = (l: Leaf, negated: boolean) => `${negated ? "NOT " : ""}${l.attr} ${OP_SYMBOL[l.op]} ${l.value}`;
+export const chipText = (l: Leaf, negated: boolean) =>
+  l.op === "exists" ? `${negated ? "no" : "has"} ${l.attr}` : `${negated ? "NOT " : ""}${l.attr} ${OP_SYMBOL[l.op]} ${l.value}`;
 
 async function post<T>(url: string, body: unknown): Promise<T> {
   const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });

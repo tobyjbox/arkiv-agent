@@ -9,7 +9,9 @@ export const SYSTEM_ATTRS = { $owner: "addr", $creator: "addr", $expiresAt: "u64
 
 export type Comparison = { op: "eq" | "ne" | "gt" | "gte" | "lt" | "lte"; attr: string; type: AttrType; value: string };
 export type Prefix = { op: "startsWith"; attr: string; value: string };
-export type AskQuery = Comparison | Prefix | { op: "and" | "or"; terms: AskQuery[] } | { op: "not"; term: AskQuery };
+/** The record has this attribute at all (any value): "with a guild", or under NOT, "without a parent_key". */
+export type Exists = { op: "exists"; attr: string };
+export type AskQuery = Comparison | Prefix | Exists | { op: "and" | "or"; terms: AskQuery[] } | { op: "not"; term: AskQuery };
 
 /** What a question becomes: which dataset to read (its own predicates are added), and the conditions on it. */
 export type AskPlan = {
@@ -26,10 +28,12 @@ export type AskPlan = {
 const attrName = z.string().min(1).max(64);
 const ComparisonSchema = z.object({ op: z.enum(["eq", "ne", "gt", "gte", "lt", "lte"]), attr: attrName, type: z.enum(ATTR_TYPES), value: z.string().max(200) });
 const PrefixSchema = z.object({ op: z.literal("startsWith"), attr: attrName, value: z.string().min(1).max(128) });
+const ExistsSchema = z.object({ op: z.literal("exists"), attr: attrName });
 export const AskQuerySchema: z.ZodType<AskQuery> = z.lazy(() =>
   z.union([
     ComparisonSchema,
     PrefixSchema,
+    ExistsSchema,
     z.object({ op: z.enum(["and", "or"]), terms: z.array(AskQuerySchema).min(1).max(8) }),
     z.object({ op: z.literal("not"), term: AskQuerySchema }),
   ]),
@@ -58,9 +62,9 @@ export function canonical(q: AskQuery | null): AskQuery | null {
 }
 
 /** Each leaf condition, in reading order (for chips). */
-export function leaves(q: AskQuery | null): (Comparison | Prefix)[] {
+export function leaves(q: AskQuery | null): (Comparison | Prefix | Exists)[] {
   if (!q) return [];
   if (q.op === "not") return leaves(q.term);
   if (q.op === "and" || q.op === "or") return q.terms.flatMap(leaves);
-  return [q as Comparison | Prefix];
+  return [q as Comparison | Prefix | Exists];
 }

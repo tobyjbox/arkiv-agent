@@ -34,11 +34,14 @@ const STOP = new Set(
 );
 const NEGATION = new Set(["not", "except", "excluding", "without", "isn't", "aren't", "non", "never", "exclude", "no", "don't", "doesn't", "didn't", "aren’t", "isn’t"]);
 /** Words that ask for data without describing it: not reported as unused. */
-const FILLER = new Set(["show", "find", "list", "get", "give", "fetch", "search", "how", "many", "count", "number", "total", "please", "every", "each", "latest", "recent", "newest", "kind", "type", "sort", "like", "also", "just", "whose", "them", "they", "it", "made", "using", "having"]);
+const FILLER = new Set(["show", "find", "list", "get", "give", "fetch", "search", "how", "many", "count", "number", "total", "please", "every", "each", "kind", "type", "sort", "like", "also", "just", "whose", "them", "they", "it", "made", "using", "having"]);
 /** Field-name words that say where something is: "in Pune" fills one of these. */
 const PLACE_WORDS = /^(city|town|district|state|region|country|location|place|area|village|county|province|ward|lga|zone|locality|tehsil|taluk|centre|center)$/;
 const LABEL_NOISE = new Set(["v1", "v2", "v3", "test", "app", "open", "dev", "demo", "prod", "arkiv", "data"]);
 const ORDERED: ReadonlySet<AttrType> = new Set(["i32", "u64", "u256", "dec"]);
+const CONJUNCTION = /^(and|or|but|,|;)$/;
+/** Words that describe Arkiv itself, not one project or kind of record. */
+const GENERIC = /^(arkiv|golem|chain|blockchain|network|testnet|mainnet|everything|anything|thing|things)$/;
 
 type Op = "gt" | "gte" | "lt" | "lte";
 /** Comparator phrases, longest first so "more than" wins over "more". */
@@ -163,13 +166,14 @@ function scoreDataset(d: Dataset, tokens: Token[]): { score: number; named: bool
     // Generic words ("records" in arkiv-records-app) don't name a project.
     const parts = words(full).filter((w) => w.length >= 3 && !LABEL_NOISE.has(w) && !STOP.has(w) && !/^\d+$/.test(w));
     tokens.forEach((t, i) => {
+      if (LABEL_NOISE.has(full) || STOP.has(full) || GENERIC.test(full)) return;
       if (t.low === full || t.low === d.project.label.toLowerCase()) { label = Math.max(label, 10); used.add(i); }
       else if (parts[0] && t.low === parts[0]) { label = Math.max(label, 8); used.add(i); }
       else if (parts.slice(1).includes(t.low)) { label = Math.max(label, 4); used.add(i); }
     });
   }
   let name = 0;
-  const nameWords = d.discriminator ? words(d.discriminator.value) : [];
+  const nameWords = (d.discriminator ? words(d.discriminator.value) : []).filter((w) => !GENERIC.test(w) && !LABEL_NOISE.has(w) && !STOP.has(w));
   for (const w of nameWords) {
     const exact = tokens.findIndex((t, i) => !used.has(i) && !STOP.has(t.low) && t.stem === stem(w));
     if (exact >= 0) { name += 5; used.add(exact); continue; }
@@ -272,12 +276,15 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     const next = tokens[i + 1];
     if (/^(first|top|latest|last|newest)$/.test(t.low) && next && /^\d{1,3}$/.test(next.low) && !TIME_UNITS[tokens[i + 2]?.low ?? ""]) {
       limit = Math.min(MAX_RESULTS, Math.max(1, Number(next.low)));
-      consumed.add(i).add(i + 1);
+      // "first/top N" is just a count; "latest/newest N" also asks for an order Arkiv can't give.
+      consumed.add(i + 1);
+      if (/^(first|top)$/.test(t.low)) consumed.add(i);
     }
   });
 
   // Which dataset.
   let dataset: Dataset | null = null;
+  let datasetNamedWeakly = false;
   if (ctx.scope) {
     dataset = ctx.datasets.find((d) => d.id === ctx.scope) ?? null;
   } else {
@@ -294,6 +301,7 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     // With an owner/creator address, only a clearly named dataset narrows it (else: all datasets).
     const best = ranked[0] && (conds.length === 0 || ranked[0].score >= 8) ? ranked[0] : undefined;
     if (best) {
+      datasetNamedWeakly = best.score < 8;
       dataset = best.d;
       for (const i of best.used) consumed.add(i);
       const label = best.d.project.method === "label" ? best.d.project.label : `${best.d.project.label.slice(0, 10)}…`;
@@ -303,8 +311,11 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     }
   }
 
+  const wholeChain = tokens.some((t) => /^(every|all|everything|any|whole|entire)$/.test(t.low)) &&
+    tokens.some((t) => /^(record|records|entity|entities|data|everything|chain|thing|things)$/.test(t.low));
+  if (wholeChain && dataset && !ctx.scope && !ctx.previous && datasetNamedWeakly) dataset = null;
   if (!dataset && !conds.length) {
-    return err({ kind: "not-understood", message: "No dataset or attribute in the catalogue matches this question." });
+    return err({ kind: "not-understood", message: "No dataset in the catalogue matches. Ask reads one dataset at a time (name a project or a kind of record), or finds records by owner or creator address." });
   }
 
   if (dataset) {
@@ -364,10 +375,24 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       const ordered = (f: SchemaField) => ORDERED.has(f.type);
       let field: SchemaField | undefined;
       const usedIdx = Array.from({ length: phrase.length + 1 }, (_, k) => i + k);
-      for (const k of [numIdx + 1, numIdx + 2]) {
-        if (k < tokens.length && !field) { field = mentionAt(k, ordered); if (field) usedIdx.push(k); }
+      // "x greater than 10": the field right before (only "is", "of"… between) wins. Then "more than
+      // 10000 events": right after the number (or its unit). Then further back. Never across and/or.
+      for (let k = i - 1; k >= Math.max(0, i - 3) && !field; k--) {
+        field = mentionAt(k, ordered);
+        if (field) usedIdx.push(k);
+        else if (!/^(is|are|was|be|of|its|the)$/.test(lows[k]!)) break;
       }
-      for (let k = i - 1; k >= Math.max(0, i - 5) && !field; k--) { field = mentionAt(k, ordered); if (field) usedIdx.push(k); }
+      for (const k of [numIdx + 1, numIdx + 2]) {
+        if (field || k >= tokens.length || CONJUNCTION.test(lows[k]!)) break;
+        field = mentionAt(k, ordered);
+        if (field) usedIdx.push(k);
+        else if (k === numIdx + 1 && !(TIME_UNITS[lows[k]!] || /^(grams?|g|kg|percent|%|rupees|inr|usd|dollars)$/.test(lows[k]!))) break;
+      }
+      for (let k = i - 1; k >= Math.max(0, i - 5) && !field; k--) {
+        if (CONJUNCTION.test(lows[k]!)) break;
+        field = mentionAt(k, ordered);
+        if (field) usedIdx.push(k);
+      }
       const secsPer = unitWord ? TIME_UNITS[unitWord] : undefined;
       if (!field && secsPer) field = fields.find((f) => ordered(f) && durationUnit(f) !== null);
       if (!field) continue;
@@ -395,13 +420,18 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       const eq: AskQuery = { op: "eq", attr: field.name, type: field.type, value };
       conds.push({ attr: field.name, q: negs.length ? { op: "not", term: eq } : eq, tokens: span });
       [...span, ...negs].forEach((k) => consumed.add(k));
+      // The field's own name just before ("city noida", "lender_type is not NBFC") is part of it too.
+      let j = span[0]! - 1;
+      while (j >= 0 && /^(is|are|was|=|:|equals|of|not|isn't)$/.test(lows[j]!)) j--;
+      if (isFree(j) && mentions(tokens[j]!, field)) consumed.add(j);
     };
     const strFields = fields.filter((f) => f.type === "str");
     const fieldWordStems = new Set(fields.flatMap((f) => words(f.name).filter((w) => w.length >= 3).map(stem)));
     /** Spans of free words starting at k, longest first (up to 3), that could be one value. */
     const runsFrom = (k: number) => {
       let end = k;
-      while (end - k < 3 && isFree(end) && (tokens[end]!.quoted || (!STOP.has(lows[end]!) && !NEGATION.has(lows[end]!) && !fieldWordStems.has(tokens[end]!.stem) && !COMPARATORS.some(([p]) => p[0] === lows[end])))) end++;
+      const startsComparison = (j: number) => COMPARATORS.some(([p]) => p.every((w, n) => lows[j + n] === w));
+      while (end - k < 3 && isFree(end) && (tokens[end]!.quoted || (!STOP.has(lows[end]!) && !NEGATION.has(lows[end]!) && !fieldWordStems.has(tokens[end]!.stem) && !startsComparison(end)))) end++;
       return Array.from({ length: end - k }, (_, n) => Array.from({ length: end - k - n }, (_, j) => k + j));
     };
     const textOf = (span: number[], sep = " ") => span.map((k) => tokens[k]!.raw).join(sep);
@@ -425,7 +455,8 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
 
     // Numbers after "N or more", "between A and B".
     const orderedNear = (before: number, after: number) => {
-      for (const k of [after, after + 1]) { const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; }
+      for (let k = before; k >= Math.max(0, before - 2); k--) { const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; if (CONJUNCTION.test(lows[k] ?? "")) break; }
+      for (const k of [after, after + 1]) { if (CONJUNCTION.test(lows[k] ?? "")) break; const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; }
       for (let k = before; k >= Math.max(0, before - 4); k--) { const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; }
       return null;
     };
@@ -450,23 +481,41 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     // Yes/no fields: "exceeds the limit", "where exp_ok is false", "that are not historical".
     for (const f of fields.filter((x) => x.type === "bool")) {
       const fw = words(f.name).map(stem);
+      /** A word of this field ("known"), and whether it came negated ("unknown", "non-demo"). */
+      const fieldWord = (k: number) => {
+        if (!isFree(k)) return null;
+        if (lows[k] === f.name.toLowerCase()) return { all: true, w: "", neg: false };
+        if (fw.includes(tokens[k]!.stem)) return { all: false, w: tokens[k]!.stem, neg: false };
+        const m = /^(un|non-?)(.{3,})$/.exec(lows[k]!);
+        return m && fw.includes(stem(m[2]!)) ? { all: false, w: stem(m[2]!), neg: true } : null;
+      };
       for (let i = 0; i < tokens.length; i++) {
-        if (!isFree(i)) continue;
+        const first = fieldWord(i);
+        if (!first) continue;
         let end = i;
-        const seen = new Set<string>();
-        while (isFree(end) && (lows[end] === f.name.toLowerCase() || (fw.includes(tokens[end]!.stem) && !seen.has(tokens[end]!.stem)))) { seen.add(tokens[end]!.stem); end++; }
-        const whole = lows[i] === f.name.toLowerCase() || fw.every((w) => seen.has(w));
-        if (end === i || !whole) continue;
-        let k = end;
         let value = true;
-        const used = Array.from({ length: end - i }, (_, n) => i + n);
+        const seen = new Set<string>();
+        const used: number[] = [];
+        for (let m = fieldWord(end); m; m = fieldWord(end)) {
+          if (m.all) fw.forEach((w) => seen.add(w)); else seen.add(m.w);
+          if (m.neg) value = !value;
+          used.push(end++);
+          if (fw.every((w) => seen.has(w))) break;
+          // "expiry is known", "quote is not checked": connectors between the field's own words.
+          let gap = end;
+          const negations: number[] = [];
+          while (isFree(gap) && /^(is|are|was|be|been|not|isn't)$/.test(lows[gap]!)) { if (/^(not|isn't)$/.test(lows[gap]!)) negations.push(gap); gap++; }
+          if (gap > end && fieldWord(gap)) { for (let g = end; g < gap; g++) used.push(g); if (negations.length % 2) value = !value; end = gap; }
+        }
+        if (!fw.every((w) => seen.has(w))) continue;
+        let k = end;
         if (EQUALS.has(lows[k] ?? "") || lows[k] === "are" || lows[k] === "was") used.push(k++);
         if (lows[k] === "not" || lows[k] === "isn't") { value = !value; used.push(k++); }
         if (/^(true|yes)$/.test(lows[k] ?? "")) used.push(k++);
         else if (/^(false|no)$/.test(lows[k] ?? "")) { value = !value; used.push(k++); }
         const negs = [i - 1, i - 2].filter((j) => isFree(j) && (NEGATION.has(lows[j]!) || lows[j] === "un"));
         if (negs.length % 2) value = !value;
-        conds.push({ attr: f.name, q: { op: "eq", attr: f.name, type: "bool", value: String(value) }, tokens: used });
+        conds.push({ attr: f.name, q: { op: "eq", attr: f.name, type: "bool", value: String(value) }, tokens: [...used, ...negs] });
         [...used, ...negs].forEach((j) => consumed.add(j));
         break;
       }
@@ -556,6 +605,24 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       explain.push(`“${word.raw}” read as ${field.name} = “${value}”; ArkivAgent hasn't seen that value, so it may match nothing.`);
     }
 
+    // Presence: "without a parent_key", "with no guild", "missing parcel" → NOT exists; "with a guild",
+    // "that have a guild" → exists. Only when no value follows (a value was bound above).
+    for (let i = 0; i < tokens.length; i++) {
+      if (!isFree(i) || !/^(with|without|has|have|having|missing|lacking|no)$/.test(lows[i]!)) continue;
+      let k = i + 1;
+      let isAbsent = /^(without|missing|lacking|no)$/.test(lows[i]!);
+      if (lows[k] === "no") { isAbsent = true; k++; }
+      if (/^(a|an|any|the)$/.test(lows[k] ?? "")) k++;
+      const field = mentionAt(k);
+      if (!field || conds.some((c) => c.attr === field.name)) continue;
+      const end = fieldEnd(k, field);
+      if (end < tokens.length && !STOP.has(lows[end]!) && !CONJUNCTION.test(lows[end]!)) continue;
+      const has: AskQuery = { op: "exists", attr: field.name };
+      const span = Array.from({ length: end - i }, (_, n) => i + n);
+      conds.push({ attr: field.name, q: isAbsent ? { op: "not", term: has } : has, tokens: span });
+      span.forEach((j) => consumed.add(j));
+    }
+
     // Any other word that is a stored value: "the pricing category", "millet".
     for (let i = 0; i < tokens.length; i++) {
       if (!isFree(i) || STOP.has(lows[i]!) || FILLER.has(lows[i]!) || NEGATION.has(lows[i]!)) continue;
@@ -569,18 +636,34 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
   }
 
   // Never drop a word silently: whatever wasn't used is reported with the plan.
-  const fieldWords = new Set((dataset?.schema ?? []).flatMap((f) => words(f.name).map(stem)));
+  const applied = new Set(conds.map((c) => c.attr));
+  const appliedField = (t: Token) => (dataset?.schema ?? []).some((f) => applied.has(f.name) && mentions(t, f));
   const ignored = tokens
-    .filter((t, i) => !consumed.has(i) && !STOP.has(t.low) && !FILLER.has(t.low) && /[\p{L}\p{N}]/u.test(t.low) && !fieldWords.has(t.stem))
+    .filter((t, i) => !consumed.has(i) && !STOP.has(t.low) && !FILLER.has(t.low) && /[\p{L}\p{N}]/u.test(t.low) && !appliedField(t))
     .map((t) => t.raw);
+  if (tokens.some((t, i) => /^(latest|newest|recent|oldest|earliest)$/.test(t.low) && !consumed.has(i))) {
+    explain.push("Arkiv can't sort query results, so newest-first isn't applied: these are the first records it returns.");
+  }
   if (tokens.some((t, i) => t.low === "many" && lows0[i - 1] === "how") || tokens.some((t) => t.low === "count")) {
     explain.push("Arkiv has no count for a query: results come a page at a time (Load more).");
+  }
+
+  // Clauses joined by "or" ("x over 20 or y under 5") form one OR group; the rest are all required.
+  const ordered = [...conds].sort((a, b) => Math.min(...a.tokens) - Math.min(...b.tokens));
+  const merged: Cond[] = [];
+  for (const c of ordered) {
+    const prev = merged[merged.length - 1];
+    const between = prev ? lows0.slice(Math.max(...prev.tokens) + 1, Math.min(...c.tokens)) : [];
+    if (prev && between.includes("or") && !between.includes("and") && prev.attr !== c.attr) {
+      const terms = prev.q.op === "or" ? [...prev.q.terms, c.q] : [prev.q, c.q];
+      merged[merged.length - 1] = { attr: `${prev.attr}|${c.attr}`, q: { op: "or", terms }, tokens: [...prev.tokens, ...c.tokens] };
+    } else merged.push(c);
   }
 
   // Same field, several values: any of them ("CDSCO or State drug lab"). Everything else: all of them.
   const groups = new Map<string, AskQuery[]>();
   const rest: AskQuery[] = [];
-  for (const c of conds) {
+  for (const c of merged) {
     if (c.q.op === "eq" && !c.attr.startsWith("$")) groups.set(c.attr, [...(groups.get(c.attr) ?? []), c.q]);
     else rest.push(c.q);
   }
