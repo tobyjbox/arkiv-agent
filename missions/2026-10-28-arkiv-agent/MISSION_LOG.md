@@ -48,3 +48,5 @@
 - 2026-10-28T22:41:56Z HANDOFF T13@acccb24 dispatched: T14 (draft -> ready, coder messaged)
 - 2026-10-28T22:42:14Z NUDGE T14 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message sent
 - 2026-10-28T22:55:53Z HANDOFF T14@c260c44 detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-fixes@c260c44:missions/2026-10-28-arkiv-agent/tasks/T14-ask-fixes.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-28T22:55:53Z HANDOFF T14@c260c44 adjudicated: accepted (487 tests verified; blind accuracy deferred to T15); integrated 4c29af3; row -> merged 81d1695
+- 2026-10-28T22:55:53Z HANDOFF T14@c260c44 dispatched: T15 (draft -> ready, QA messaged)
