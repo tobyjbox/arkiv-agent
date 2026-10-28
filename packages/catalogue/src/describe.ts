@@ -29,13 +29,29 @@ Be concrete and modest: say what the records appear to be, and say "appears to" 
 export const schemaHash = (d: Pick<Dataset, "id" | "schema">) =>
   createHash("sha256").update(`${d.id}|${d.schema.map((f) => `${f.name}:${f.type}`).sort().join(",")}`).digest("hex").slice(0, 16);
 
+const NAME_CHARS = 64;
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : s);
+
+/**
+ * Model text shown in ArkivAgent's own UI, with links and long hex (addresses, keys) taken out: on-chain
+ * text that steers the model can't turn into a "send to 0x…" or "visit …" line on the page.
+ */
+export function cleanModelText(text: string, max: number): string {
+  const cleaned = text
+    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, "[link removed]")
+    .replace(/\b0x[0-9a-f]{8,}\b/gi, "[hex removed]")
+    .replace(/\b[0-9a-f]{32,}\b/gi, "[hex removed]")
+    .replace(/\s+/g, " ")
+    .trim();
+  return clip(cleaned, max);
+}
 
 /** The model's whole input: schema, counts and a few truncated samples. Nothing else is sent. */
 export function describeInput(d: Dataset, samples: readonly RecordView[]): string {
   return JSON.stringify({
-    name: d.name, project: d.project.method === "label" ? d.project.label : "(unlabelled wallet)",
+    name: clip(d.name, NAME_CHARS), project: d.project.method === "label" ? clip(d.project.label, NAME_CHARS) : "(unlabelled wallet)",
     liveRecords: d.liveCount, writers: d.writers, ownership: d.ownership, contentTypes: d.contentTypes,
+    // Attribute names are at most 32 bytes on Arkiv; names and labels (up to 128) are clipped.
     attributes: d.schema.map((f) => ({ name: f.name, type: f.type, presentIn: `${Math.round(f.presence * 100)}%`, examples: f.examples.map((e) => clip(e, VALUE_CHARS)) })),
     samples: samples.slice(0, SAMPLE_COUNT).map((r) => ({
       attributes: Object.fromEntries(r.attributes.map((a) => [a.name, clip(a.value, VALUE_CHARS)])),
@@ -62,7 +78,7 @@ export async function describeDataset(d: Dataset, samples: readonly RecordView[]
   if (response.stop_reason === "refusal" || !response.parsed_output) return null;
   const out = response.parsed_output;
   return {
-    summary: clip(out.summary.replace(/\s+/g, " ").trim(), 400), likelyUse: clip(out.likelyUse.replace(/\s+/g, " ").trim(), 240),
+    summary: cleanModelText(out.summary, 400), likelyUse: cleanModelText(out.likelyUse, 240),
     suggestedName: out.suggestedName && /^[a-z0-9_]{2,48}$/.test(out.suggestedName) ? out.suggestedName : null,
     datasetId: d.id, schemaHash: schemaHash(d), model: response.model, createdAtMs: Date.now(),
     inputs: `the schema and ${Math.min(samples.length, SAMPLE_COUNT)} sample records`,

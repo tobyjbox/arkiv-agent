@@ -49,16 +49,21 @@ const toRow = (e: SdkEntity): AskRow => ({
 /**
  * Runs a compiled query live on Arkiv, read-only (public client, `arkiv_query` only), one page at
  * a pinned block. Later pages pass the block and cursor back so they read the same state.
+ * `connect` builds a client bound to an abort signal: on timeout the read is aborted, not abandoned.
  */
 export async function runAsk(
-  client: ArkivClient,
+  connect: (signal: AbortSignal) => ArkivClient,
   expression: Expression,
   opts: { limit?: number; cursor?: string | null; block?: string | null; timeoutMs?: number } = {},
 ): Promise<Result<AskPage, RunError>> {
   const started = performance.now();
   const timeoutMs = opts.timeoutMs ?? ASK_TIMEOUT_MS;
+  const controller = new AbortController();
+  const client = connect(controller.signal);
   let timer: NodeJS.Timeout | undefined;
-  const timeout = new Promise<"timeout">((resolve) => { timer = setTimeout(() => resolve("timeout"), timeoutMs); });
+  const timeout = new Promise<"timeout">((resolve) => {
+    timer = setTimeout(() => { controller.abort(new Error("Ask timeout")); resolve("timeout"); }, timeoutMs);
+  });
   try {
     const read = (async () => {
       const block = opts.block ? BigInt(opts.block) : await client.getBlockNumber();
@@ -70,6 +75,7 @@ export async function runAsk(
       if (opts.cursor) q = q.cursor(opts.cursor);
       return q.fetch();
     })();
+    read.catch(() => {}); // after a timeout the aborted read rejects; nobody is waiting for it
     const page = await Promise.race([read, timeout]);
     if (page === "timeout") return err({ kind: "timeout", message: `Arkiv didn't respond in ${Math.round(timeoutMs / 1000)} s.` });
     return ok({

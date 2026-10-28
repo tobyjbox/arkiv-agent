@@ -22,6 +22,8 @@ export function askContext(scope: string | null = null, previous: AskPlan | null
 /** Arkiv's Data Explorer runs the same query string from `?q=` (checked 2026-10-28). */
 export const explorerUrl = (query: string) => `https://data.arkiv.network/?q=${encodeURIComponent(query)}`;
 
-let client: ArkivClient | null = null;
-/** Public, read-only client: no wallet, so Ask can only read. */
-export const arkiv = () => (client ??= createArkivClient());
+/**
+ * Public, read-only client (no wallet, so Ask can only read), one per read so its timeout can
+ * abort it. One retry: a person is waiting, and the indexer shares the RPC budget.
+ */
+export const arkiv = (signal: AbortSignal): ArkivClient => createArkivClient(undefined, undefined, { signal, retryCount: 1 });
