@@ -9,7 +9,7 @@ const DAY = 86_400;
 
 /** One dataset (design/03-catalogue.md "Dataset row"): the whole row links to the detail page. */
 export function DatasetRow({ row, ageSeconds, description, flash, onPrefetch }: {
-  row: Row; ageSeconds: number; description?: string; flash: "new" | "changed" | null; onPrefetch: () => void;
+  row: Row; ageSeconds: number; description?: string | undefined; flash: "new" | "changed" | null; onPrefetch: () => void;
 }) {
   const isActive = ageSeconds < 3_600;
   const types = [...new Set(row.fields.map((f) => f.type))];

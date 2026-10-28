@@ -90,7 +90,7 @@ export function CatalogueView({ initial }: { initial: CatalogueData }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => <DatasetRow key={r.id} row={r} ageSeconds={ageOf(r)} flash={flashes.get(r.id) ?? null} onPrefetch={() => router.prefetch(`/catalogue/${r.id}`)} />)}
+              {rows.map((r) => <DatasetRow key={r.id} row={r} ageSeconds={ageOf(r)} description={r.description ?? undefined} flash={flashes.get(r.id) ?? null} onPrefetch={() => router.prefetch(`/catalogue/${r.id}`)} />)}
             </tbody>
           </table>
         ) : (

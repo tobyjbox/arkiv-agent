@@ -38,10 +38,10 @@ export const writeAgeSeconds = (row: DatasetRow, chainHead: number, secondsSince
 
 const freshnessOf = (age: number): Freshness => (age < 3_600 ? "hour" : age < 86_400 ? "day" : age < 604_800 ? "week" : "quiet");
 
-export function matchesQuery(row: DatasetRow, q: string, description?: string): boolean {
+export function matchesQuery(row: DatasetRow, q: string): boolean {
   const needle = q.trim().toLowerCase();
   if (!needle) return true;
-  return [row.name, row.project.label, description ?? "", ...row.fields.map((f) => f.name)].some((s) => s.toLowerCase().includes(needle));
+  return [row.name, row.project.label, row.description ?? "", ...row.fields.map((f) => f.name)].some((s) => s.toLowerCase().includes(needle));
 }
 
 export function applyView(rows: readonly DatasetRow[], v: View, ageOf: (r: DatasetRow) => number): DatasetRow[] {

@@ -1,7 +1,8 @@
 import { execFileSync } from "node:child_process";
-import { closeSync, openSync, readFileSync, rmSync, writeSync } from "node:fs";
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, rmSync, writeSync } from "node:fs";
 import { join } from "node:path";
-import { repoRoot } from "@arkiv-agent/db";
+import Database from "better-sqlite3";
+import { databasePath, repoRoot } from "@arkiv-agent/db";
 
 const isAlive = (pid: number) => {
   try {
@@ -32,9 +33,35 @@ export function acquireIndexerLock(dbPath: string): void {
   }
 }
 
-/** Applies pending Prisma migrations (after the lock, so no other writer holds the database). */
+/** Migrations in the repo that the database has not applied yet (all of them for a new database). */
+function pendingMigrations(): string[] {
+  const dir = join(repoRoot(), "packages/db/prisma/migrations");
+  const all = readdirSync(dir).filter((d) => existsSync(join(dir, d, "migration.sql")));
+  if (!existsSync(databasePath())) return all;
+  const db = new Database(databasePath(), { readonly: true });
+  try {
+    const applied = new Set(db.prepare(`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL`).pluck().all() as string[]);
+    return all.filter((m) => !applied.has(m));
+  } catch {
+    return all;
+  } finally {
+    db.close();
+  }
+}
+
+/**
+ * Applies pending Prisma migrations, under the lock. Prisma needs the database to itself, so this
+ * only runs when something is pending; then the app (`pnpm dev`) must be stopped for a moment.
+ */
 export function migrate(): void {
-  execFileSync(join(repoRoot(), "packages/db/node_modules/.bin/prisma"), ["migrate", "deploy"], {
-    cwd: join(repoRoot(), "packages/db"), stdio: ["ignore", "ignore", "inherit"],
-  });
+  const pending = pendingMigrations();
+  if (!pending.length) return;
+  console.log(`applying ${pending.length} migration(s): ${pending.join(", ")}`);
+  try {
+    execFileSync(join(repoRoot(), "packages/db/node_modules/.bin/prisma"), ["migrate", "deploy"], {
+      cwd: join(repoRoot(), "packages/db"), stdio: ["ignore", "ignore", "inherit"],
+    });
+  } catch {
+    throw new Error("Could not apply the database migration: the database is in use. Stop the app (pnpm dev / start) for a moment, run the indexer again, then restart the app.");
+  }
 }

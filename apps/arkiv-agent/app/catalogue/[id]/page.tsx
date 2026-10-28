@@ -3,7 +3,8 @@ import { AlertTriangle, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActivityChart } from "../../../components/dataset/activity-chart";
-import { AiSummary } from "../../../components/dataset/ai-summary";
+import { Suspense } from "react";
+import { AiSummary, AiSummarySkeleton } from "../../../components/dataset/ai-summary";
 import { DatasetLive } from "../../../components/dataset/dataset-live";
 import { SchemaTable } from "../../../components/dataset/schema-table";
 import { SdkSnippet } from "../../../components/dataset/sdk-snippet";
@@ -55,7 +56,7 @@ export default async function DatasetPage({ params }: { params: Promise<{ id: st
       )}
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <div className="xl:col-span-7"><AiSummary text={null} /></div>
+        <div className="xl:col-span-7"><Suspense fallback={<AiSummarySkeleton />}><AiSummary id={d.id} /></Suspense></div>
         <div className="xl:col-span-5"><DatasetLive initial={live} part="stats" /></div>
       </div>
 
