@@ -19,9 +19,9 @@
 
 ## Progress log
 - 2026-10-28T22:32Z claimed (arkiv-agent_QA_claude-code_opus-5.5-low). Base 3141fd3.
-- 2026-10-28T22:40Z fresh clone keyless: install, typecheck, 52/52 vitest, next build all pass. index:verify --attrs 20: 20/20, count diff -2 within lag.
-- 2026-10-28T22:45Z blind set committed (d967b1b) before running; 8/15 pass.
-- 2026-10-28T22:55Z handoff written; -> review.
+- 2026-10-28T22:34Z fresh clone keyless: install, typecheck, 52/52 vitest, next build all pass. index:verify --attrs 20: 20/20, count diff -2 within lag.
+- 2026-10-28T22:34Z blind set committed (d967b1b) before running; 8/15 pass.
+- 2026-10-28T22:36Z handoff written; -> review.
 
 ## Handoff
 Branch review/qa-slice (base 3141fd3 = mission with T01-T05). Evidence: tasks/T06-blind-questions.md (pre-run, d967b1b), tasks/T06-blind-results.txt.
@@ -41,3 +41,4 @@ Setup: fresh `git clone` of review/qa-slice in a scratch dir, `cp .env.example .
 
 Deviations: blind Q2/Q6 expectation is my reading of plain English; I judged results on the compiled query. Q5 returned 0 rows with a correct query (not counted as a failure). Q11 ("how many") counted a pass: correct dataset; no count shown.
 Next owner: Orchestrator (add finding rows; F1/F2 to coder via T05 follow-up; F4 decision).
+- 2026-10-28T22:36:27Z notify intent: T06 review candidate=7e89549057c54fa06af78cb745c754eb50323b6b to Orchestrator local_<session> via ccd send_message; attempt 1. (Progress-log times above corrected to actual UTC.)
