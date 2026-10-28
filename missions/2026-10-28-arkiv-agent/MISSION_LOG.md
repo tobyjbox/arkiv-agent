@@ -10,3 +10,6 @@
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 dispatched: T09 (draft -> ready, UX nudged). T04 still waits on T03.
 - 2026-10-28T17:08:33Z HANDOFF T02@dc160e1 adjudicated: accepted; canonical row flip re-applied 5426f84 (prior commit missed the row)
 - 2026-10-28T17:08:48Z NUDGE T09 -> arkiv-agent_ux_designer_claude-code_opus-5.5-med no-watcher; session message queued <id>; worktree design/pulse-cost created
+- 2026-10-28T17:10:46Z HANDOFF T09@f64c9ad detected: row review 3/3 by arkiv-agent_ux_designer_claude-code_opus-5.5-med; handoff design/pulse-cost@f64c9ad:missions/2026-10-28-arkiv-agent/tasks/T09-pulse-cost-specs.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-28T17:10:46Z HANDOFF T09@f64c9ad adjudicated: accepted; integrated 0194123; row -> merged 31bcffc
+- 2026-10-28T17:10:46Z HANDOFF T09@f64c9ad dispatched: none eligible (T10 waits on T08)
