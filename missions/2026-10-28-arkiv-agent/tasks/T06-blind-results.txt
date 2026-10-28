@@ -1,0 +1,30 @@
+Q1 claim-check listed hospitals in Pune
+   {"ok": true, "ds": "claim-check/listed", "query": "app = str('claim-check') AND kind = str('listed')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 1.5}}
+Q2 kharab alerts where exp_ok is false
+   {"ok": true, "ds": "kharab/alert", "query": "app = str('kharab') AND type = str('alert') AND exp_ok = true", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q3 dawa-alert alerts with expiry_ym after 202612
+   {"ok": true, "ds": "dawa-alert/alert", "query": "app = str('dawa-alert') AND kind = str('alert')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q4 sayso dla records from lender type NBFC
+   {"ok": true, "ds": "sayso/dla", "query": "app = str('sayso') AND kind = str('dla') AND lender_type = str('NBFC')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q5 tankha votes with v greater than 1
+   {"ok": true, "ds": "tankha/vote", "query": "project = str('tankha') AND type = str('vote') AND v > i32(1)", "msg": null, "run": {"ok": true, "n": 0, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.1}}
+Q6 jalsaakshya observations that exceed limits
+   {"ok": true, "ds": "jalsaakshya/v1/obs", "query": "app = str('jalsaakshya/v1') AND kind = str('obs')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q7 jalsaakshya observations with mgl over 1.5 in district Jaipur
+   {"ok": true, "ds": "jalsaakshya/v1/obs", "query": "app = str('jalsaakshya/v1') AND kind = str('obs') AND mgl > dec(1.5)", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q8 haqclock ic orders with penalty_inr at least 25000
+   {"ok": true, "ds": "haqclock/ic_order", "query": "app = str('haqclock') AND type = str('ic_order') AND penalty_inr >= u64(25000)", "msg": null, "run": {"ok": true, "n": 5, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q9 prometheus receipts
+   {"ok": true, "ds": "prometheus/receipt", "query": "project = str('prometheus') AND kind = str('receipt')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q10 supercall-test call records for asset BTC
+   {"ok": true, "ds": "supercall-test-*/call", "query": "project STARTSWITH str('supercall-test-') AND kind = str('call')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q11 how many claim-check delisted records are there
+   {"ok": true, "ds": "claim-check/delisted", "query": "app = str('claim-check') AND kind = str('delisted')", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q12 tideland parcels with x less than 5
+   {"ok": true, "ds": "tideland/parcel", "query": "app = str('tideland') AND kind = str('parcel') AND x < i32(5)", "msg": null, "run": {"ok": true, "n": 42, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q13 haqclock corrected ic orders that are historical
+   {"ok": true, "ds": "haqclock/ic_order_corrected", "query": "app = str('haqclock') AND type = str('ic_order_corrected') AND historical = true", "msg": null, "run": {"ok": true, "n": 50, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.2}}
+Q14 records owned by 0x0000000000000000000000000000000000000001
+   {"ok": true, "ds": "arkiv-records-appgprj-6ac5f4bf/project", "query": "project = str('arkiv-records-appgprj-6ac5f4bf') AND $owner = addr(0x0000000000000000000000000000000000000001)", "msg": null, "run": {"ok": true, "n": 0, "keys": ["ok", "rows", "block", "cursor", "ms"], "msg": null, "s": 0.0}}
+Q15 weather forecasts for London
+   {"ok": false, "ds": "None/None", "query": null, "msg": "No dataset or attribute in the catalogue matches this question."}
