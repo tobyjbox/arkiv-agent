@@ -36,6 +36,8 @@
   author email -> GitHub noreply). Force-pushed atomically with leases; local branches and worktrees realigned; old
   objects pruned locally. All SHAs changed: T04 candidate 6027a1c is now 8b764dd (same tree content apart from the
   cleaned docs). Old -> new map and a local backup bundle: `<checkpoints>/arkiv-agent/history-rewrite-2026-10-28-*`.
+- 2026-10-28T22:10:00Z Owner approved one message to the Orchestrator with the old -> new commit map ("Yes, message it").
+  Sent once via SendMessage to the Orchestrator thread: delivered, message_id <id>. Do not resend.
 
 ## Handoff
 
