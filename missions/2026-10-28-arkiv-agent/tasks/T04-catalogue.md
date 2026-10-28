@@ -30,6 +30,7 @@
 - 2026-10-28T18:38:26Z Notification result for `2026-10-28-arkiv-agent:T04@0e42e3a:blocked`: sent once via SendMessage to local_<session>; tool reported delivery: delivered (turn started), message_id <id>; read not confirmed. Do not resend.
 - 2026-10-28T20:02:12Z The owner, directly: "no I am not doing that now. We need to finish without this." (re adding ANTHROPIC_API_KEY). Finishing T04 without live AI descriptions: the code stays in, off without a key; pages show the design's no-key state. Flipping blocked -> review, candidate 6027a1c.
 - 2026-10-28T20:02:29Z Decode complete (738 datasets, 288 projects). Flipped to review, candidate 6027a1c. Notification intent: key `2026-10-28-arkiv-agent:T04@6027a1c:review`; recipient Orchestrator thread local_<session>; route Claude Code session message; state: pending.
+- 2026-10-28T21:31:50Z Notification result for `2026-10-28-arkiv-agent:T04@6027a1c:review`: sent once via SendMessage to local_<session>; tool reported delivery: delivered (turn started), message_id <id>; read not confirmed. Do not resend.
 
 ## Handoff
 
