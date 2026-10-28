@@ -44,3 +44,5 @@
 - 2026-10-28T22:37:00Z HANDOFF T06@7e89549 dispatched: none eligible now (T14 waits on T13 in progress; T15 waits on T14)
 - 2026-10-28T22:37:15Z synced canonical PLAN/BOARD to integration (stale-copy cause of F06-4). Told QA: T06 accepted, F4 rejected, T15 next.
 - 2026-10-28T22:41:56Z HANDOFF T13@acccb24 detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/security-fixes@acccb24:missions/2026-10-28-arkiv-agent/tasks/T13-security-fixes.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-28T22:41:56Z HANDOFF T13@acccb24 adjudicated: accepted (62 tests verified; M1 L1-L3 addressed, backoff in-memory noted); integrated 614a4b5; row -> merged 2a0fae3
+- 2026-10-28T22:41:56Z HANDOFF T13@acccb24 dispatched: T14 (draft -> ready, coder messaged)
