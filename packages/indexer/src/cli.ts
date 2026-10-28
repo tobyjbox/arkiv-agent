@@ -1,5 +1,7 @@
 // `pnpm index` syncs once and exits; `pnpm index --watch` keeps following the chain head.
 // Both are safe to stop at any point (Ctrl-C) and resume.
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { createArkivClient } from "@arkiv-agent/core";
 import { databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
@@ -16,6 +18,7 @@ const HISTORY_BLOCKS = 7n * 43_200n;
 /** Public RPC allows 600 requests/min; leave headroom for sync. Raise with an access key. */
 const RPS = Number(process.env.ARKIV_RPS ?? (process.env.ARKIV_API_KEY ? 25 : 8));
 
+mkdirSync(dirname(databasePath()), { recursive: true });
 acquireIndexerLock(databasePath());
 migrate();
 const client = createArkivClient();
