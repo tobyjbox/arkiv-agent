@@ -27,6 +27,7 @@
 - 2026-10-28T18:37:57Z Live updates verified in the browser (feed cursor advances, list refetches every change); Playwright smoke 4/4 (173f51b); Vitest 34/34. Fixed a silent decode stall from entities with thousands of patches (6027a1c); watch indexer now runs from this worktree against the shared index, decoding ~10/s (~37.6k left, about 1 h).
 - 2026-10-28T18:37:57Z BLOCKED on milestone 3: real AI descriptions need ANTHROPIC_API_KEY in .env. Owner of next action: the owner (add the key). Then Coder runs `pnpm describe`, checks the AI cards on list and detail pages, ticks milestone 3 and flips to review. Everything else in T04 is done and pushed (feat/catalogue @ 6027a1c).
 - 2026-10-28T18:38:06Z Notification intent: key `2026-10-28-arkiv-agent:T04@0e42e3a:blocked`; recipient Orchestrator (arkiv-agent) thread local_<session> (from `ak-orch.sh thread arkiv-agent`); route Claude Code session message; state: pending.
+- 2026-10-28T18:38:26Z Notification result for `2026-10-28-arkiv-agent:T04@0e42e3a:blocked`: sent once via SendMessage to local_<session>; tool reported delivery: delivered (turn started), message_id <id>; read not confirmed. Do not resend.
 
 ## Handoff
 
