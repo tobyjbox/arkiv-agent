@@ -3,7 +3,7 @@
 // result is validated and compiled like any other plan before it runs.
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import type { Dataset } from "@arkiv-agent/catalogue";
+import { cleanModelText, type Dataset } from "@arkiv-agent/catalogue";
 import { type Result, err, ok } from "@arkiv-agent/core";
 import { z } from "zod";
 import { type AskContext, rankDatasets } from "./interpret.ts";
@@ -12,6 +12,7 @@ import { type AskPlan, AskPlanSchema, type AskQuery, type AttrType, MAX_RESULTS,
 export const ASK_MODEL = process.env.ARKIV_AGENT_ASK_MODEL ?? "claude-opus-5-5";
 const CANDIDATES = 12;
 const EXAMPLE_CHARS = 40;
+const NAME_CHARS = 64;
 const ORDERED: ReadonlySet<AttrType> = new Set(["i32", "u64", "u256", "dec"]);
 
 const AnswerSchema = z.object({
@@ -43,7 +44,9 @@ export function catalogueInput(candidates: Dataset[], ctx: Pick<AskContext, "hea
     now: new Date(ctx.now).toISOString(),
     previousTurn: ctx.previous ? { datasetId: ctx.previous.datasetId, where: ctx.previous.where } : null,
     datasets: candidates.map((d) => ({
-      id: d.id, name: d.name, project: d.project.method === "label" ? d.project.label : "(unlabelled wallet)", liveRecords: d.liveCount,
+      id: d.id, name: clip(d.name, NAME_CHARS), project: d.project.method === "label" ? clip(d.project.label, NAME_CHARS) : "(unlabelled wallet)",
+      liveRecords: d.liveCount,
+      // Attribute names are at most 32 bytes on Arkiv, and must reach the model unchanged.
       attributes: d.schema.filter((f) => !f.name.includes("*")).map((f) => ({ name: f.name, type: f.type, examples: f.examples.map((e) => clip(e, EXAMPLE_CHARS)) })),
     })),
   });
@@ -68,7 +71,7 @@ export function answerToPlan(a: Answer, candidates: Dataset[]): Result<AskPlan, 
     leaves.push(c.negate ? { op: "not", term: leaf } : leaf);
   }
   const where = leaves.length === 0 ? null : leaves.length === 1 ? leaves[0]! : { op: a.match === "any" ? ("or" as const) : ("and" as const), terms: leaves };
-  const plan = { datasetId: d?.id ?? null, where, limit: Math.min(MAX_RESULTS, Math.max(1, a.limit || MAX_RESULTS)), explain: a.explain.slice(0, 3).map((e) => clip(e.replace(/\s+/g, " ").trim(), 300)) };
+  const plan = { datasetId: d?.id ?? null, where, limit: Math.min(MAX_RESULTS, Math.max(1, a.limit || MAX_RESULTS)), explain: a.explain.slice(0, 3).map((e) => cleanModelText(e, 300)) };
   const parsed = AskPlanSchema.safeParse(plan);
   return parsed.success ? ok(parsed.data) : err({ kind: "invalid", message: parsed.error.issues[0]?.message ?? "Invalid plan." });
 }

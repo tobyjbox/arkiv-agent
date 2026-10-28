@@ -26,6 +26,7 @@ export function InterpretationCard({ result, onEdit, isBusy }: { result: Interpr
         <ul className="mt-3 space-y-0.5 caption text-text-secondary">
           {plan.explain.map((e) => <li key={e}>{e}</li>)}
           {result.note && <li className="text-warn">{result.note}</li>}
+          {engine === "claude" && plan.explain.length > 0 && <li className="text-text-tertiary">Notes are model output; the query above is checked against the catalogue.</li>}
         </ul>
       )}
     </section>

@@ -1,12 +1,15 @@
 import { getOrCreateDescription } from "@arkiv-agent/catalogue";
 import { Sparkles } from "lucide-react";
+import { headers } from "next/headers";
 
 /**
  * AI summary card (design/03-catalogue.md, detail section 2). Server component in its own
  * Suspense boundary: a cached summary renders at once; a new one streams in when ready.
  */
 export async function AiSummary({ id }: { id: string }) {
-  const state = await getOrCreateDescription(id);
+  // Only a visit from ArkivAgent itself (or typed into the address bar) may call the model.
+  const site = (await headers()).get("sec-fetch-site");
+  const state = await getOrCreateDescription(id, undefined, { allowNew: site === null || site === "same-origin" || site === "none" });
   if (state.status !== "ready") {
     return (
       <div className="rounded-md border border-border-default bg-surface p-5 text-text-secondary">

@@ -45,3 +45,14 @@ test("the run API takes validated plans only, never query strings", async ({ req
   const bad = await request.post("/api/ask/run", { data: { plan: { datasetId: null, where: { op: "eq", attr: "city", type: "str", value: "x" }, limit: 5, explain: [] } } });
   expect(await bad.json()).toMatchObject({ ok: false, kind: "invalid" });
 });
+
+test("the ask APIs refuse cross-site requests (T07 M1)", async ({ request }) => {
+  const evil = "https://evil.example";
+  // What a web page can send without a CORS preflight: refused before it reaches the model.
+  const simple = await request.post("/api/ask", { headers: { "content-type": "text/plain;charset=UTF-8", origin: evil }, data: '{"question":"tankha salaries in noida"}' });
+  expect(simple.status()).toBe(415);
+  const cross = await request.post("/api/ask", { headers: { origin: evil }, data: { question: "tankha salaries in noida" } });
+  expect(cross.status()).toBe(403);
+  const run = await request.post("/api/ask/run", { headers: { origin: evil, "sec-fetch-site": "cross-site" }, data: { plan: { datasetId: null, where: null, limit: 1, explain: [] } } });
+  expect(run.status()).toBe(403);
+});

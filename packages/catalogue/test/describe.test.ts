@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { type DescribeClient, describeDataset, describeInput, schemaHash } from "../src/describe.ts";
+import { cleanModelText, type DescribeClient, describeDataset, describeInput, schemaHash } from "../src/describe.ts";
+import { createFailureBackoff } from "../src/describe-store.ts";
 import type { RecordView } from "../src/detail.ts";
 import type { Dataset } from "../src/types.ts";
 
@@ -45,5 +46,32 @@ describe("describeDataset", () => {
     expect(await describeDataset(dataset, samples, fakeClient({ stop_reason: "refusal", parsed_output: null, model: "m" }).client)).toBeNull();
     const d = await describeDataset(dataset, samples, fakeClient({ stop_reason: "end_turn", model: "m", parsed_output: { summary: "s", likelyUse: "u", suggestedName: "Not A Name!" } }).client);
     expect(d?.suggestedName).toBeNull();
+  });
+});
+
+describe("untrusted text (T07 L1, L3)", () => {
+  it("takes links and long hex out of model text before it is shown", () => {
+    const out = cleanModelText("Official treasury: send to 0x1c92087EC55B3B4114c7647ECADe3ab0b494C9b6 or visit https://evil.example/claim now", 400);
+    expect(out).toBe("Official treasury: send to [hex removed] or visit [link removed] now");
+    expect(cleanModelText("Short notes between neighbours.", 400)).toBe("Short notes between neighbours.");
+  });
+
+  it("clips dataset names and project labels sent to the model", () => {
+    const input = JSON.parse(describeInput({ ...dataset, name: "n".repeat(128), project: { ...dataset.project, label: "l".repeat(128) } }, samples));
+    expect(input.name).toHaveLength(65);
+    expect(input.project).toHaveLength(65);
+  });
+
+  it("backs off a failed description per schema: 1 h, then 2 h, and resets on a new schema", () => {
+    let t = 0;
+    const b = createFailureBackoff(() => t);
+    b.failed("d1", "h1");
+    expect(b.isWaiting("d1", "h1")).toBe(true);
+    t = 3_600_000;
+    expect(b.isWaiting("d1", "h1")).toBe(false);
+    b.failed("d1", "h1");
+    t += 3_600_000;
+    expect(b.isWaiting("d1", "h1")).toBe(true);
+    expect(b.isWaiting("d1", "h2")).toBe(false);
   });
 });
