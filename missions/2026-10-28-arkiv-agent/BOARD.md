@@ -1,4 +1,4 @@
-**Mission progress:** 15 tasks — 8 merged, 1 ready, 6 draft (T10-T12 stretch) · updated 2026-10-28T22:37:00Z
+**Mission progress:** 15 tasks — 9 merged, 1 ready, 5 draft (T10-T12 stretch) · updated 2026-10-28T22:41:56Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -15,6 +15,6 @@
 | T10 | Stretch: ecosystem pulse | coder | frontier | draft | 0/4 | | T08, T09 | 2026-10-28T17:02:27Z |
 | T11 | Stretch: cost view | coder | frontier | draft | 0/4 | | T10 | 2026-10-28T17:02:27Z |
 | T12 | Stretch: QA + Security review of T10/T11 | qa, security_whitehat | fast, alt-frontier | draft | 0/3 | | T11 | 2026-10-28T17:02:27Z |
-| T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | ready | 0/3 | | T07 | 2026-10-28T22:34:47Z |
-| T14 | Fix T06 findings: F1 Ask rules drop conditions, F2 'is false' negation, F3 owner-only binds wrong project; F5 e2e port/reuse, F6 time-dependent e2e, F7 verify values | coder | frontier | draft | 0/3 | | T06, T13 | 2026-10-28T22:37:00Z |
+| T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T07 | 2026-10-28T22:41:56Z |
+| T14 | Fix T06 findings: F1 Ask rules drop conditions, F2 'is false' negation, F3 owner-only binds wrong project; F5 e2e port/reuse, F6 time-dependent e2e, F7 verify values | coder | frontier | ready | 0/3 | | T06, T13 | 2026-10-28T22:41:56Z |
 | T15 | QA re-check: fresh blind Ask set (>= 80%) + T13/T14 fixes | qa | fast | draft | 0/3 | | T14 | 2026-10-28T22:37:00Z |
