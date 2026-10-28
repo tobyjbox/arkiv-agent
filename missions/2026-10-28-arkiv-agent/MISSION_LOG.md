@@ -17,3 +17,4 @@
 - 2026-10-28T17:31:20Z HANDOFF T01@736a733 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/spike@736a733:missions/2026-10-28-arkiv-agent/tasks/T01-spike.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-28T17:31:20Z HANDOFF T01@736a733 adjudicated: accepted; integrated 73dba90; row -> merged 548a491
 - 2026-10-28T17:31:20Z HANDOFF T01@736a733 dispatched: T03 (draft -> ready, coder nudged)
+- 2026-10-28T17:31:35Z NUDGE T03 -> arkiv-agent_coder_claude-code_opus-5.5-extra no-watcher; session message sent
