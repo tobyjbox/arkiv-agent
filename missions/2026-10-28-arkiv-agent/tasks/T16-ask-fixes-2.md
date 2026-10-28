@@ -31,6 +31,7 @@
   fixed ("up" refused as a value because it starts "up to"; "arkiv" in a record kind named the dataset; presence not
   expressible); presence ("without a parent_key") added as Arkiv EXISTS. Vitest 500, Playwright 9.
 - 2026-10-28T23:10:30Z Flipped to review, candidate 9127e8a. Notification intent: key `2026-10-28-arkiv-agent:T16@9127e8a:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
+- 2026-10-28T23:10:47Z Notification result for `2026-10-28-arkiv-agent:T16@9127e8a:review`: sent once via SendMessage to local_<session>; tool reported delivered, message_id <id>. Do not resend.
 
 ## Handoff
 
