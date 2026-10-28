@@ -1,0 +1,21 @@
+{
+  "name": "arkiv-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p ${PORT:-3101}",
+    "build": "next build",
+    "start": "next start -p ${PORT:-3101}",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@arkiv-agent/core": "workspace:*",
+    "next": "^15.5.28",
+    "react": "^19.1.10",
+    "react-dom": "^19.1.10"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}
