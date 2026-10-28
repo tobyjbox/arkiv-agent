@@ -86,4 +86,6 @@ become new draft rows. Orchestrator is sole merger.
 
 ## Amendments
 
-(none)
+
+
+- 2026-10-28T17:31:20Z (T01 findings, no-go rule): read-all and history are Go; history starts at Tiramisu genesis 2026-10-01, so T10 cohorts cover only Tiramisu-era events (pre-Oct hackathons out). DB is SQLite via Prisma (docs/PLAN.md still says Postgres; mission PLAN governs). Fees show no lifetime dependence; own controlled test needs a wallet (optional). Optional ARKIV_API_KEY speeds T03's first backfill (~1 h without).

@@ -14,3 +14,4 @@
 - 2026-10-28T17:10:46Z HANDOFF T09@f64c9ad adjudicated: accepted; integrated 0194123; row -> merged 31bcffc
 - 2026-10-28T17:10:46Z HANDOFF T09@f64c9ad dispatched: none eligible (T10 waits on T08)
 - 2026-10-28T17:11:02Z CHASE T01 -> arkiv-agent_coder_claude-code_opus-5.5-extra: unclaimed since dispatch (worker respawned); session message delivered <id>
+- 2026-10-28T17:31:20Z HANDOFF T01@736a733 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/spike@736a733:missions/2026-10-28-arkiv-agent/tasks/T01-spike.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low

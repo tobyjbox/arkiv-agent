@@ -1,11 +1,11 @@
-**Mission progress:** 12 tasks — 2 merged, 1 ready, 9 draft (T10-T12 stretch) · updated 2026-10-28T17:10:46Z
+**Mission progress:** 12 tasks — 3 merged, 1 ready, 8 draft (T10-T12 stretch) · updated 2026-10-28T17:31:20Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
 |---|---|---|---|---|---|---|---|---|
-| T01 | Spike: scaffold, read checks, history, fees, DB choice | coder | frontier | ready | 0/4 | | — | 2026-10-28T17:02:27Z |
+| T01 | Spike: scaffold, read checks, history, fees, DB choice | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-28T17:31:20Z |
 | T02 | Visual system + catalogue/Ask specs (dark, feels live) | ux_designer | fast | merged | 4/4 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | — | 2026-10-28T17:08:33Z |
-| T03 | Indexer + change feed | coder | frontier | draft | 0/4 | | T01 | 2026-10-28T17:02:27Z |
+| T03 | Indexer + change feed | coder | frontier | ready | 0/4 | | T01 | 2026-10-28T17:31:20Z |
 | T04 | Data catalogue | coder | frontier | draft | 0/4 | | T02, T03 | 2026-10-28T17:02:27Z |
 | T05 | Ask Arkiv + eval | coder | frontier | draft | 0/4 | | T04 | 2026-10-28T17:02:27Z |
 | T06 | QA review of slice | qa | fast | draft | 0/3 | | T05 | 2026-10-28T17:02:27Z |
