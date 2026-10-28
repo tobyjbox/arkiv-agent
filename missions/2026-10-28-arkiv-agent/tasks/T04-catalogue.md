@@ -10,7 +10,7 @@
 - ../BRIEF.md, ../PLAN.md, docs/PLAN.md (technical design)
 
 ## Milestones
-- [ ] inference + grouping
+- [x] inference + grouping
 - [ ] pages per T02
 - [ ] AI descriptions (cached)
 - [ ] live updates + tests
@@ -21,5 +21,6 @@
 - [ ] Vitest for inference/ownership; Playwright smoke per page
 
 ## Progress log
+- 2026-10-28T18:03:18Z Claimed on feat/catalogue (847b6d0), in-progress (cf7cbce). Inference + grouping in @arkiv-agent/catalogue with Vitest (28 tests total). Reads the shared T03 index via DATABASE_URL (absolute path, local .env). On the live index: 188 datasets, 76 projects (load generators excluded); 30k live records still awaiting T03 decode.
 
 ## Handoff
