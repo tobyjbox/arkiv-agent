@@ -24,6 +24,7 @@
 ## Progress log
 - 2026-10-28T17:07:37Z claimed (a22acd1); read BRIEF, PLAN, docs/PLAN.md.
 - 2026-10-28T17:07:37Z all 4 milestones reached: design/01..04 + README written; palette contrast checked against WCAG 2.1 AA.
+- 2026-10-28T17:07:47Z -> review, candidate=dc160e149f9d2ca08f8e1fd0ff6019cb3ed3fd04. Notify intent: event=review, key=T02+dc160e1+review, recipient=local_<session> (ak-orch.sh thread arkiv-agent), route=Claude Code session route send_message, attempt=pending.
 
 ## Handoff
 - **What changed:** new `design/` folder: `README.md` (index + rationale), `01-visual-system.md` (dark tokens: colour, type, spacing, radius, elevation, motion, icons, a11y baseline), `02-feels-live.md` (sync indicator, skeletons, number roll, row transitions, streaming/optimistic UI, announcements, freshness), `03-catalogue.md` (app shell, /catalogue, /catalogue/[id], all states, responsive), `04-ask-arkiv.md` (flow, interpretation chips, result tabs, all states, responsive).
