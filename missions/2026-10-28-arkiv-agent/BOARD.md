@@ -15,4 +15,4 @@
 | T10 | Stretch: ecosystem pulse | coder | frontier | draft | 0/4 | | T08, T09 | 2026-10-28T17:02:27Z |
 | T11 | Stretch: cost view | coder | frontier | draft | 0/4 | | T10 | 2026-10-28T17:02:27Z |
 | T12 | Stretch: QA + Security review of T10/T11 | qa, security_whitehat | fast, alt-frontier | draft | 0/3 | | T11 | 2026-10-28T17:02:27Z |
-| T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | in-progress | 0/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T07 | 2026-10-28T22:35:54Z |
+| T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | review | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T07 | 2026-10-28T22:41:08Z |
