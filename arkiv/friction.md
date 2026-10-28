@@ -78,12 +78,18 @@ queries and spot checks, because it has its own small anonymous budget.
 - **What would fix it:** a documented `ALL` query, or a note that bounding `$expiresAt` at the read block
   is the fast form.
 
-## 4. Issue: `eth_getLogs` range limit is not stated in the error
+## 4. Mixed: `eth_getLogs` caps results, and viem's default response cap trips first
 
-- **Actual:** 5,000-block spans work (~9.9k logs, 0.44 s); 10,000 fails with "Invalid parameters were
-  provided to the RPC method" and no limit named.
-- **Steps:** `pnpm spike:history` (span probe).
-- **What would fix it:** name the max block span (or max results) in the error and the RPC docs.
+- **Actual:** the node caps a call at 20,000 results, not a block span. The raw error is helpful:
+  `query exceeds max results 20000, retry with the range 725001-729209`. viem surfaces it as
+  "Invalid parameters were provided to the RPC method" and keeps the node's text only in `cause`, which
+  is why the T01 spike misread it as a span limit. Separately, a full 20,000-log page is ~10.5 MB, just
+  over viem's default 10 MB `maxResponseBodySize`, so following the node's own hint fails with
+  `ResponseBodyTooLargeError` unless the cap is raised.
+- **Steps:** `pnpm index` on a fresh database (dense blocks around 725,000).
+- **Impact:** a backfill stopped twice before the indexer learned to split on both errors.
+- **What would fix it:** document the result cap in the RPC docs; keep the retry hint (it is good).
+  In SDK docs, mention raising viem's response cap for log backfills.
 
 ## 5. Worked: full history from genesis
 

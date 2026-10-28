@@ -16,3 +16,7 @@ next-env.d.ts
 data/
 
 .DS_Store
+
+# generated at install (prisma generate)
+packages/db/src/generated/
+*.lock

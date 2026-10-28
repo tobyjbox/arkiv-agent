@@ -15,7 +15,9 @@
     "spike:history": "pnpm --filter @arkiv-agent/indexer spike:history",
     "spike:fees": "pnpm --filter @arkiv-agent/indexer spike:fees",
     "spike:logs": "pnpm --filter @arkiv-agent/indexer spike:logs",
-    "spike:decode": "pnpm --filter @arkiv-agent/indexer spike:decode"
+    "spike:decode": "pnpm --filter @arkiv-agent/indexer spike:decode",
+    "index": "pnpm --filter @arkiv-agent/indexer start",
+    "index:verify": "pnpm --filter @arkiv-agent/indexer verify"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

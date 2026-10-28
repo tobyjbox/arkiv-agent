@@ -20,7 +20,8 @@ export function createArkivClient(
   const fetchOptions = apiKey ? { headers: { "X-API-KEY": apiKey } } : undefined;
   return createPublicClient({
     chain: tiramisu,
-    transport: http(rpcUrl, { retryCount: 5, retryDelay: 400, timeout: 30_000, ...(fetchOptions && { fetchOptions }) }),
+    // A full 20,000-log page is ~11 MB, over viem's 10 MB default response cap.
+    transport: http(rpcUrl, { retryCount: 5, retryDelay: 400, timeout: 30_000, maxResponseBodySize: 32 * 1024 * 1024, ...(fetchOptions && { fetchOptions }) }),
   });
 }
 
