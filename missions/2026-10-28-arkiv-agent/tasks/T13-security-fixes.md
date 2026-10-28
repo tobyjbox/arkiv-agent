@@ -25,6 +25,7 @@
 - 2026-10-28T22:40:47Z All three milestones. Candidate acccb24. Vitest 62 (was 52), Playwright 8 (was 7). Checked on the
   running build: LAN address refuses connections, a foreign Host gets 421, a text/plain cross-origin POST gets 415;
   ARKIV_AGENT_ALLOWED_HOSTS checked on a temporary server (listed host 200, other 421).
+- 2026-10-28T22:41:16Z Flipped to review (3d29106), candidate acccb24. Notification intent: key `2026-10-28-arkiv-agent:T13@acccb24:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
 
 ## Handoff
 
