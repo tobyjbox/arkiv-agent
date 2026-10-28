@@ -11,7 +11,7 @@
 
 ## Milestones
 - [x] AskQuery + Zod + compiler
-- [ ] prompt + live read
+- [x] prompt + live read (Claude path behind ANTHROPIC_API_KEY, tested with a fake client; rules path default)
 - [ ] UI per T02
 - [x] 20-question eval (no-key path, per A01)
 
@@ -31,5 +31,10 @@
   run 11/15 (73%); misses were inflections ("withdrawals"/"withdraw", "challenge"/"challenges"), a compound
   ("downvotes") and "shift 2". After general fixes 15/15 (no longer held out). Live checks on Tiramisu: tankha/noida
   262 ms, bijlilog cuts > 3 h 303 ms; `$expiresAt` bounds take ~7 s (friction.md item 12). Vitest 11/11 in the package.
+- 2026-10-28T22:20:25Z Milestone 2: Claude path (`claude.ts`) behind the key: Opus 5.5 at low effort with server-side
+  fallback (same request shape as T04 descriptions, which is known-good; PLAN said Sonnet 5.5, ARKIV_AGENT_ASK_MODEL overrides),
+  flat structured output, 12 candidate datasets from the catalogue ranker, on-chain text framed as data; attribute types
+  always taken from the catalogue and every plan validated and compiled before running. API unreachable -> rules answer
+  with a note. Example questions are generated from live datasets and checked to interpret back to them. 51 tests pass (17 in packages/ask).
 
 ## Handoff

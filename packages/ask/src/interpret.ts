@@ -401,3 +401,16 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
   }
   return ok({ datasetId: dataset?.id ?? null, where, limit, explain: explain.slice(0, 6) });
 }
+
+/** Datasets the question points at, best first, topped up with the largest ones (the model's candidates). */
+export function rankDatasets(question: string, datasets: Dataset[], n = 12): Dataset[] {
+  const tokens = tokenize(question);
+  const byScore = datasets
+    .map((d) => ({ d, ...scoreDataset(d, tokens) }))
+    .filter((r) => r.score > 0 && (!r.d.isLoadGenerator || r.score >= 10))
+    .sort((a, b) => b.score - a.score || b.d.liveCount - a.d.liveCount)
+    .map((r) => r.d);
+  const seen = new Set(byScore.map((d) => d.id));
+  const largest = datasets.filter((d) => !d.isLoadGenerator && !seen.has(d.id)).sort((a, b) => b.liveCount - a.liveCount);
+  return [...byScore, ...largest].slice(0, n);
+}
