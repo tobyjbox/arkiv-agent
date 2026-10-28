@@ -129,3 +129,11 @@ lifetime. Their attribute names carry random suffixes (`random_number_0_<hex>`),
 looks like a new schema. Arkiv's indexer repo runs "baseload" fleets, which fits. The catalogue and
 pulse must detect and exclude them by default (`docs/PLAN.md` risk table). Some live entities expire
 at `u64` max (`0xffffffffffffffff`).
+
+## 11. Observation: some entities are patched thousands of times
+
+Patches are deltas, so an off-chain replica rebuilds attributes by replaying the create and every
+patch. 17 live entities have over 25 patches each (21,067 in all; the most, 3,045). Replaying those
+from calldata exceeds the public rate limit, so ArkivAgent reads their current state with one `getEntity`
+instead. **What would help:** a cheap "attributes at block N" read that does not draw on the small
+anonymous query budget, or a snapshot event every N patches.

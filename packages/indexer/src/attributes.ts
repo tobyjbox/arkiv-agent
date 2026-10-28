@@ -75,3 +75,14 @@ function lastCharBoundary(bytes: Uint8Array): number {
   }
   return bytes.length;
 }
+
+/** An entity's state from an SDK read (`getEntity`), in the same canonical text as calldata decoding. */
+export function stateFromSdk(entity: { attributes?: Readonly<Record<string, { type: string; value: unknown }>> | undefined; payload?: Uint8Array | undefined; contentType?: string | undefined }): EntityState {
+  const attrs = new Map<string, Attr>();
+  for (const [name, v] of Object.entries(entity.attributes ?? {})) {
+    if (v.type === "bytes" || !Object.values(TYPE_TAGS).includes(v.type as TypeTag)) continue;
+    const text = typeof v.value === "string" ? v.value : String(v.value);
+    attrs.set(name, { type: v.type as Attr["type"], value: ["addr", "bytes32", "key"].includes(v.type) ? text.toLowerCase() : text });
+  }
+  return { attrs, contentType: entity.contentType ?? null, payload: entity.payload ?? null };
+}
