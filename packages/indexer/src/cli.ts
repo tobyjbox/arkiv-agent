@@ -56,8 +56,11 @@ async function enrich(maxBatches: number, batchSize: number) {
 }
 
 if (!isWatch) {
-  await syncTick(false);
-  await enrich(Number.POSITIVE_INFINITY, 200);
+  // Decoding can take a while on the public RPC; a second pass catches up the blocks it took.
+  for (const isQuiet of [false, true]) {
+    await syncTick(isQuiet);
+    await enrich(Number.POSITIVE_INFINITY, 200);
+  }
   console.log("done");
 } else {
   let backoff = TICK_MS;

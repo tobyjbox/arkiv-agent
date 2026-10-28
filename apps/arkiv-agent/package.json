@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@arkiv-agent/core": "workspace:*",
+    "@arkiv-agent/db": "workspace:*",
+    "@prisma/adapter-better-sqlite3": "7.10.1",
+    "better-sqlite3": "^12.11.1",
     "next": "^15.5.28",
     "react": "^19.1.10",
     "react-dom": "^19.1.10"

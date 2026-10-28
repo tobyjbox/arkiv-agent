@@ -19,6 +19,7 @@ describe("suggestedEnd", () => {
   it("follows the node's retry hint, else halves, else gives up", () => {
     expect(suggestedEnd(err("query exceeds max results 20000, retry with the range 725001-729209"), 725_001n, 730_000n)).toBe(729_209n);
     expect(suggestedEnd(err("query exceeds max results 20000"), 0n, 100n)).toBe(50n);
+    expect(suggestedEnd(new Error("HTTP response body exceeded the size limit."), 0n, 100n)).toBe(50n);
     expect(suggestedEnd(err("rate limited"), 0n, 100n)).toBeNull();
   });
 });

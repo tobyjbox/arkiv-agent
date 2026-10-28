@@ -47,10 +47,13 @@ export function toEvents(logs: readonly RawLog[]): EntityEvent[] {
   });
 }
 
-/** The node's "query exceeds max results 20000, retry with the range A-B" error, if this is one. */
+/**
+ * Where to split a span that returned too much: the node's "query exceeds max results 20000, retry
+ * with the range A-B" hint, else the midpoint (also for an over-size response). Null: not that error.
+ */
 export function suggestedEnd(error: unknown, from: bigint, to: bigint): bigint | null {
   const text = error instanceof Error ? `${error.message} ${String((error as { cause?: { message?: string } }).cause?.message ?? "")}` : String(error);
-  if (!/exceeds max results/.test(text) || from >= to) return null;
+  if (!/exceeds max results|exceeded the size limit/.test(text) || from >= to) return null;
   const end = /retry with the range \d+-(\d+)/.exec(text)?.[1];
   const hinted = end ? BigInt(end) : null;
   return hinted !== null && hinted >= from && hinted < to ? hinted : from + (to - from) / 2n;
