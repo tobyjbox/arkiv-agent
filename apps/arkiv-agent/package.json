@@ -11,6 +11,7 @@
     "screenshot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
+    "@arkiv-agent/ask": "workspace:*",
     "@arkiv-agent/catalogue": "workspace:*",
     "@arkiv-agent/core": "workspace:*",
     "@arkiv-agent/db": "workspace:*",
@@ -21,7 +22,8 @@
     "lucide-react": "^1.63.0",
     "next": "^15.5.28",
     "react": "^19.1.10",
-    "react-dom": "^19.1.10"
+    "react-dom": "^19.1.10",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

@@ -330,7 +330,8 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       const fieldUnit = durationUnit(field);
       if (secsPer && fieldUnit) {
         const converted = (value * secsPer) / fieldUnit;
-        explain.push(`${value} ${unitWord} = ${converted} in ${field.name}.`);
+        const unitName = { 0.001: "milliseconds", 1: "seconds", 60: "minutes", 3600: "hours", 86400: "days" }[fieldUnit] ?? "its unit";
+        explain.push(`${value} ${unitWord} = ${converted} ${unitName} (${field.name}).`);
         value = converted;
         unitWord = undefined;
       }

@@ -1,0 +1,27 @@
+import type { AskContext, AskPlan } from "@arkiv-agent/ask";
+import { type Dataset, loadCatalogue } from "@arkiv-agent/catalogue";
+import { type ArkivClient, createArkivClient } from "@arkiv-agent/core";
+
+/** What the Ask screen needs about the chosen dataset: names, and table columns in schema order. */
+export type DatasetBrief = { id: string; name: string; project: string; liveCount: number; columns: { name: string; type: string }[] };
+
+export function brief(d: Dataset): DatasetBrief {
+  const skip = new Set([d.project.labelAttr, d.discriminator?.name]);
+  return {
+    id: d.id, name: d.name, liveCount: d.liveCount,
+    project: d.project.method === "label" ? d.project.label : `${d.project.label.slice(0, 8)}…${d.project.label.slice(-4)}`,
+    columns: d.schema.filter((f) => !skip.has(f.name) && !f.name.includes("*")).map(({ name, type }) => ({ name, type })),
+  };
+}
+
+export function askContext(scope: string | null = null, previous: AskPlan | null = null): AskContext {
+  const { datasets, summary } = loadCatalogue();
+  return { datasets, head: summary.indexedBlock, now: Date.now(), scope, previous };
+}
+
+/** Arkiv's Data Explorer runs the same query string from `?q=` (checked 2026-10-28). */
+export const explorerUrl = (query: string) => `https://data.arkiv.network/?q=${encodeURIComponent(query)}`;
+
+let client: ArkivClient | null = null;
+/** Public, read-only client: no wallet, so Ask can only read. */
+export const arkiv = () => (client ??= createArkivClient());

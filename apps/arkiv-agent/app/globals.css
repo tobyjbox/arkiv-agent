@@ -66,6 +66,12 @@
 .row-in { animation: row-in 240ms var(--ease-decel); }
 .flash { animation: flash 2000ms ease-out; }
 .fade-in { animation: fade-in 160ms var(--ease-decel); }
+/* Pattern 2 skeleton sweep. */
+.shimmer::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-text-primary) 6%, transparent), transparent);
+  animation: shimmer 1400ms ease-in-out infinite;
+}
 .hero-glow {
   background: radial-gradient(450px 260px at 50% 0%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 60%);
 }

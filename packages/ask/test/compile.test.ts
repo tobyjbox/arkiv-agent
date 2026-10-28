@@ -50,6 +50,14 @@ describe("compile", () => {
     for (const where of bad) expect(compile({ where, limit: 50 }, salary).ok, JSON.stringify(where)).toBe(false);
   });
 
+  it("only allows owner, creator and key lookups across all datasets", () => {
+    const owner = { op: "eq", attr: "$owner", type: "addr", value: "0x1c92087EC55B3B4114c7647ECADe3ab0b494C9b6" } as const;
+    expect(compile({ where: owner, limit: 50 }, null).ok).toBe(true);
+    expect(compile({ where: { op: "eq", attr: "city", type: "str", value: "noida" }, limit: 50 }, null).ok).toBe(false);
+    expect(compile({ where: { op: "lte", attr: "$expiresAt", type: "u64", value: "1" }, limit: 50 }, null).ok).toBe(false);
+    expect(compile({ where: { op: "not", term: owner }, limit: 50 }, null).ok).toBe(false);
+  });
+
   it("rejects malformed plans at the schema", () => {
     expect(AskPlanSchema.safeParse({ datasetId: null, where: { op: "eq", attr: "a", type: "float", value: "1" }, limit: 50, explain: [] }).success).toBe(false);
     expect(AskPlanSchema.safeParse({ datasetId: null, where: null, limit: 500, explain: [] }).success).toBe(false);

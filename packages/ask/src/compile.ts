@@ -7,6 +7,11 @@ import type { AskPlan, AskQuery, AttrType, Comparison } from "./query.ts";
 const J = JSON.stringify;
 const OPS = { eq, ne, gt, gte, lt, lte } as const;
 const HEX = /^0x[0-9a-fA-F]+$/;
+const CROSS_DATASET = new Set(["$owner", "$creator", "$key"]);
+
+/** Equality on owner, creator or key (or several of them): the only queries that run without a dataset. */
+const isLookup = (q: AskQuery): boolean =>
+  q.op === "and" || q.op === "or" ? q.terms.every(isLookup) : q.op === "eq" && CROSS_DATASET.has(q.attr);
 
 /** The typed SDK value for a condition, and the code that builds it. Throws on a value the type can't hold. */
 function typedValue(type: AttrType, v: string): { value: Parameters<typeof eq>[1]; code: string } {
@@ -64,6 +69,10 @@ export type Compiled = { expression: Expression; query: string; typescript: stri
  * attribute type can't hold, a name that can't exist) come back as a message: never run them.
  */
 export function compile(plan: Pick<AskPlan, "where" | "limit">, dataset: Dataset | null): Result<Compiled, string> {
+  // Across all datasets only who-wrote-it lookups run: anything else would scan the whole chain.
+  if (!dataset && plan.where && !isLookup(plan.where)) {
+    return err("Choose a dataset first: across all datasets Ask only looks up records by $owner, $creator or $key.");
+  }
   try {
     const preds = [...(dataset ? datasetPredicates(dataset) : []), ...(plan.where ? [toPredicate(plan.where)] : [])];
     if (!preds.length) return err("The question has no conditions to query on.");
