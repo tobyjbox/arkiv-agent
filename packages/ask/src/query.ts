@@ -59,5 +59,5 @@ export function leaves(q: AskQuery | null): (Comparison | Prefix)[] {
   if (!q) return [];
   if (q.op === "not") return leaves(q.term);
   if (q.op === "and" || q.op === "or") return q.terms.flatMap(leaves);
-  return [q];
+  return [q as Comparison | Prefix];
 }

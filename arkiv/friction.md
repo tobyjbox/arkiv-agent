@@ -137,3 +137,13 @@ patch. 17 live entities have over 25 patches each (21,067 in all; the most, 3,04
 from calldata exceeds the public rate limit, so ArkivAgent reads their current state with one `getEntity`
 instead. **What would help:** a cheap "attributes at block N" read that does not draw on the small
 anonymous query budget, or a snapshot event every N patches.
+
+## 12. Friction: `$expiresAt` ranges are slow, and creation time can't be filtered
+
+Ask Arkiv turns "expiring in the next 24 hours" into `$expiresAt <= u64(head + 43200)`. On Tiramisu
+(2026-10-28, anonymous), `app = str('tideland') AND kind = str('sign')` returns in about 1 s; adding
+that one-sided bound takes 6.5 to 7.5 s, whichever order the terms are in. A two-sided range
+(`$expiresAt > head AND $expiresAt <= head + 43200`) did not return within 60 s. `$createdAt` is not
+indexed at all, so "created today" only works on datasets that write their own timestamp
+attribute, and ArkivAgent says so when one is missing. **What would help:** an indexed `$createdAt`
+(or creation block), and a query planner that applies the cheap equality filters before a range.

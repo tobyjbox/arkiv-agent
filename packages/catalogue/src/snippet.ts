@@ -2,7 +2,8 @@ import { addr, str } from "@arkiv-network/sdk/attr";
 import { and, eq, exists, type Expression, render, startsWith } from "@arkiv-network/sdk/query";
 import type { Dataset } from "./types.ts";
 
-type Predicate = { expr: Expression; code: string };
+/** One condition, as an SDK expression and as the SDK code that builds it. */
+export type Predicate = { expr: Expression; code: string };
 
 /**
  * The query that reads a dataset back from Arkiv, as SDK code and as the query string the node
@@ -29,12 +30,20 @@ export function datasetPredicates(d: Pick<Dataset, "project" | "discriminator" |
 }
 
 export function datasetSnippet(d: Parameters<typeof datasetPredicates>[0]): { typescript: string; query: string } {
-  const preds = datasetPredicates(d);
+  return querySnippet(datasetPredicates(d));
+}
+
+const QUERY_FNS = ["and", "or", "not", "eq", "ne", "gt", "gte", "lt", "lte", "exists", "startsWith"];
+const VALUE_FNS = ["str", "addr", "i32", "u64", "u256", "dec", "key", "bytes32"];
+
+/** Read-only SDK code and the node's query string for predicates that must all hold. */
+export function querySnippet(preds: Predicate[], limit = 50): { typescript: string; query: string } {
   if (!preds.length) return { typescript: "// This dataset has no queryable attributes.", query: "" };
   const query = render(preds.length === 1 ? preds[0]!.expr : and(preds.map((p) => p.expr)));
   const where = preds.length === 1 ? preds[0]!.code : `and(\n      ${preds.map((p) => p.code).join(",\n      ")},\n    )`;
-  const fns = [...new Set(["and", "eq", "exists", "startsWith"].filter((f) => where.includes(`${f}(`)))];
-  const attrFns = ["str", "addr"].filter((f) => where.includes(`${f}(`));
+  const uses = (f: string) => new RegExp(`(^|[^\\w$])${f}\\(`).test(where);
+  const fns = QUERY_FNS.filter(uses);
+  const attrFns = VALUE_FNS.filter(uses);
   const typescript = `import { createPublicClient } from "@arkiv-network/sdk";
 ${attrFns.length ? `import { ${attrFns.join(", ")} } from "@arkiv-network/sdk/attr";\n` : ""}import { tiramisu } from "@arkiv-network/sdk/chains";
 import { ${fns.join(", ")} } from "@arkiv-network/sdk/query";
@@ -48,7 +57,7 @@ const page = await client
   .select({ key: true, owner: true, attributes: true, payload: true })
   .where(${where})
   .atBlock(head)
-  .limit(50)
+  .limit(${limit})
   .fetch();
 
 console.log(page.entities.length, "records; more:", page.hasNextPage());
