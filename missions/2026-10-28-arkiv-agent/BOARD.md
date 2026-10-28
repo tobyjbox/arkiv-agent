@@ -8,7 +8,7 @@
 | T03 | Indexer + change feed | coder | frontier | review | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T01 | 2026-10-28T17:57:31Z |
 | T04 | Data catalogue | coder | frontier | review | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T02, T03 | 2026-10-28T20:02:29Z |
 | T05 | Ask Arkiv + eval | coder | frontier | review | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T04 | 2026-10-28T22:31:11Z |
-| T06 | QA review of slice | qa | fast | in-progress | 0/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T05 | 2026-10-28T22:32:52Z |
+| T06 | QA review of slice | qa | fast | review | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T05 | 2026-10-28T22:36:19Z |
 | T07 | Security review of slice | security_whitehat | alt-frontier | draft | 0/3 | | T05 | 2026-10-28T17:02:27Z |
 | T08 | README, friction log, demo script | coder | fast | draft | 0/3 | | T06, T07 | 2026-10-28T17:02:27Z |
 | T09 | Stretch: pulse + cost specs | ux_designer | fast | review | 3/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:10:26Z |
