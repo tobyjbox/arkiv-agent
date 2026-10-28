@@ -3,7 +3,7 @@
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
 |---|---|---|---|---|---|---|---|---|
-| T01 | Spike: scaffold, read checks, history, fees, DB choice | coder | frontier | in-progress | 1/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-28T17:22:14Z |
+| T01 | Spike: scaffold, read checks, history, fees, DB choice | coder | frontier | review | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-28T17:30:19Z |
 | T02 | Visual system + catalogue/Ask specs (dark, feels live) | ux_designer | fast | ready | 0/4 | | — | 2026-10-28T17:02:27Z |
 | T03 | Indexer + change feed | coder | frontier | draft | 0/4 | | T01 | 2026-10-28T17:02:27Z |
 | T04 | Data catalogue | coder | frontier | draft | 0/4 | | T02, T03 | 2026-10-28T17:02:27Z |
