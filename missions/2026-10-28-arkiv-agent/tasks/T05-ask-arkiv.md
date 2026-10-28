@@ -16,7 +16,8 @@
 - [ ] 20-question eval
 
 ## Acceptance criteria
-- [ ] eval >= 80% correct queries (Vitest, fixtures)
+- [ ] works with no API key (deterministic question-to-query, A01); Claude path behind ANTHROPIC_API_KEY
+- [ ] eval >= 80% correct queries on the no-key path (Vitest, fixtures)
 - [ ] read-only, limit + timeout enforced
 - [ ] shows results, query, TS snippet, Data Explorer link
 

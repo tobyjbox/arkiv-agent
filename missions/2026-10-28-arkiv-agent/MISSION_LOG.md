@@ -23,3 +23,5 @@
 - 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 dispatched: T04 (draft -> ready, coder nudged)
 - 2026-10-28T17:58:20Z NUDGE T04 -> arkiv-agent_coder_claude-code_opus-5.5-extra no-watcher; session message sent
 - 2026-10-28T18:38:25Z BLOCKED T04@0e42e3a (branch copy, 3/4): needs ANTHROPIC_API_KEY in .env; surfaced to the owner. Keep DB at worktrees/arkiv-agent-indexer/data (T03 worktree retained). The owner, directly to coder: repo private until mission complete; history rewrite needed before publishing (see T04 Handoff).
+- 2026-10-28T22:03:02Z INBOX A01 accepted: finish without Anthropic key (owner via Coder); PLAN amended
+- 2026-10-28T22:03:02Z HANDOFF T04@8b764dd detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/catalogue@8b764dd:missions/2026-10-28-arkiv-agent/tasks/T04-catalogue.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low (old key 6027a1c, pre-rewrite)
