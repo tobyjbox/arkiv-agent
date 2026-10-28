@@ -12,7 +12,7 @@
 ## Milestones
 - [x] inference + grouping
 - [x] pages per T02
-- [ ] AI descriptions (cached)
+- [x] AI descriptions (cached) — built and tested with a fake client; live generation off (no API key, the owner's call)
 - [x] live updates + tests
 
 ## Acceptance criteria
@@ -28,11 +28,13 @@
 - 2026-10-28T18:37:57Z BLOCKED on milestone 3: real AI descriptions need ANTHROPIC_API_KEY in .env. Owner of next action: the owner (add the key). Then Coder runs `pnpm describe`, checks the AI cards on list and detail pages, ticks milestone 3 and flips to review. Everything else in T04 is done and pushed (feat/catalogue @ 6027a1c).
 - 2026-10-28T18:38:06Z Notification intent: key `2026-10-28-arkiv-agent:T04@0e42e3a:blocked`; recipient Orchestrator (arkiv-agent) thread local_<session> (from `ak-orch.sh thread arkiv-agent`); route Claude Code session message; state: pending.
 - 2026-10-28T18:38:26Z Notification result for `2026-10-28-arkiv-agent:T04@0e42e3a:blocked`: sent once via SendMessage to local_<session>; tool reported delivery: delivered (turn started), message_id <id>; read not confirmed. Do not resend.
+- 2026-10-28T20:02:12Z The owner, directly: "no I am not doing that now. We need to finish without this." (re adding ANTHROPIC_API_KEY). Finishing T04 without live AI descriptions: the code stays in, off without a key; pages show the design's no-key state. Flipping blocked -> review, candidate 6027a1c.
+- 2026-10-28T20:02:29Z Decode complete (738 datasets, 288 projects). Flipped to review, candidate 6027a1c. Notification intent: key `2026-10-28-arkiv-agent:T04@6027a1c:review`; recipient Orchestrator thread local_<session>; route Claude Code session message; state: pending.
 
 ## Handoff
 
-**State:** `blocked` (milestone 3 needs ANTHROPIC_API_KEY), code at `6027a1c` on `feat/catalogue`
-(worktree `worktrees/arkiv-agent-catalogue`). Not merged.
+**Candidate:** `6027a1c` on `feat/catalogue` (worktree `worktrees/arkiv-agent-catalogue`). Not merged.
+Finished without live AI descriptions at the owner's direction (no ANTHROPIC_API_KEY): see the first deviation.
 
 **What changed**
 - `packages/catalogue` (new): dataset inference (project label or writer, then kind/type, else
@@ -54,6 +56,12 @@
 - With ANTHROPIC_API_KEY set: `pnpm describe --limit 20`, then check the AI cards.
 
 **Deviations from the specs (flagged)**
+- **Acceptance "every live dataset listed with schema, stats, description": descriptions are not
+  generated.** The owner chose to finish without an API key. The description pipeline is built and tested
+  with a fake client and turns on when ANTHROPIC_API_KEY is set (`pnpm describe` fills the cache).
+  Without it, rows show schema chips only and the detail card says "No AI summary yet. The schema below
+  is read directly from Arkiv." (the design's no-key state). T05 (Ask Arkiv) also calls Claude, so it
+  hits the same gap.
 - Activity chart offers 24h and 7d, not 30d: only 7 days of history carry decoded attributes.
 - "Open Data Explorer" links to data.arkiv.network's home page (no deep-link format known).
 - Not built yet: Ask Arkiv entries (⌘K "Ask:", "Ask Arkiv instead" in no-results; T05), the
@@ -62,7 +70,7 @@
 - AI model is claude-opus-5-5 (the design caption said Haiku as an example), configurable with
   ARKIV_AGENT_DESCRIBE_MODEL. Descriptions send the schema and 5 truncated samples only.
 - Patched entities' attributes refresh within ~5 min (re-decode throttle); the feed shows the patch at once.
-- The catalogue lists only decoded records: ~28k live records were still decoding at handoff (banner says so).
+- Decode finished: 738 datasets from 288 projects (load generators excluded); 790 of 37,186 live records are undecoded (recent creates the watch indexer picks up within seconds).
 
 **Pre-publication note (from the owner, 2026-10-28):** keep the repo private until the mission is complete.
 Before it goes public, the history needs a rewrite: mission files and docs/PLAN.md mention personal references. No secrets were found in history (checked all branches).
