@@ -18,3 +18,6 @@
 - 2026-10-28T17:31:20Z HANDOFF T01@736a733 adjudicated: accepted; integrated 73dba90; row -> merged 548a491
 - 2026-10-28T17:31:20Z HANDOFF T01@736a733 dispatched: T03 (draft -> ready, coder nudged)
 - 2026-10-28T17:31:35Z NUDGE T03 -> arkiv-agent_coder_claude-code_opus-5.5-extra no-watcher; session message sent
+- 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/indexer@1e3c621:missions/2026-10-28-arkiv-agent/tasks/T03-indexer.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 adjudicated: accepted (build + 19 tests verified; attr spot-check deferred to T06 QA: pnpm index:verify --attrs 20); integrated 535517d; row -> merged d015a31. T03 worktree kept while coder's background decode runs.
+- 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 dispatched: T04 (draft -> ready, coder nudged)
