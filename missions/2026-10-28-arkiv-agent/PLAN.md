@@ -1,6 +1,6 @@
 # Plan: ArkivAgent
 
-Mission `2026-10-28-arkiv-agent` · Status: **DRAFT, awaiting the owner's approval** · Orchestrator:
+Mission `2026-10-28-arkiv-agent` · Status: **APPROVED by the owner 2026-10-28T17:02:27Z** · Orchestrator:
 arkiv-agent_orchestrator_claude-code_opus-5.5-low
 
 Technical design: `docs/PLAN.md` (Coder). This file is the mission decomposition; where they
