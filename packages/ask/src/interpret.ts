@@ -15,6 +15,11 @@ export type AskContext = {
   scope?: string | null;
   /** The previous turn, so a follow-up ("only in Surat") narrows it. */
   previous?: AskPlan | null;
+  /**
+   * Stored text values of a dataset equal to `text` (ignoring case), across `fields`. The app looks
+   * in the whole index; without it only the catalogue's three examples per field are known.
+   */
+  lookup?: (datasetId: string, text: string, fields: readonly string[]) => { field: string; value: string; count: number }[];
 };
 
 export type NotUnderstood = { kind: "not-understood"; message: string };
@@ -27,7 +32,11 @@ const STOP = new Set(
     "live public other none new true false yes no than more less over under above below has have had")
     .split(" "),
 );
-const NEGATION = new Set(["not", "except", "excluding", "without", "isn't", "aren't", "non", "never", "exclude"]);
+const NEGATION = new Set(["not", "except", "excluding", "without", "isn't", "aren't", "non", "never", "exclude", "no", "don't", "doesn't", "didn't", "aren’t", "isn’t"]);
+/** Words that ask for data without describing it: not reported as unused. */
+const FILLER = new Set(["show", "find", "list", "get", "give", "fetch", "search", "how", "many", "count", "number", "total", "please", "every", "each", "latest", "recent", "newest", "kind", "type", "sort", "like", "also", "just", "whose", "them", "they", "it", "made", "using", "having"]);
+/** Field-name words that say where something is: "in Pune" fills one of these. */
+const PLACE_WORDS = /^(city|town|district|state|region|country|location|place|area|village|county|province|ward|lga|zone|locality|tehsil|taluk|centre|center)$/;
 const LABEL_NOISE = new Set(["v1", "v2", "v3", "test", "app", "open", "dev", "demo", "prod", "arkiv", "data"]);
 const ORDERED: ReadonlySet<AttrType> = new Set(["i32", "u64", "u256", "dec"]);
 
@@ -38,8 +47,10 @@ const COMPARATORS: [string[], Op][] = (
     ["greater than", "gt"], ["more than", "gt"], ["higher than", "gt"], ["longer than", "gt"], ["bigger than", "gt"],
     ["larger than", "gt"], ["older than", "gt"], ["at least", "gte"], ["no less than", "gte"], ["less than", "lt"],
     ["fewer than", "lt"], ["lower than", "lt"], ["shorter than", "lt"], ["smaller than", "lt"], ["at most", "lte"],
-    ["no more than", "lte"], ["up to", "lte"], ["over", "gt"], ["above", "gt"], ["exceeding", "gt"], [">", "gt"],
-    [">=", "gte"], ["under", "lt"], ["below", "lt"], ["<", "lt"], ["<=", "lte"],
+    ["no more than", "lte"], ["not more than", "lte"], ["not less than", "gte"], ["up to", "lte"], ["over", "gt"],
+    ["above", "gt"], ["exceeding", "gt"], ["exceeds", "gt"], ["after", "gt"], ["since", "gte"], ["before", "lt"],
+    ["until", "lte"], [">", "gt"], [">=", "gte"], ["≥", "gte"], ["under", "lt"], ["below", "lt"], ["<", "lt"],
+    ["<=", "lte"], ["≤", "lte"],
   ] as [string, Op][]
 )
   .map(([p, op]) => [p.split(" "), op] as [string[], Op])
@@ -58,7 +69,7 @@ export function stem(w: string): string {
   if (w.length > 4 && w.endsWith("ies")) return `${w.slice(0, -3)}y`;
   if (w.length > 4 && /(ches|shes|sses|xes)$/.test(w)) return w.slice(0, -2);
   if (w.length > 3 && w.endsWith("s") && !/(ss|us)$/.test(w)) return w.slice(0, -1);
-  if (w.length > 5 && w.endsWith("ed")) return w.slice(0, -2);
+  if (w.length > 5 && w.endsWith("ed") && !w.endsWith("eed")) return w.slice(0, -2); // "exceed" stays whole
   if (w.length > 5 && w.endsWith("ing")) return w.slice(0, -3);
   return w;
 }
@@ -149,7 +160,8 @@ function scoreDataset(d: Dataset, tokens: Token[]): { score: number; named: bool
   let label = 0;
   if (d.project.method === "label") {
     const full = d.project.label.replace(/\*$/, "").replace(/[-_.]$/, "").toLowerCase();
-    const parts = words(full).filter((w) => w.length >= 3 && !LABEL_NOISE.has(w) && !/^\d+$/.test(w));
+    // Generic words ("records" in arkiv-records-app) don't name a project.
+    const parts = words(full).filter((w) => w.length >= 3 && !LABEL_NOISE.has(w) && !STOP.has(w) && !/^\d+$/.test(w));
     tokens.forEach((t, i) => {
       if (t.low === full || t.low === d.project.label.toLowerCase()) { label = Math.max(label, 10); used.add(i); }
       else if (parts[0] && t.low === parts[0]) { label = Math.max(label, 8); used.add(i); }
@@ -161,7 +173,7 @@ function scoreDataset(d: Dataset, tokens: Token[]): { score: number; named: bool
   for (const w of nameWords) {
     const exact = tokens.findIndex((t, i) => !used.has(i) && !STOP.has(t.low) && t.stem === stem(w));
     if (exact >= 0) { name += 5; used.add(exact); continue; }
-    const prefix = w.length >= 3 ? tokens.findIndex((t, i) => !used.has(i) && t.low.length > w.length && t.low.startsWith(w)) : -1;
+    const prefix = w.length >= 3 ? tokens.findIndex((t, i) => !used.has(i) && !STOP.has(t.low) && t.low.length > w.length && t.low.startsWith(w)) : -1;
     if (prefix >= 0) { name += 3; used.add(prefix); continue; }
     // A compound ("downvotes" for votes) names the dataset but its first part may be a value: leave it free.
     if (w.length >= 3 && tokens.some((t) => t.low.length > w.length + 1 && t.stem.endsWith(stem(w)))) name += 3;
@@ -170,6 +182,30 @@ function scoreDataset(d: Dataset, tokens: Token[]): { score: number; named: bool
   const attrs = d.schema.filter((f) => !skip.has(f.name) && tokens.some((t, i) => !used.has(i) && mentions(t, f))).length;
   const values = new Set(valueHits(d, tokens, used).map((h) => h.span.join(":"))).size;
   return { score: label + name + 2 * attrs + 3 * values, named: label > 0 || name > 0, used };
+}
+
+/**
+ * Question words that are stored values of a dataset per the index lookup, beyond its three
+ * examples (counted in `scoreDataset`). Three examples per field are luck; the index is not.
+ */
+function lookupValueCount(d: Dataset, tokens: Token[], used: Set<number>, lookup: NonNullable<AskContext["lookup"]>): number {
+  const skip = datasetAttrs(d);
+  const fields = d.schema.filter((f) => f.type === "str" && !skip.has(f.name) && !f.name.includes("*")).map((f) => f.name);
+  if (!fields.length) return 0;
+  const exampleSpans = new Set(valueHits(d, tokens, used).flatMap((h) => Array.from({ length: h.span[1] - h.span[0] }, (_, k) => h.span[0] + k)));
+  const free = (k: number) => k < tokens.length && !used.has(k) && !exampleSpans.has(k) && !STOP.has(tokens[k]!.low) && !FILLER.has(tokens[k]!.low) && tokens[k]!.low !== "";
+  let count = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    if (!free(i)) continue;
+    let end = i;
+    while (end - i < 3 && free(end)) end++;
+    for (let e = end; e > i; e--) {
+      const span = tokens.slice(i, e);
+      const texts = [...new Set([" ", "_", "-"].map((sep) => span.map((t) => t.raw).join(sep)))];
+      if (texts.some((t) => lookup(d.id, t, fields).length)) { count++; i = e - 1; break; }
+    }
+  }
+  return count;
 }
 
 /** A record-time attribute and its unit, judged from its name and the magnitude of its values. */
@@ -216,6 +252,7 @@ type Cond = { attr: string; q: AskQuery; tokens: number[] };
  */
 export function interpret(question: string, ctx: AskContext): Result<AskPlan, NotUnderstood> {
   const tokens = tokenize(question);
+  const lows0 = tokens.map((t) => t.low);
   const consumed = new Set<number>();
   const conds: Cond[] = [];
   const explain: string[] = [];
@@ -227,6 +264,7 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     consumed.add(i);
     const before = tokens.slice(Math.max(0, i - 3), i).map((x) => x.low);
     const attr = before.some((w) => /^(created|creator|written|writer|wrote|made)$/.test(w)) ? "$creator" : "$owner";
+    for (let k = Math.max(0, i - 3); k < i; k++) if (/^(owned|owner|owners|created|creator|written|writer|wrote|made|by|from)$/.test(tokens[k]!.low)) consumed.add(k);
     conds.push({ attr, q: { op: "eq", attr, type: "addr", value: t.raw }, tokens: [i] });
   });
 
@@ -243,11 +281,18 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
   if (ctx.scope) {
     dataset = ctx.datasets.find((d) => d.id === ctx.scope) ?? null;
   } else {
-    const ranked = ctx.datasets
-      .map((d) => ({ d, ...scoreDataset(d, tokens.map((t, i) => (consumed.has(i) ? { ...t, low: "", stem: "" } : t))) }))
+    const visible = tokens.map((t, i) => (consumed.has(i) ? { ...t, low: "", stem: "" } : t));
+    const byScore = (a: { score: number; d: Dataset }, b: { score: number; d: Dataset }) => b.score - a.score || b.d.liveCount - a.d.liveCount;
+    let ranked = ctx.datasets
+      .map((d) => ({ d, ...scoreDataset(d, visible) }))
       .filter((r) => r.named && r.score >= 5 && (!r.d.isLoadGenerator || r.score >= 10))
-      .sort((a, b) => b.score - a.score || b.d.liveCount - a.d.liveCount);
-    const best = ranked[0];
+      .sort(byScore);
+    if (ctx.lookup) {
+      const lookup = ctx.lookup;
+      ranked = [...ranked.slice(0, 6).map((r) => ({ ...r, score: r.score + 3 * lookupValueCount(r.d, visible, r.used, lookup) })).sort(byScore), ...ranked.slice(6)];
+    }
+    // With an owner/creator address, only a clearly named dataset narrows it (else: all datasets).
+    const best = ranked[0] && (conds.length === 0 || ranked[0].score >= 8) ? ranked[0] : undefined;
     if (best) {
       dataset = best.d;
       for (const i of best.used) consumed.add(i);
@@ -267,7 +312,7 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     const skip = datasetAttrs(d);
     const fields = d.schema.filter((f) => !skip.has(f.name) && !f.name.includes("*"));
     const mentionAt = (i: number, pred: (f: SchemaField) => boolean = () => true) =>
-      consumed.has(i) ? undefined : fields.find((f) => pred(f) && mentions(tokens[i]!, f));
+      i < 0 || i >= tokens.length || consumed.has(i) ? undefined : fields.find((f) => pred(f) && mentions(tokens[i]!, f));
     const lows = tokens.map((t) => t.low);
     const isExpiry = tokens.some((t) => t.low.startsWith("expir"));
 
@@ -342,50 +387,194 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       conds.push({ attr: field.name, q: { op, attr: field.name, type: field.type, value: String(value) }, tokens: usedIdx });
     }
 
-    // Stored values named in the question: "noida", "State drug lab", "tata-aig".
+    const isFree = (k: number) => k >= 0 && k < tokens.length && !consumed.has(k);
+    const negationBefore = (k: number) => [k - 1, k - 2].filter((j) => isFree(j) && NEGATION.has(lows[j]!));
+    /** Adds `field = value` (or NOT, after "not"/"except"), using up the words it came from. */
+    const bind = (field: SchemaField, value: string, span: number[]) => {
+      const negs = negationBefore(span[0]!);
+      const eq: AskQuery = { op: "eq", attr: field.name, type: field.type, value };
+      conds.push({ attr: field.name, q: negs.length ? { op: "not", term: eq } : eq, tokens: span });
+      [...span, ...negs].forEach((k) => consumed.add(k));
+    };
+    const strFields = fields.filter((f) => f.type === "str");
+    const fieldWordStems = new Set(fields.flatMap((f) => words(f.name).filter((w) => w.length >= 3).map(stem)));
+    /** Spans of free words starting at k, longest first (up to 3), that could be one value. */
+    const runsFrom = (k: number) => {
+      let end = k;
+      while (end - k < 3 && isFree(end) && (tokens[end]!.quoted || (!STOP.has(lows[end]!) && !NEGATION.has(lows[end]!) && !fieldWordStems.has(tokens[end]!.stem) && !COMPARATORS.some(([p]) => p[0] === lows[end])))) end++;
+      return Array.from({ length: end - k }, (_, n) => Array.from({ length: end - k - n }, (_, j) => k + j));
+    };
+    const textOf = (span: number[], sep = " ") => span.map((k) => tokens[k]!.raw).join(sep);
+    /** Index lookup for a span, trying "delhi ncr" as delhi_ncr and delhi-ncr too. */
+    const lookupSpan = (span: number[], among: SchemaField[]) => {
+      if (!ctx.lookup || !among.length) return [];
+      const names = among.map((f) => f.name);
+      for (const sep of [" ", "_", "-"]) {
+        if (sep !== " " && span.length === 1) break;
+        const hits = ctx.lookup(d.id, textOf(span, sep), names);
+        if (hits.length) return hits;
+      }
+      return [];
+    };
+    const casedLike = (field: SchemaField, typed: string) => {
+      const ex = field.examples.filter((e) => /[a-z]/i.test(e));
+      if (ex.length && ex.every((e) => e === e.toUpperCase())) return typed.toUpperCase();
+      if (ex.length && ex.every((e) => e === e.toLowerCase())) return typed.toLowerCase();
+      return typed;
+    };
+
+    // Numbers after "N or more", "between A and B".
+    const orderedNear = (before: number, after: number) => {
+      for (const k of [after, after + 1]) { const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; }
+      for (let k = before; k >= Math.max(0, before - 4); k--) { const f = mentionAt(k, (x) => ORDERED.has(x.type)); if (f) return { f, k }; }
+      return null;
+    };
+    for (let i = 0; i < tokens.length; i++) {
+      if (!isFree(i)) continue;
+      if (lows[i] === "between" && isNumber(lows[i + 1] ?? "") && lows[i + 2] === "and" && isNumber(lows[i + 3] ?? "")) {
+        const hit = orderedNear(i - 1, i + 4);
+        if (!hit) continue;
+        const [a, b] = [parseNumber(lows[i + 1]!), parseNumber(lows[i + 3]!)].sort((x, y) => x - y);
+        conds.push({ attr: hit.f.name, q: { op: "gte", attr: hit.f.name, type: hit.f.type, value: String(a) }, tokens: [i] });
+        conds.push({ attr: hit.f.name, q: { op: "lte", attr: hit.f.name, type: hit.f.type, value: String(b) }, tokens: [i] });
+        [i, i + 1, i + 2, i + 3, hit.k].forEach((k) => consumed.add(k));
+      } else if (isNumber(lows[i]!) && lows[i + 1] === "or" && /^(more|above|higher|greater|over|less|below|lower|fewer|under)$/.test(lows[i + 2] ?? "")) {
+        const hit = orderedNear(i - 1, i + 3);
+        if (!hit) continue;
+        const op = /^(more|above|higher|greater|over)$/.test(lows[i + 2]!) ? "gte" : "lte";
+        conds.push({ attr: hit.f.name, q: { op, attr: hit.f.name, type: hit.f.type, value: String(parseNumber(lows[i]!)) }, tokens: [i] });
+        [i, i + 1, i + 2, hit.k].forEach((k) => consumed.add(k));
+      }
+    }
+
+    // Yes/no fields: "exceeds the limit", "where exp_ok is false", "that are not historical".
+    for (const f of fields.filter((x) => x.type === "bool")) {
+      const fw = words(f.name).map(stem);
+      for (let i = 0; i < tokens.length; i++) {
+        if (!isFree(i)) continue;
+        let end = i;
+        const seen = new Set<string>();
+        while (isFree(end) && (lows[end] === f.name.toLowerCase() || (fw.includes(tokens[end]!.stem) && !seen.has(tokens[end]!.stem)))) { seen.add(tokens[end]!.stem); end++; }
+        const whole = lows[i] === f.name.toLowerCase() || fw.every((w) => seen.has(w));
+        if (end === i || !whole) continue;
+        let k = end;
+        let value = true;
+        const used = Array.from({ length: end - i }, (_, n) => i + n);
+        if (EQUALS.has(lows[k] ?? "") || lows[k] === "are" || lows[k] === "was") used.push(k++);
+        if (lows[k] === "not" || lows[k] === "isn't") { value = !value; used.push(k++); }
+        if (/^(true|yes)$/.test(lows[k] ?? "")) used.push(k++);
+        else if (/^(false|no)$/.test(lows[k] ?? "")) { value = !value; used.push(k++); }
+        const negs = [i - 1, i - 2].filter((j) => isFree(j) && (NEGATION.has(lows[j]!) || lows[j] === "un"));
+        if (negs.length % 2) value = !value;
+        conds.push({ attr: f.name, q: { op: "eq", attr: f.name, type: "bool", value: String(value) }, tokens: used });
+        [...used, ...negs].forEach((j) => consumed.add(j));
+        break;
+      }
+    }
+
+    // Stored example values named in the question: "noida", "State drug lab", "tata-aig".
     const hits = valueHits(d, tokens, consumed).filter((h) => !skip.has(h.field.name));
     const bySpan = new Map<string, ValueHit[]>();
     for (const h of hits) bySpan.set(h.span.join(":"), [...(bySpan.get(h.span.join(":")) ?? []), h]);
     for (const group of bySpan.values()) {
       // The same text can be a value of two fields: prefer one the question names.
-      const h = group.find((g) => tokens.some((t, i) => !consumed.has(i) && mentions(t, g.field))) ?? group.sort((a, b) => b.field.presence - a.field.presence)[0]!;
+      const h = group.find((g) => tokens.some((t, i) => isFree(i) && mentions(t, g.field))) ?? group.sort((a, b) => b.field.presence - a.field.presence)[0]!;
       const span = Array.from({ length: h.span[1] - h.span[0] }, (_, k) => h.span[0] + k);
-      const negated = [1, 2].some((k) => NEGATION.has(lows[h.span[0] - k] ?? "") && !consumed.has(h.span[0] - k));
-      const eq: AskQuery = { op: "eq", attr: h.field.name, type: "str", value: h.value };
-      conds.push({ attr: h.field.name, q: negated ? { op: "not", term: eq } : eq, tokens: span });
-      span.forEach((k) => consumed.add(k));
-      const said = tokens.slice(h.span[0], h.span[1]).map((t) => t.raw).join(" ");
+      if (!span.every(isFree)) continue;
+      bind(h.field, h.value, span);
+      const said = textOf(span);
       if (said !== h.value) explain.push(`“${said}” matched the stored value ${h.field.name} = “${h.value}” (values are exact and case-sensitive).`);
     }
 
-    // "status is failed", "city: Pune", quoted values: a field named, then a value not seen in examples.
+    // A field named, then its value: "district Doda", "asset LINK", "city: Pune", "shift 2", "lender type NBFC".
+    /** Words from i that name `f` ("lender type" for lender_type), as an end index. */
+    const fieldEnd = (i: number, f: SchemaField) => {
+      const fw = words(f.name).map(stem);
+      const seen = new Set([tokens[i]!.stem]);
+      let k = i + 1;
+      while (isFree(k) && fw.includes(tokens[k]!.stem) && !seen.has(tokens[k]!.stem)) seen.add(tokens[k++]!.stem);
+      return k;
+    };
     for (let i = 0; i < tokens.length; i++) {
-      const field = mentionAt(i);
-      if (!field || field.type === "bool") continue;
-      let v = i + 1;
-      if (EQUALS.has(lows[v] ?? "")) v++;
-      const t = tokens[v];
-      if (!t || consumed.has(v) || (!t.quoted && (STOP.has(t.low) || COMPARATORS.some(([p]) => p[0] === t.low)))) continue;
-      if (!t.quoted && !EQUALS.has(lows[i + 1] ?? "") && !(ORDERED.has(field.type) && isNumber(t.low))) continue;
-      let value = t.raw;
-      if (ORDERED.has(field.type)) { if (!isNumber(t.low)) continue; value = String(parseNumber(t.low)); }
-      else if (field.type === "str") {
-        const ex = field.examples.filter((e) => /[a-z]/i.test(e));
-        if (ex.length && ex.every((e) => e === e.toUpperCase())) value = value.toUpperCase();
-        else if (ex.length && ex.every((e) => e === e.toLowerCase())) value = value.toLowerCase();
-      } else if (field.type !== "addr" && field.type !== "key" && field.type !== "bytes32") continue;
-      conds.push({ attr: field.name, q: { op: "eq", attr: field.name, type: field.type, value }, tokens: [i, v] });
-      [i, i + 1, v].forEach((k) => consumed.add(k));
+      if (!isFree(i)) continue;
+      const candidates = fields.filter((f) => f.type !== "bool" && mentions(tokens[i]!, f));
+      const field = candidates.sort((a, b) => fieldEnd(i, b) - fieldEnd(i, a) || words(a.name).length - words(b.name).length)[0];
+      if (!field) continue;
+      let k = fieldEnd(i, field);
+      const fieldSpan = Array.from({ length: k - i }, (_, n) => i + n);
+      if (EQUALS.has(lows[k] ?? "") || lows[k] === "of") k++;
+      if (!isFree(k)) continue;
+      if (ORDERED.has(field.type)) {
+        if (!isNumber(lows[k]!)) continue;
+        conds.push({ attr: field.name, q: { op: "eq", attr: field.name, type: field.type, value: String(parseNumber(lows[k]!)) }, tokens: [...fieldSpan, k] });
+        [...fieldSpan, k - 1, k].forEach((j) => j > i && consumed.add(j));
+        fieldSpan.forEach((j) => consumed.add(j));
+        continue;
+      }
+      if (field.type === "addr" || field.type === "key" || field.type === "bytes32") {
+        if (!/^0x[0-9a-f]+$/i.test(tokens[k]!.raw)) continue;
+        bind(field, tokens[k]!.raw, [...fieldSpan, k]);
+        continue;
+      }
+      if (field.type !== "str") continue;
+      const runs = runsFrom(k);
+      if (!runs.length) continue;
+      const found = runs.map((span) => ({ span, hit: lookupSpan(span, [field])[0] })).find((r) => r.hit);
+      if (found?.hit) {
+        bind(field, found.hit.value, [...fieldSpan, ...found.span]);
+        if (textOf(found.span) !== found.hit.value) explain.push(`“${textOf(found.span)}” matched the stored value ${field.name} = “${found.hit.value}”.`);
+        continue;
+      }
+      // Not a stored value: take one word (or the quoted text) as typed, cased like the examples, and say so.
+      const span = runs[runs.length - 1]!;
+      const value = tokens[span[0]!]!.quoted ? tokens[span[0]!]!.raw : casedLike(field, tokens[span[0]!]!.raw);
+      bind(field, value, [...fieldSpan, ...span]);
+      explain.push(`${field.name} = “${value}” is not among the values ArkivAgent has seen, so it may match nothing (values are exact).`);
     }
 
-    // Boolean fields named outright: "where arsenic exceeds the limit" → exceeds = true.
-    for (const f of fields.filter((x) => x.type === "bool")) {
-      const i = tokens.findIndex((t, k) => !consumed.has(k) && (t.low === f.name.toLowerCase() || (words(f.name).length === 1 && t.stem === stem(f.name.toLowerCase()))));
-      if (i < 0) continue;
-      const negated = [1, 2].some((k) => NEGATION.has(lows[i - k] ?? "") || /^(don't|doesn't|didn't|no)$/.test(lows[i - k] ?? ""));
-      conds.push({ attr: f.name, q: { op: "eq", attr: f.name, type: "bool", value: String(!negated) }, tokens: [i] });
-      consumed.add(i);
+    // Places: "in Nashik", "from Jharkhand", "at Pune" fill a place field (city, district, state…).
+    const places = strFields.filter((f) => words(f.name).some((w) => PLACE_WORDS.test(w)));
+    for (let i = 0; i < tokens.length - 1; i++) {
+      if (!/^(in|at|from|near)$/.test(lows[i]!) || !places.length) continue;
+      const runs = runsFrom(i + 1);
+      if (!runs.length) continue;
+      const found = runs.map((span) => ({ span, hits: lookupSpan(span, places) })).find((r) => r.hits.length);
+      if (found) {
+        const top = found.hits[0]!;
+        const field = places.find((f) => f.name === top.field)!;
+        bind(field, top.value, [i, ...found.span]);
+        const others = [...new Set(found.hits.slice(1).map((h) => h.field))].filter((f) => f !== top.field);
+        explain.push(`“${textOf(found.span)}” read as ${field.name} = “${top.value}”${others.length ? ` (also a value of ${others.join(", ")}; name the field to choose)` : ""}.`);
+        continue;
+      }
+      const span = runs[runs.length - 1]!;
+      const word = tokens[span[0]!]!;
+      if (places.length !== 1 || word.raw[0] !== word.raw[0]!.toUpperCase() || /^\d/.test(word.raw)) continue;
+      const field = places[0]!;
+      const value = casedLike(field, word.raw);
+      bind(field, value, [i, ...span]);
+      explain.push(`“${word.raw}” read as ${field.name} = “${value}”; ArkivAgent hasn't seen that value, so it may match nothing.`);
     }
+
+    // Any other word that is a stored value: "the pricing category", "millet".
+    for (let i = 0; i < tokens.length; i++) {
+      if (!isFree(i) || STOP.has(lows[i]!) || FILLER.has(lows[i]!) || NEGATION.has(lows[i]!)) continue;
+      const found = runsFrom(i).map((span) => ({ span, hits: lookupSpan(span, strFields) })).find((r) => r.hits.length);
+      if (!found) continue;
+      const named = found.hits.find((h) => tokens.some((t) => mentions(t, strFields.find((f) => f.name === h.field)!)));
+      const top = named ?? found.hits[0]!;
+      bind(strFields.find((f) => f.name === top.field)!, top.value, found.span);
+      if (textOf(found.span) !== top.value) explain.push(`“${textOf(found.span)}” matched the stored value ${top.field} = “${top.value}”.`);
+    }
+  }
+
+  // Never drop a word silently: whatever wasn't used is reported with the plan.
+  const fieldWords = new Set((dataset?.schema ?? []).flatMap((f) => words(f.name).map(stem)));
+  const ignored = tokens
+    .filter((t, i) => !consumed.has(i) && !STOP.has(t.low) && !FILLER.has(t.low) && /[\p{L}\p{N}]/u.test(t.low) && !fieldWords.has(t.stem))
+    .map((t) => t.raw);
+  if (tokens.some((t, i) => t.low === "many" && lows0[i - 1] === "how") || tokens.some((t) => t.low === "count")) {
+    explain.push("Arkiv has no count for a query: results come a page at a time (Load more).");
   }
 
   // Same field, several values: any of them ("CDSCO or State drug lab"). Everything else: all of them.
@@ -400,7 +589,7 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
   if (ctx.previous?.where && dataset && ctx.previous.datasetId === dataset.id && !ctx.scope) {
     where = where ? { op: "and", terms: [ctx.previous.where, where] } : ctx.previous.where;
   }
-  return ok({ datasetId: dataset?.id ?? null, where, limit, explain: explain.slice(0, 6) });
+  return ok({ datasetId: dataset?.id ?? null, where, limit, explain: explain.slice(0, 6), ignored: ignored.slice(0, 12) });
 }
 
 /** Datasets the question points at, best first, topped up with the largest ones (the model's candidates). */

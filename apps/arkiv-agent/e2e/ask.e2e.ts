@@ -56,3 +56,13 @@ test("the ask APIs refuse cross-site requests (T07 M1)", async ({ request }) => 
   const run = await request.post("/api/ask/run", { headers: { origin: evil, "sec-fetch-site": "cross-site" }, data: { plan: { datasetId: null, where: null, limit: 1, explain: [] } } });
   expect(run.status()).toBe(403);
 });
+
+test("words ArkivAgent can't use are reported, not dropped (T06 F1)", async ({ page }) => {
+  await page.goto("/ask");
+  const main = page.locator("#main");
+  const example = (await main.getByText("Try:").locator("..").getByRole("button").first().textContent())!.trim();
+  const input = main.getByLabel("Ask a question about data on Arkiv");
+  await input.fill(`${example} zebrafish`);
+  await input.press("Enter");
+  await expect(main.getByRole("region", { name: "Interpretation" }).getByText(/Not used: “zebrafish”/)).toBeVisible();
+});

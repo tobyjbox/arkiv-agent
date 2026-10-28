@@ -1,9 +1,11 @@
 // `pnpm index:verify`: does the index match the chain? Read-only, so it runs beside `pnpm index
-// --watch`. Compares the live count with arkiv_getEntityCount, and with `--attrs N` spot-checks N
-// decoded live entities against getEntity (this spends the anonymous `arkiv_query` budget).
+// --watch`. Compares the live count with arkiv_getEntityCount, and with `--attrs N` spot-checks the
+// names, types and values of N decoded live entities against getEntity (this spends the anonymous
+// `arkiv_query` budget). Values are normalized as the indexer stores them (addresses lowercased).
 import { attempt, createArkivClient } from "@arkiv-agent/core";
 import { openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
+import { attributeDiff } from "./attributes.ts";
 import { createStore } from "./store.ts";
 
 const client = createArkivClient();
@@ -26,11 +28,10 @@ if (process.argv.includes("--attrs") && sample > 0) {
   for (const key of keys) {
     const r = await attempt(() => client.getEntity(key));
     if (!r.ok) { console.log(`  ${key.slice(0, 12)}… getEntity failed: ${r.error.message.slice(0, 100)}`); continue; }
-    const chain = Object.entries(r.value.attributes ?? {}).map(([name, v]) => `${name}:${(v as { type: string }).type}`).sort();
-    const ours = (attrs.all(key) as { name: string; type: string }[]).map((a) => `${a.name}:${a.type}`);
-    const isSame = chain.join() === ours.join();
+    const { chainOnly, indexOnly } = attributeDiff(r.value as Parameters<typeof attributeDiff>[0], attrs.all(key) as { name: string; type: string; value: string }[]);
+    const isSame = chainOnly.length === 0 && indexOnly.length === 0;
     matched += isSame ? 1 : 0;
-    console.log(`  ${key.slice(0, 12)}… ${isSame ? "match" : `MISMATCH chain [${chain}] index [${ours}]`}`);
+    console.log(`  ${key.slice(0, 12)}… ${isSame ? "match" : `MISMATCH chain only [${chainOnly}] index only [${indexOnly}]`}`);
   }
-  console.log(`attributes: ${matched}/${keys.length} entities match the chain's attribute names and types`);
+  console.log(`attributes: ${matched}/${keys.length} entities match the chain's attribute names, types and values`);
 }

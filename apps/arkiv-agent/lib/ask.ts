@@ -1,5 +1,5 @@
 import type { AskContext, AskPlan } from "@arkiv-agent/ask";
-import { type Dataset, loadCatalogue } from "@arkiv-agent/catalogue";
+import { type Dataset, findValues, loadCatalogue } from "@arkiv-agent/catalogue";
 import { type ArkivClient, createArkivClient } from "@arkiv-agent/core";
 
 /** What the Ask screen needs about the chosen dataset: names, and table columns in schema order. */
@@ -16,7 +16,8 @@ export function brief(d: Dataset): DatasetBrief {
 
 export function askContext(scope: string | null = null, previous: AskPlan | null = null): AskContext {
   const { datasets, summary } = loadCatalogue();
-  return { datasets, head: summary.indexedBlock, now: Date.now(), scope, previous };
+  // The rules look values up in the whole index, not just the catalogue's three examples per field.
+  return { datasets, head: summary.indexedBlock, now: Date.now(), scope, previous, lookup: findValues };
 }
 
 /** Arkiv's Data Explorer runs the same query string from `?q=` (checked 2026-10-28). */

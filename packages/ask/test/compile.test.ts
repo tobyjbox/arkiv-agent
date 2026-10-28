@@ -5,6 +5,7 @@ import { interpret } from "../src/interpret.ts";
 import { AskPlanSchema } from "../src/query.ts";
 import { evalContext } from "./eval-set.ts";
 import fixture from "./fixtures/catalogue.json" with { type: "json" };
+import { fixtureLookup } from "./lookup.ts";
 
 const datasets = fixture.datasets as unknown as Dataset[];
 const salary = datasets.find((d) => d.id === "011e76e5c32f")!;
@@ -88,5 +89,73 @@ describe("interpret", () => {
     const r = interpret("top 10 tankha salaries from the last 7 days", ctx);
     expect(r.ok && r.value.limit).toBe(10);
     expect(r.ok && JSON.stringify(r.value.where)).toContain("created_at");
+  });
+});
+
+describe("interpret: never drops a condition silently (T06 F1-F3)", () => {
+  const withLookup = { ...ctx, lookup: fixtureLookup };
+
+  it("reads 'is false' and 'not' on yes/no fields, and compiles them", () => {
+    const r = interpret("switched-off records where emergency is false", withLookup);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "emergency", type: "bool", value: "false" });
+    const c = r.ok ? compile(r.value, datasets.find((d) => d.id === r.value.datasetId)!) : null;
+    expect(c?.ok && c.value.query).toContain("emergency = false");
+    const n = interpret("nexora shifts that are not demo", withLookup);
+    expect(n.ok && n.value.where).toEqual({ op: "eq", attr: "demo", type: "bool", value: "false" });
+    const y = interpret("nexora shifts that are demo", withLookup);
+    expect(y.ok && y.value.where).toEqual({ op: "eq", attr: "demo", type: "bool", value: "true" });
+  });
+
+  it("reports words it could not use instead of dropping them", () => {
+    const r = interpret("tideland structures made of driftwood near the harbour", withLookup);
+    expect(r.ok && r.value.ignored).toEqual(expect.arrayContaining(["harbour"]));
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "material", type: "str", value: "driftwood" });
+  });
+
+  it("takes a value after a field name even when ArkivAgent hasn't seen it, and says so", () => {
+    const r = interpret("supercall calls on asset ZZTOP", withLookup);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "asset", type: "str", value: "ZZTOP" });
+    expect(r.ok && r.value.explain.join(" ")).toContain("may match nothing");
+  });
+
+  it("looks values up in the index, not just the three examples", () => {
+    const r = interpret("claim-check delisted hospitals in Nashik", withLookup);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "city", type: "str", value: "NASHIK" });
+    const without = interpret("claim-check delisted hospitals in Nashik", ctx);
+    expect(without.ok && (without.value.where !== null || without.value.ignored.includes("Nashik"))).toBe(true);
+  });
+
+  it("keeps an owner-only question across all datasets", () => {
+    const r = interpret("records owned by 0x0000000000000000000000000000000000000001", withLookup);
+    expect(r.ok && r.value).toMatchObject({ datasetId: null, where: { op: "eq", attr: "$owner" } });
+  });
+
+  it("reads 'after', 'N or more' and 'between'", () => {
+    const after = interpret("doorledger episodes with t0 after 1791500000", withLookup);
+    expect(after.ok && after.value.where).toEqual({ op: "gt", attr: "t0", type: "u64", value: "1791500000" });
+    const more = interpret("kharab links with lag_d 30 or more", withLookup);
+    expect(more.ok && more.value.where).toEqual({ op: "gte", attr: "lag_d", type: "i32", value: "30" });
+    const between = interpret("kharab links with lag_d between 10 and 20", withLookup);
+    expect(between.ok && between.value.where).toEqual({ op: "and", terms: [
+      { op: "gte", attr: "lag_d", type: "i32", value: "10" }, { op: "lte", attr: "lag_d", type: "i32", value: "20" }] });
+  });
+});
+
+describe("interpret: field names inside values", () => {
+  const synthetic = {
+    ...salary, id: "synthetic0001", name: "loan", discriminator: { name: "kind", value: "loan" },
+    project: { ...salary.project, label: "lendbook", labelAttr: "app" },
+    schema: [
+      { name: "app", type: "str", presence: 1, examples: ["lendbook"] },
+      { name: "kind", type: "str", presence: 1, examples: ["loan"] },
+      { name: "lender", type: "str", presence: 1, examples: ["ACME BANK"] },
+      { name: "lender_type", type: "str", presence: 1, examples: ["BANK"] },
+    ],
+  } as Dataset;
+  const sctx = { ...ctx, datasets: [synthetic] };
+
+  it("reads 'lender type X' as lender_type, and never takes a field's own word as a value", () => {
+    const r = interpret("lendbook loans from lender type COOP", sctx);
+    expect(r.ok && r.value.where).toEqual({ op: "eq", attr: "lender_type", type: "str", value: "COOP" });
   });
 });
