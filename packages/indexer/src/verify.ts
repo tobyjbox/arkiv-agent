@@ -2,11 +2,14 @@
 // arkiv_getEntityCount at (nearly) the same block, and with `--attrs N` spot-checks N decoded
 // live entities against getEntity (this spends the anonymous `arkiv_query` budget).
 import { attempt, createArkivClient } from "@arkiv-agent/core";
-import { openSqlite } from "@arkiv-agent/db";
+import { databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
+import { acquireIndexerLock } from "./lock.ts";
 import { createStore } from "./store.ts";
 import { openChain, syncEvents } from "./sync.ts";
 
+// Verify catches up first, so it is an indexer too: it needs the same lock.
+acquireIndexerLock(databasePath());
 const client = createArkivClient();
 const db = openSqlite();
 const store = createStore(db);

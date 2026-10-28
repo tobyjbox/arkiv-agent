@@ -16,7 +16,7 @@
     "spike:fees": "pnpm --filter @arkiv-agent/indexer spike:fees",
     "spike:logs": "pnpm --filter @arkiv-agent/indexer spike:logs",
     "spike:decode": "pnpm --filter @arkiv-agent/indexer spike:decode",
-    "index": "pnpm --filter @arkiv-agent/db migrate:deploy && pnpm --filter @arkiv-agent/indexer start",
+    "index": "pnpm --filter @arkiv-agent/indexer start",
     "index:verify": "pnpm --filter @arkiv-agent/indexer verify"
   },
   "devDependencies": {

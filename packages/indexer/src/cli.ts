@@ -4,6 +4,7 @@ import { createArkivClient } from "@arkiv-agent/core";
 import { databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
 import { createEnricher, rateLimited } from "./enrich.ts";
+import { acquireIndexerLock, migrate } from "./lock.ts";
 import { createStore, feedFloor } from "./store.ts";
 import { openChain, syncEvents } from "./sync.ts";
 
@@ -15,6 +16,8 @@ const HISTORY_BLOCKS = 7n * 43_200n;
 /** Public RPC allows 600 requests/min; leave headroom for sync. Raise with an access key. */
 const RPS = Number(process.env.ARKIV_RPS ?? (process.env.ARKIV_API_KEY ? 25 : 8));
 
+acquireIndexerLock(databasePath());
+migrate();
 const client = createArkivClient();
 const db = openSqlite();
 const store = createStore(db);
