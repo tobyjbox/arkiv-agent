@@ -53,6 +53,7 @@ function summarize(members: readonly Member[], ctx: BuildContext) {
   return {
     schema: schemaOf(basis), liveCount: live.length, writers: perWriter.size, ownership: classifyOwnership([...perWriter.values()]),
     medianLifetimeBlocks: median(finite), lastWriteBlock: members.reduce((max, m) => (m.updatedAtBlock > max ? m.updatedAtBlock : max), 0),
+    firstWriteBlock: members.reduce((min, m) => (m.createdAtBlock < min ? m.createdAtBlock : min), Number.POSITIVE_INFINITY),
     hourly24h, writes24h: hourly24h.reduce((a, b) => a + b, 0),
     contentTypes: [...new Set(basis.flatMap((m) => (m.contentType ? [m.contentType] : [])))].slice(0, 3),
     medianPayloadBytes: median(basis.flatMap((m) => (m.payloadBytes === null ? [] : [m.payloadBytes]))),

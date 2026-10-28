@@ -15,7 +15,9 @@ const MIN_REBUILD_MS = 4_000;
 type Row = { key: string; owner: string; status: Member["status"]; createdAtBlock: bigint; updatedAtBlock: bigint; expiresAt: bigint; contentType: string | null; payloadBytes: bigint | null };
 
 let connection: Database.Database | null = null;
-const db = () => {
+/** One read-only connection per process; the indexer writes through its own. */
+export const catalogueDb = () => db();
+const db = (): Database.Database => {
   if (!connection) {
     connection = new Database(databasePath(), { readonly: true, fileMustExist: true });
     connection.pragma("busy_timeout = 5000");

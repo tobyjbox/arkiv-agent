@@ -16,12 +16,16 @@ export const normalizeAttrName = (name: string) => name.replace(/([_\-.:])[0-9a-
 /** `supercall-test-1793010381266` → `supercall-test-*`: run ids and timestamps are not projects. */
 export const normalizeLabel = (label: string) => label.trim().replace(/([_\-.:])\d{10,}$/, "$1*");
 
-export function projectOf(attrs: ReadonlyMap<string, Attr>, owner: string): { method: "label" | "creator"; label: string } {
+export type Project = { method: "label" | "creator"; label: string; labelAttr: string | null; isPrefix: boolean };
+
+export function projectOf(attrs: ReadonlyMap<string, Attr>, owner: string): Project {
   for (const name of LABEL_ATTRS) {
     const a = attrs.get(name);
-    if (a?.type === "str" && a.value.trim()) return { method: "label", label: normalizeLabel(a.value) };
+    if (a?.type !== "str" || !a.value.trim()) continue;
+    const label = normalizeLabel(a.value);
+    return { method: "label", label, labelAttr: name, isPrefix: label !== a.value.trim() };
   }
-  return { method: "creator", label: owner.toLowerCase() };
+  return { method: "creator", label: owner.toLowerCase(), labelAttr: null, isPrefix: false };
 }
 
 export function discriminatorOf(attrs: ReadonlyMap<string, Attr>): { name: string; value: string } | null {

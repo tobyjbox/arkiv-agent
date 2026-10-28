@@ -5,6 +5,10 @@ export type Attribution = {
   /** The label value, or the writer's address when there is no label. */
   label: string;
   method: "label" | "creator";
+  /** The attribute that carried the label (`project`, `app`, …), for queries. */
+  labelAttr: string | null;
+  /** True when the label was normalized (run-id suffix dropped), so queries use a prefix. */
+  isPrefix: boolean;
   /** Heuristic, 0 to 1: shown so readers can judge it. */
   confidence: number;
   /** Set when unrelated wallets (no shared writers) use the same label. */
@@ -30,6 +34,7 @@ export type Dataset = {
   ownership: Ownership;
   /** Median planned lifetime of live records in blocks; null when they never expire. */
   medianLifetimeBlocks: number | null;
+  firstWriteBlock: number;
   lastWriteBlock: number;
   writes24h: number;
   /** Creates per hour, oldest first, 24 points. */

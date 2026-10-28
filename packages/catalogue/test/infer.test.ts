@@ -24,8 +24,9 @@ describe("normalization", () => {
 
 describe("attribution and grouping", () => {
   it("prefers a project label, else falls back to the writer", () => {
-    expect(projectOf(attrs({ app: "tideland" }), "0xAbC")).toEqual({ method: "label", label: "tideland" });
-    expect(projectOf(attrs({ project: ["u64", "7"] }), "0xAbC")).toEqual({ method: "creator", label: "0xabc" });
+    expect(projectOf(attrs({ app: "tideland" }), "0xAbC")).toEqual({ method: "label", label: "tideland", labelAttr: "app", isPrefix: false });
+    expect(projectOf(attrs({ project: "run-1793010381266" }), "0x1")).toMatchObject({ label: "run-*", isPrefix: true });
+    expect(projectOf(attrs({ project: ["u64", "7"] }), "0xAbC")).toEqual({ method: "creator", label: "0xabc", labelAttr: null, isPrefix: false });
   });
 
   it("splits a project by its kind/type value, else by shape", () => {
