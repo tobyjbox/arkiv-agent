@@ -10,7 +10,7 @@
 - ../BRIEF.md, ../PLAN.md, docs/PLAN.md (technical design)
 
 ## Milestones
-- [ ] scaffold (pnpm workspace, .gitignore with .env, .env.example)
+- [x] scaffold (pnpm workspace, .gitignore with .env, .env.example)
 - [ ] read checks (page all live entities, timing)
 - [ ] history + fee data checks
 - [ ] go/no-go notes + DB choice
@@ -22,5 +22,6 @@
 - [ ] explicit go/no-go per check, and what scope a no-go removes
 
 ## Progress log
+- 2026-10-28T17:22:14Z claimed (a058638), in-progress (e80676e). Scaffold done (099f29e): `pnpm build` builds core, indexer and the Next.js app; app serves a live entity count on 3101. Spike scripts written; history check run (full history from block 1); read walk and fee fit running.
 
 ## Handoff
