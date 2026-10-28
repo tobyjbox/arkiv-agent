@@ -49,4 +49,15 @@ describe("enricher", () => {
     const sigs = db.prepare(`SELECT schemaSig FROM "Entity"`).pluck().all() as string[];
     expect(sigs.every((s) => s.includes("project:str"))).toBe(true);
   });
+
+  it("samples a high-volume owner's live entities 1 in 16 by key, and skips its history", async () => {
+    const { db } = tempDb();
+    const keys = Array.from({ length: 32 }, (_, i) => `0x${i.toString(16).padStart(64, "0")}` as Hex);
+    createStore(db).applySpan(keys.map((key, i) => (
+      { kind: "created" as const, block: 10n, logIndex: i, tx: T1!, op: i, key, owner: OWNER, expiresAt: i < 16 ? 1_000n : 20n, flags: 0 }
+    )), 30n, 0n, state);
+    const enricher = createEnricher(db, async () => "0x", { busyCreates: 10 });
+    expect(enricher.pendingCount(0n)).toBe(1); // live keys 0x…00-0x…0f: only 0x…00 ends in 0
+    expect(createEnricher(db, async () => "0x").pendingCount(0n)).toBe(32);
+  });
 });

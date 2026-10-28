@@ -35,16 +35,16 @@ async function syncTick(isQuiet: boolean) {
     lastLog = performance.now();
     console.log(`  block ${to} / ${target} · ${events} events · ${secondsSince(started)}s`);
   });
-  if (r.to >= r.from && (!isQuiet || r.events > 0)) console.log(`synced ${r.from}..${r.to}: ${r.events} events in ${secondsSince(started)}s`);
+  if (r.to >= r.from && !isQuiet) console.log(`synced ${r.from}..${r.to}: ${r.events} events in ${secondsSince(started)}s`);
   return r;
 }
 
-/** Decodes attributes in batches; `maxBatches` bounds a watch tick so the feed stays fresh. */
-async function enrich(maxBatches: number, batchSize: number) {
+/** Decodes attributes in batches; returns how many entities it handled. */
+async function enrich(maxBatches: number, batchSize: number): Promise<number> {
   const indexed = store.readState()?.indexedBlock ?? 0n;
   const since = indexed > HISTORY_BLOCKS ? indexed - HISTORY_BLOCKS : 0n;
-  const total = enricher.pendingCount(since);
-  if (total === 0) return;
+  const total = maxBatches > 1 ? enricher.pendingCount(since) : batchSize;
+  if (total === 0) return 0;
   const started = performance.now();
   let done = 0;
   for (let i = 0; i < maxBatches; i++) {
@@ -56,6 +56,7 @@ async function enrich(maxBatches: number, batchSize: number) {
       console.log(`  attributes ${done} / ${total} · ${r.failed} undecodable · ~${Math.ceil((total - done) / rate / 60)} min left`);
     }
   }
+  return done;
 }
 
 if (!isWatch) {
@@ -66,16 +67,33 @@ if (!isWatch) {
   }
   console.log("done");
 } else {
-  let backoff = TICK_MS;
-  for (;;) {
-    try {
-      await syncTick(true);
-      await enrich(1, 25);
-      backoff = TICK_MS;
-    } catch (error) {
-      backoff = Math.min(backoff * 2, MAX_BACKOFF_MS);
-      console.error(`sync failed, retrying in ${backoff / 1000}s:`, error instanceof Error ? error.message : error);
+  // Two loops: sync keeps the feed within a tick of the head; decoding drains its queue alongside.
+  const loop = async (name: string, step: () => Promise<boolean>) => {
+    let backoff = TICK_MS;
+    for (;;) {
+      try {
+        const isBusy = await step();
+        backoff = TICK_MS;
+        if (isBusy) continue;
+      } catch (error) {
+        backoff = Math.min(backoff * 2, MAX_BACKOFF_MS);
+        console.error(`${name} failed, retrying in ${backoff / 1000}s:`, error instanceof Error ? error.message : error);
+      }
+      await new Promise((r) => setTimeout(r, backoff));
     }
-    await new Promise((r) => setTimeout(r, backoff));
-  }
+  };
+  const STATUS_MS = 30_000;
+  const status = () => {
+    const s = store.readState();
+    const indexed = s?.indexedBlock ?? 0n;
+    const live = db.prepare(`SELECT COUNT(*) FROM "Entity" WHERE status = 'live'`).pluck().get();
+    const queue = enricher.pendingCount(indexed > HISTORY_BLOCKS ? indexed - HISTORY_BLOCKS : 0n);
+    console.log(`${new Date().toISOString()} head ${s?.chainHead} · indexed ${indexed} · ${live} live · ${queue} to decode`);
+  };
+  status();
+  setInterval(status, STATUS_MS);
+  await Promise.all([
+    loop("sync", async () => (await syncTick(true), false)),
+    loop("decode", async () => (await enrich(1, 50)) > 0),
+  ]);
 }

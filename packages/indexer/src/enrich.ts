@@ -16,18 +16,21 @@ type PatchRef = { tx: Hex; op: number; block: bigint };
 export const BUSY_OWNER_CREATES = 5_000;
 
 /**
- * Which entities get attributes: every live one, plus recent history (created at or after
- * `sinceBlock`) from owners that are not high-volume. Everything else keeps its lifecycle only:
- * decoding a week of load-generator writes would take ~12 h at the public rate limit.
+ * Which entities get attributes: live ones, plus recent history (created at or after `sinceBlock`),
+ * from owners that are not high-volume. High-volume owners (load generators, random schemas) get a
+ * 1-in-16 sample of their live entities, by key. Everything else keeps its lifecycle only: decoding
+ * a week of load-generator writes would take ~12 h at the public rate limit.
  */
-export function createEnricher(db: Sqlite, source: InputSource) {
-  const busyOwners = db.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ${BUSY_OWNER_CREATES}`).pluck();
+export function createEnricher(db: Sqlite, source: InputSource, { busyCreates = BUSY_OWNER_CREATES } = {}) {
+  const busyOwners = db.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck();
   const pending = db.prepare(`SELECT key, createdTx, createdOp, createdAtBlock FROM "Entity" e
-    WHERE (status = 'live' OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
+    WHERE ((status = 'live' AND (key LIKE '%0' OR owner NOT IN (SELECT value FROM json_each(@busy))))
+        OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
       AND (decodedBlock IS NULL OR (decodedBlock <> -1 AND EXISTS (SELECT 1 FROM "Patch" p WHERE p.entityKey = e.key AND p.block > e.decodedBlock)))
     ORDER BY status = 'live' DESC, createdAtBlock DESC LIMIT @limit`).safeIntegers();
   const countPending = db.prepare(`SELECT COUNT(*) AS n FROM "Entity" e
-    WHERE (status = 'live' OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
+    WHERE ((status = 'live' AND (key LIKE '%0' OR owner NOT IN (SELECT value FROM json_each(@busy))))
+        OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
       AND (decodedBlock IS NULL OR (decodedBlock <> -1 AND EXISTS (SELECT 1 FROM "Patch" p WHERE p.entityKey = e.key AND p.block > e.decodedBlock)))`);
   const patches = db.prepare(`SELECT tx, op, block FROM "Patch" WHERE entityKey = ? ORDER BY block, logIndex`).safeIntegers();
   const clear = db.prepare(`DELETE FROM "Attribute" WHERE entityKey = ?`);
@@ -48,7 +51,7 @@ export function createEnricher(db: Sqlite, source: InputSource) {
     if (decodedBlock > feedFloor) announce.run({ key, decodedBlock });
   });
 
-  const busy = (sinceBlock: bigint) => JSON.stringify(busyOwners.all(sinceBlock));
+  const busy = (sinceBlock: bigint) => JSON.stringify(busyOwners.all(sinceBlock, busyCreates));
 
   /** Decodes up to `limit` entities; returns how many were written and how many failed. */
   async function run(sinceBlock: bigint, limit: number, feedFloor: bigint) {
