@@ -42,3 +42,4 @@ Setup: fresh `git clone` of review/qa-slice in a scratch dir, `cp .env.example .
 Deviations: blind Q2/Q6 expectation is my reading of plain English; I judged results on the compiled query. Q5 returned 0 rows with a correct query (not counted as a failure). Q11 ("how many") counted a pass: correct dataset; no count shown.
 Next owner: Orchestrator (add finding rows; F1/F2 to coder via T05 follow-up; F4 decision).
 - 2026-10-28T22:36:27Z notify intent: T06 review candidate=7e89549057c54fa06af78cb745c754eb50323b6b to Orchestrator local_<session> via ccd send_message; attempt 1. (Progress-log times above corrected to actual UTC.)
+- 2026-10-28T22:36:39Z notify result: delivered (message_id <id>).
