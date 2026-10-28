@@ -51,3 +51,4 @@
 - 2026-10-28T22:55:53Z HANDOFF T14@c260c44 adjudicated: accepted (487 tests verified; blind accuracy deferred to T15); integrated 4c29af3; row -> merged 81d1695
 - 2026-10-28T22:55:53Z HANDOFF T14@c260c44 dispatched: T15 (draft -> ready, QA messaged)
 - 2026-10-28T22:56:09Z NUDGE T15 -> arkiv-agent_QA_claude-code_opus-5.5-low session message sent
+- 2026-10-28T23:01:56Z HANDOFF T15@d7ef227 detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-recheck@d7ef227:missions/2026-10-28-arkiv-agent/tasks/T15-qa-recheck.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
