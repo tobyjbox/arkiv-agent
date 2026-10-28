@@ -40,3 +40,5 @@
 - 2026-10-28T22:34:47Z HANDOFF T07@0f57bd0 dispatched: T13 (new, ready, coder nudged). T08 waits on T06, T13.
 - 2026-10-28T22:34:58Z NUDGE T13 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message sent
 - 2026-10-28T22:37:00Z HANDOFF T06@7e89549 detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-slice@7e89549:missions/2026-10-28-arkiv-agent/tasks/T06-qa-slice.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-28T22:37:00Z HANDOFF T06@7e89549 adjudicated: accepted (report: F1/F2 High, F3/F5 Med, F6/F7 Low -> T14; F4 rejected: A01 is recorded in PLAN.md Amendments on main (canonical), QA read the stale integration copy; keyless no-description state accepted by A01); integrated 769e845; row -> merged 619fc0b
+- 2026-10-28T22:37:00Z HANDOFF T06@7e89549 dispatched: none eligible now (T14 waits on T13 in progress; T15 waits on T14)
