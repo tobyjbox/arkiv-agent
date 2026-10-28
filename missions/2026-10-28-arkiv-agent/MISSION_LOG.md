@@ -22,3 +22,4 @@
 - 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 adjudicated: accepted (build + 19 tests verified; attr spot-check deferred to T06 QA: pnpm index:verify --attrs 20); integrated 535517d; row -> merged d015a31. T03 worktree kept while coder's background decode runs.
 - 2026-10-28T17:58:09Z HANDOFF T03@1e3c621 dispatched: T04 (draft -> ready, coder nudged)
 - 2026-10-28T17:58:20Z NUDGE T04 -> arkiv-agent_coder_claude-code_opus-5.5-extra no-watcher; session message sent
+- 2026-10-28T18:38:25Z BLOCKED T04@0e42e3a (branch copy, 3/4): needs ANTHROPIC_API_KEY in .env; surfaced to the owner. Keep DB at worktrees/arkiv-agent-indexer/data (T03 worktree retained). The owner, directly to coder: repo private until mission complete; history rewrite needed before publishing (see T04 Handoff).
