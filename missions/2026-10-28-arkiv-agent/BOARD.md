@@ -11,7 +11,7 @@
 | T06 | QA review of slice | qa | fast | draft | 0/3 | | T05 | 2026-10-28T17:02:27Z |
 | T07 | Security review of slice | security_whitehat | alt-frontier | draft | 0/3 | | T05 | 2026-10-28T17:02:27Z |
 | T08 | README, friction log, demo script | coder | fast | draft | 0/3 | | T06, T07 | 2026-10-28T17:02:27Z |
-| T09 | Stretch: pulse + cost specs | ux_designer | fast | claimed | 0/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:08:57Z |
+| T09 | Stretch: pulse + cost specs | ux_designer | fast | review | 3/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:10:26Z |
 | T10 | Stretch: ecosystem pulse | coder | frontier | draft | 0/4 | | T08, T09 | 2026-10-28T17:02:27Z |
 | T11 | Stretch: cost view | coder | frontier | draft | 0/4 | | T10 | 2026-10-28T17:02:27Z |
 | T12 | Stretch: QA + Security review of T10/T11 | qa, security_whitehat | fast, alt-frontier | draft | 0/3 | | T11 | 2026-10-28T17:02:27Z |

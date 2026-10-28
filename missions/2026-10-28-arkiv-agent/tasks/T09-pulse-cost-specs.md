@@ -20,6 +20,7 @@
 ## Progress log
 - 2026-10-28T17:10:26Z claimed (6eeb77c); read docs/PLAN.md pulse and cost sections.
 - 2026-10-28T17:10:26Z all 3 milestones reached: design/05-pulse.md, design/06-cost.md, README index updated.
+- 2026-10-28T17:10:26Z -> review, candidate=f64c9adbef10e3e52a0448b1d00f0171d1dd5931. Notify intent: event=review, key=T09+f64c9ad+review, recipient=local_<session> (ak-orch.sh thread arkiv-agent), route=Claude Code session route send_message, attempt=pending.
 
 ## Handoff
 - **What changed:** `design/05-pulse.md` (period and load-generator controls, weekly AI summary, stat tiles, hackathon retention D7/D14/D30 with cohort list, activity chart with event markers, most-active table, states, responsive); `design/06-cost.md` (calculator with number+log-slider inputs, mandatory error range, cost-driver breakdown, illustrative-only fiat toggle, observed spend, fee-vs-lifetime and fee-vs-payload scatter with model band, finding note, states, responsive); `design/README.md` index rows.
