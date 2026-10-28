@@ -7,7 +7,9 @@
     "typecheck": "tsc -p .",
     "spike:read": "tsx --env-file-if-exists=../../.env src/spike/read-all.ts",
     "spike:history": "tsx --env-file-if-exists=../../.env src/spike/history.ts",
-    "spike:fees": "tsx --env-file-if-exists=../../.env src/spike/fees.ts"
+    "spike:fees": "tsx --env-file-if-exists=../../.env src/spike/fees.ts",
+    "spike:logs": "tsx --env-file-if-exists=../../.env src/spike/logs.ts",
+    "spike:decode": "tsx --env-file-if-exists=../../.env src/spike/decode.ts"
   },
   "dependencies": {
     "@arkiv-network/sdk": "~0.8.1",

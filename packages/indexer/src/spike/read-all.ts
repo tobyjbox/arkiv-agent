@@ -1,6 +1,6 @@
 // Spike check 1: can we page through every live entity, and how long does it take?
 // `--full` also pulls attributes and payloads (what the indexer needs), else a light projection.
-import { allLive, createArkivClient, PAGE_SIZE } from "@arkiv-agent/core";
+import { allLive, attempt, createArkivClient, PAGE_SIZE } from "@arkiv-agent/core";
 import { seconds, tally, top, writeReport } from "./report.ts";
 
 const isFull = process.argv.includes("--full");
@@ -25,7 +25,7 @@ const creators = new Map<string, number>();
 const contentTypes = new Map<string, number>();
 const signatures = new Map<string, number>();
 const pageMs: number[] = [];
-let seen = 0, payloadBytes = 0, remainingBlocks = 0n, readBlock = 0n;
+let seen = 0, payloadBytes = 0, remainingBlocks = 0n, readBlock = 0n, stoppedBy: string | null = null;
 const started = performance.now();
 
 // Pin the block: SDK 0.8.1 drops atBlock on next(), and the node rejects an unpinned cursor.
@@ -44,13 +44,16 @@ for (;;) {
   if (seen % 5000 < PAGE_SIZE) console.log(`  ${seen} entities, ${seconds(started)}s`);
   if (!page.hasNextPage()) break;
   const t = performance.now();
-  page = await page.next();
+  // The anonymous `arkiv_query` budget (HTTP 429 ANON_COST_LIMITED) can end a walk: record, stop.
+  const next = await attempt(() => page.next());
+  if (!next.ok) { stoppedBy = next.error.message.slice(0, 200); break; }
+  page = next.value;
   pageMs.push(performance.now() - t);
 }
 
 const sorted = [...pageMs].sort((a, b) => a - b);
 const result = {
-  mode: isFull ? "full" : "light", head, readBlock, entityCount, seen,
+  mode: isFull ? "full" : "light", head, readBlock, entityCount, seen, complete: stoppedBy === null, stoppedBy,
   pages: pageMs.length + 1, totalSeconds: seconds(started),
   pageMs: { p50: sorted[Math.floor(sorted.length / 2)], p95: sorted[Math.floor(sorted.length * 0.95)] },
   owners: owners.size, creators: creators.size, signatures: signatures.size,

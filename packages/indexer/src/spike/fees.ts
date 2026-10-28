@@ -1,8 +1,9 @@
 // Spike check 3 (no wallet): do fees depend on lifetime? Fit observed receipts of create-only
 // transactions: gas fee (gasUsed x price) and the node's separate `rentFee`, against lifetime
-// (expiresAt - block) and stored size. Read-only: nothing is written to the chain.
+// (expiresAt - block) and calldata size. Read-only, and eth_* only: `arkiv_query` has its own
+// small anonymous budget, so this check leaves it alone.
 import { ENTITY_EVENTS_ABI } from "@arkiv-network/sdk";
-import { ARKIV_ADDRESS, attempt, createArkivClient } from "@arkiv-agent/core";
+import { ARKIV_ADDRESS, createArkivClient } from "@arkiv-agent/core";
 import type { Hex } from "viem";
 import { writeReport } from "./report.ts";
 
@@ -12,7 +13,7 @@ const WINDOWS = [head - 600n, head - 50_000n, head - 200_000n, head - 500_000n].
 const MAX_TX_PER_WINDOW = 60;
 
 type Row = { tx: Hex; block: bigint; from: Hex; creates: number; lifetime: bigint; calldata: number;
-  storedBytes: number | null; gasFee: bigint; rentFee: bigint | null };
+  gasUsed: bigint; gasPrice: bigint; gasFee: bigint; rentFee: bigint | null };
 const rows: Row[] = [];
 
 for (const from of WINDOWS) {
@@ -29,12 +30,10 @@ for (const from of WINDOWS) {
       const raw = receipt as unknown as Record<string, unknown>;
       const created = ls.flatMap((l) => (l.eventName === "EntityCreated" ? [l.args] : []));
       const lifetime = created.reduce((s, a) => s + (a.expiresAt ?? 0n) - receipt.blockNumber, 0n) / BigInt(created.length);
-      // Stored size of a single create, if it is still live (payload + attribute values as served).
-      const single = created.length === 1 && created[0]?.entityKey ? await attempt(() => client.getEntity(created[0]!.entityKey!)) : null;
-      const storedBytes = single?.ok ? (single.value.payload?.length ?? 0) + JSON.stringify(single.value.attributes ?? {}, (_, v) => (typeof v === "bigint" ? v.toString() : v)).length : null;
       return {
         tx: hash, block: receipt.blockNumber, from: tx.from, creates: created.length, lifetime,
-        calldata: (tx.input.length - 2) / 2, storedBytes,
+        calldata: (tx.input.length - 2) / 2,
+        gasUsed: receipt.gasUsed, gasPrice: receipt.effectiveGasPrice,
         gasFee: receipt.gasUsed * receipt.effectiveGasPrice,
         rentFee: raw.rentFee === undefined || raw.rentFee === null ? null : BigInt(raw.rentFee as string | bigint),
       };
@@ -54,9 +53,14 @@ const summary = {
   head, windows: WINDOWS, sampled: rows.length, withRentFee: withRent.length,
   distinctSenders: new Set(rows.map((r) => r.from)).size,
   distinctLifetimes: new Set(rows.map((r) => r.lifetime)).size,
+  lifetimeBlocks: { min: rows.reduce((m, r) => (r.lifetime < m ? r.lifetime : m), rows[0]?.lifetime ?? 0n), max: rows.reduce((m, r) => (r.lifetime > m ? r.lifetime : m), 0n) },
+  gasUsed: { min: rows.reduce((m, r) => (r.gasUsed < m ? r.gasUsed : m), rows[0]?.gasUsed ?? 0n), max: rows.reduce((m, r) => (r.gasUsed > m ? r.gasUsed : m), 0n) },
+  gasPrices: [...new Set(rows.map((r) => r.gasPrice))].slice(0, 10),
   corr: {
     gasFeeVsLifetime: corr(rows.map((r) => num(r.lifetime)), rows.map((r) => num(r.gasFee))),
     gasFeeVsCalldata: corr(rows.map((r) => r.calldata), rows.map((r) => num(r.gasFee))),
+    gasUsedVsLifetime: corr(rows.map((r) => num(r.lifetime)), rows.map((r) => num(r.gasUsed))),
+    gasUsedVsCalldata: corr(rows.map((r) => r.calldata), rows.map((r) => num(r.gasUsed))),
     rentVsLifetime: withRent.length > 2 ? corr(withRent.map((r) => num(r.lifetime)), withRent.map((r) => num(r.rentFee!))) : null,
     rentVsBytesTimesLifetime: withRent.length > 2 ? corr(withRent.map((r) => r.calldata * num(r.lifetime)), withRent.map((r) => num(r.rentFee!))) : null,
   },

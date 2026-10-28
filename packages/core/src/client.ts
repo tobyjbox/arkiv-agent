@@ -9,11 +9,18 @@ export const DEFAULT_RPC_URL = tiramisu.rpcUrls.default.http[0];
 /** Node maximum for `arkiv_query` pages. */
 export const PAGE_SIZE = 200;
 
-/** Read-only Tiramisu client with retry and backoff for long walks. */
-export function createArkivClient(rpcUrl = process.env.ARKIV_RPC_URL ?? DEFAULT_RPC_URL) {
+/**
+ * Read-only Tiramisu client with retry and backoff for long walks. An Arkiv Hub access key, when
+ * set, raises the anonymous limits (600 requests/min, and a small separate `arkiv_query` budget).
+ */
+export function createArkivClient(
+  rpcUrl = process.env.ARKIV_RPC_URL ?? DEFAULT_RPC_URL,
+  apiKey = process.env.ARKIV_API_KEY,
+) {
+  const fetchOptions = apiKey ? { headers: { "X-API-KEY": apiKey } } : undefined;
   return createPublicClient({
     chain: tiramisu,
-    transport: http(rpcUrl, { retryCount: 5, retryDelay: 400, timeout: 30_000 }),
+    transport: http(rpcUrl, { retryCount: 5, retryDelay: 400, timeout: 30_000, ...(fetchOptions && { fetchOptions }) }),
   });
 }
 
