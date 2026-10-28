@@ -58,3 +58,5 @@
 - 2026-10-28T23:11:09Z HANDOFF T16@9127e8a detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-fixes-2@9127e8a:missions/2026-10-28-arkiv-agent/tasks/T16-ask-fixes-2.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-28T23:11:09Z HANDOFF T16@9127e8a adjudicated: accepted (500 tests verified; blind measure in T17); integrated 4c06f64; row -> merged 3bd334f
 - 2026-10-28T23:11:09Z HANDOFF T16@9127e8a dispatched: T08 (coder), T17 (qa) draft -> ready, both messaged
+- 2026-10-28T23:11:29Z NUDGE T08 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message sent
+- 2026-10-28T23:11:29Z NUDGE T17 -> arkiv-agent_QA_claude-code_opus-5.5-low session message sent
