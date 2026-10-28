@@ -90,3 +90,17 @@ model SyncState {
   /// Unix ms of the last successful sync tick, even one that found no new blocks.
   syncedAtMs   BigInt
 }
+
+/// AI dataset descriptions (T04), cached per dataset and regenerated only when its schema changes.
+model DatasetDescription {
+  datasetId     String @id
+  /// Hash of the dataset's attribute names and types when it was described.
+  schemaHash    String
+  summary       String
+  likelyUse     String
+  suggestedName String?
+  model         String
+  /// What the model saw, for the UI caption ("the schema and 5 samples").
+  inputs        String
+  createdAtMs   BigInt
+}

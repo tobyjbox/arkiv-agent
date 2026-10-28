@@ -5,6 +5,7 @@ import { dirname } from "node:path";
 import { createArkivClient } from "@arkiv-agent/core";
 import { databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
+import { stateFromSdk } from "./attributes.ts";
 import { createEnricher, rateLimited } from "./enrich.ts";
 import { acquireIndexerLock, migrate } from "./lock.ts";
 import { createStore, feedFloor } from "./store.ts";
@@ -24,7 +25,12 @@ migrate();
 const client = createArkivClient();
 const db = openSqlite();
 const store = createStore(db);
-const enricher = createEnricher(db, rateLimited(async (hash: Hex) => (await client.getTransaction({ hash })).input, RPS));
+const enricher = createEnricher(db, rateLimited(async (hash: Hex) => (await client.getTransaction({ hash })).input, RPS), {
+  current: rateLimited(async (key: Hex) => {
+    const entity = await client.getEntity(key).catch(() => null);
+    return entity ? stateFromSdk(entity as Parameters<typeof stateFromSdk>[0]) : null;
+  }, RPS),
+});
 const startState = await openChain(client, store);
 console.log(`index ${databasePath()} at block ${startState.indexedBlock}, decoding at ${RPS} req/s`);
 
@@ -95,8 +101,26 @@ if (!isWatch) {
   };
   status();
   setInterval(status, STATUS_MS);
+  let decodedSinceStatus = 0;
+  /** A decode batch should take seconds; past this it is treated as hung, logged and retried. */
+  const BATCH_LIMIT_MS = 60_000;
+  const decodeStep = async () => {
+    let timer: NodeJS.Timeout | undefined;
+    const limit = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`decode batch took over ${BATCH_LIMIT_MS / 1000}s`)), BATCH_LIMIT_MS); });
+    try {
+      const n = await Promise.race([enrich(1, 50), limit]);
+      decodedSinceStatus += n;
+      return n > 0;
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+  setInterval(() => {
+    console.log(`  decoded ${decodedSinceStatus} in the last ${STATUS_MS / 1000}s`);
+    decodedSinceStatus = 0;
+  }, STATUS_MS);
   await Promise.all([
     loop("sync", async () => (await syncTick(true), false)),
-    loop("decode", async () => (await enrich(1, 50)) > 0),
+    loop("decode", decodeStep),
   ]);
 }

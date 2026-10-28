@@ -60,4 +60,23 @@ describe("enricher", () => {
     expect(enricher.pendingCount(0n)).toBe(1); // live keys 0x…00-0x…0f: only 0x…00 ends in 0
     expect(createEnricher(db, async () => "0x").pendingCount(0n)).toBe(32);
   });
+
+  it("reads a heavily patched entity's current state instead of replaying every patch", async () => {
+    const { db } = tempDb();
+    const patches = Array.from({ length: 30 }, (_, i) => (
+      { kind: "patched" as const, block: 20n + BigInt(i), logIndex: 0, tx: `0x${(i + 10).toString(16).padStart(64, "0")}` as Hex, op: 0, key: KEY, owner: OWNER }
+    ));
+    createStore(db).applySpan([
+      { kind: "created", block: 10n, logIndex: 0, tx: T1!, op: 0, key: KEY, owner: OWNER, expiresAt: 1_000n, flags: 0 }, ...patches,
+    ], 60n, 0n, state);
+    const fetched: Hex[] = [];
+    const enricher = createEnricher(db, async (tx) => (fetched.push(tx), executeInput([{ create: [str("v", "old")] }])), {
+      current: async () => ({ attrs: new Map([["v", { type: "str" as const, value: "now" }]]), contentType: null, payload: null }),
+    });
+    expect(await enricher.run(0n, 10, 0n)).toMatchObject({ written: 1, txs: 1 });
+    expect(fetched).toEqual([T1]);
+    expect(db.prepare(`SELECT value FROM "Attribute" WHERE name = 'v'`).pluck().get()).toBe("now");
+    expect(db.prepare(`SELECT decodedBlock FROM "Entity"`).safeIntegers().pluck().get()).toBe(49n);
+    expect(enricher.pendingCount(0n)).toBe(0);
+  });
 });
