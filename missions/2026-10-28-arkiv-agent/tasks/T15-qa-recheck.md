@@ -19,7 +19,7 @@
 - 2026-10-28T22:56Z claimed (arkiv-agent_QA_claude-code_opus-5.5-low). Base 84e0533. Task file was missing on review/qa-recheck; copied from main.
 - 2026-10-28T22:57Z blind set committed before any run (6c7dd65).
 - 2026-10-28T23:00Z fresh clone keyless: install, typecheck, 487/487 vitest, build pass; verify 20/20 incl. values. Blind 11/15.
-- 2026-10-28T23:05Z fix checks + values.json review done; handoff written; -> review.
+- 2026-10-28T23:01Z fix checks + values.json review done; handoff written; -> review.
 
 ## Handoff
 Branch review/qa-recheck (base 84e0533 = integration + T13 + T14). Evidence: tasks/T15-blind-questions.md (pre-run, 6c7dd65), T15-blind-results.txt (with `ignored` per question), T15-t06-rerun.txt.
@@ -47,3 +47,4 @@ Setup: fresh clone, `cp .env.example .env` (no keys), DB = read-only `.backup` o
 Judging: Q4 (OR) and Q13 (absence) count as passes because the unsupported part is listed as Not used. Q9 and Q12 returned 0 rows with correct queries.
 Next owner: Orchestrator (route R1-R3 to coder; R4-R6 at your call).
 - 2026-10-28T23:01:26Z notify intent: T15 review candidate=d7ef2276ec24143304c52cb30bcef5626bf59a9d to Orchestrator local_<session> via ccd send_message; attempt 1.
+- 2026-10-28T23:01:40Z notify result: delivered (message_id <id>). Log time corrected to actual UTC.
