@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogueData } from "../../lib/catalogue";
@@ -42,6 +42,13 @@ export function CommandPalette() {
     setQuery("");
     router.push(`/catalogue/${id}`);
   };
+  /** The last option: send the text to Ask Arkiv as a question. */
+  const askIndex = query.trim() ? matches.length : -1;
+  const ask = () => {
+    setOpen(false);
+    setQuery("");
+    router.push(`/ask?q=${encodeURIComponent(query.trim())}`);
+  };
 
   return (
     <>
@@ -57,9 +64,10 @@ export function CommandPalette() {
               onChange={(e) => { setQuery(e.target.value); setActive(0); }}
               onKeyDown={(e) => {
                 if (e.key === "Escape") setOpen(false);
-                if (e.key === "ArrowDown") setActive((a) => Math.min(a + 1, matches.length - 1));
+                if (e.key === "ArrowDown") setActive((a) => Math.min(a + 1, Math.max(matches.length - 1, askIndex)));
                 if (e.key === "ArrowUp") setActive((a) => Math.max(a - 1, 0));
-                if (e.key === "Enter" && matches[active]) go(matches[active].id);
+                if (e.key === "Enter" && active === askIndex) ask();
+                else if (e.key === "Enter" && matches[active]) go(matches[active].id);
               }}
               placeholder="Search datasets, attributes, projects…"
               role="combobox"
@@ -76,6 +84,13 @@ export function CommandPalette() {
                 </li>
               ))}
               {!matches.length && <li className="px-4 py-3 text-text-tertiary">No datasets match.</li>}
+              {askIndex >= 0 && (
+                <li role="option" aria-selected={active === askIndex} onMouseEnter={() => setActive(askIndex)} onClick={ask}
+                  className={`flex cursor-pointer items-center gap-2 border-t border-border-subtle px-4 py-2 ${active === askIndex ? "bg-raised" : ""}`}>
+                  <Sparkles size={14} className="shrink-0 text-ai" aria-hidden />
+                  <span className="truncate">Ask Arkiv: “{query.trim()}”</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>

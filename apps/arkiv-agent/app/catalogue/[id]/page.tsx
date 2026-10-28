@@ -1,5 +1,5 @@
 import { datasetSnippet, getDataset, recentRecords } from "@arkiv-agent/catalogue";
-import { AlertTriangle, ExternalLink } from "lucide-react";
+import { AlertTriangle, ExternalLink, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActivityChart } from "../../../components/dataset/activity-chart";
@@ -35,8 +35,11 @@ export default async function DatasetPage({ params }: { params: Promise<{ id: st
             {d.liveCount === 0 ? "All expired" : isActive ? "● Active" : "Quiet"}
           </span>
           <div className="ml-auto flex gap-2">
+            <Link href={`/ask?scope=${d.id}`} className="inline-flex h-9 items-center gap-1.5 rounded-md border border-ai/40 px-4 text-text-primary hover:bg-raised">
+              <Sparkles size={16} className="text-ai" aria-hidden /> Ask about this dataset
+            </Link>
             <a href="#read" className="inline-flex h-9 items-center rounded-md bg-accent px-4 font-medium text-on-accent">Copy SDK snippet</a>
-            <a href="https://data.arkiv.network/" target="_blank" rel="noreferrer" className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default px-4 text-text-primary hover:bg-raised">
+            <a href={`https://data.arkiv.network/?q=${encodeURIComponent(snippet.query)}`} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default px-4 text-text-primary hover:bg-raised">
               <ExternalLink size={16} className="text-info" aria-hidden /> Open Data Explorer<span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>

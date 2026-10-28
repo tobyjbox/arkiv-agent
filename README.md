@@ -14,6 +14,10 @@ shows the level above that: **projects and datasets**.
 - **Data catalogue** groups records into datasets (by project label and record kind), infers each
   dataset's schema, and shows live counts, writers, ownership, lifetimes and recent activity. Each
   dataset page has the SDK code to read it back.
+- **Ask Arkiv** turns a plain-English question ("tideland parcels with x greater than 20") into a typed
+  Arkiv query using the catalogue's schema, runs it live, and shows the query, the results, the SDK code
+  and a Data Explorer link. Every condition is an editable chip. It works with no API key (catalogue
+  rules); with `ANTHROPIC_API_KEY` set, Claude reads the question instead, checked against the same schema.
 - **Feels live:** a local indexer follows the chain head, and the UI updates within seconds without a
   refresh. It never shows invented numbers: a sync indicator says how fresh the data is.
 - **Read-only:** ArkivAgent writes nothing to Arkiv and holds no wallet. It runs locally against Arkiv's
@@ -22,7 +26,7 @@ shows the level above that: **projects and datasets**.
 | Feature | Status |
 |---|---|
 | Data catalogue | Built |
-| Ask Arkiv (plain-English search to query and SDK code) | Next |
+| Ask Arkiv (plain-English search to query and SDK code) | Built |
 | Ecosystem pulse, cost view | Planned |
 
 ## Run it locally
@@ -39,6 +43,10 @@ pnpm dev            # http://localhost:3101
 Keep `pnpm index --watch` running beside `pnpm dev` for live updates. Decoding attributes for the first
 time takes about 2 hours on the public RPC. Set an optional Arkiv Hub access key (`ARKIV_API_KEY`) to
 speed it up. The catalogue fills in as decoding progresses.
+
+![Ask Arkiv: a question becomes editable query chips, then live results from Arkiv](docs/screenshots/ask.png)
+
+Ask Arkiv's question-to-query rules are measured by a 20-question eval (`pnpm test`).
 
 What ArkivAgent reads from Arkiv is listed in [`arkiv/schema.md`](arkiv/schema.md). What was hard is in
 [`arkiv/friction.md`](arkiv/friction.md).
