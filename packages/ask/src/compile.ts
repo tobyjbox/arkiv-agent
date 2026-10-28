@@ -1,5 +1,5 @@
 import { addr, bool, bytes32, dec, i32, key, str, u256, u64 } from "@arkiv-network/sdk/attr";
-import { and, eq, type Expression, gt, gte, lt, lte, ne, not, or, render, startsWith } from "@arkiv-network/sdk/query";
+import { and, eq, exists, type Expression, gt, gte, lt, lte, ne, not, or, render, startsWith } from "@arkiv-network/sdk/query";
 import { type Dataset, datasetPredicates, type Predicate, querySnippet } from "@arkiv-agent/catalogue";
 import { type Result, err, ok } from "@arkiv-agent/core";
 import type { AskPlan, AskQuery, AttrType, Comparison } from "./query.ts";
@@ -54,6 +54,8 @@ export function toPredicate(q: AskQuery): Predicate {
     }
     case "startsWith":
       return { expr: startsWith(q.attr, q.value), code: `startsWith(${J(q.attr)}, ${J(q.value)})` };
+    case "exists":
+      return { expr: exists(q.attr), code: `exists(${J(q.attr)})` };
     default: {
       const c = q as Comparison;
       const { value, code } = typedValue(c.type, c.value);

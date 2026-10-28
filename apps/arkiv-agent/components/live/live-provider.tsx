@@ -5,8 +5,7 @@ import { createContext, type ReactNode, useCallback, useContext, useEffect, useR
 
 /** Client side of the change feed (design/02-feels-live.md): poll every 5 s while visible. */
 const POLL_MS = 5_000;
-export const LIVE_UNDER_S = 15;
-export const OFFLINE_AFTER_S = 120;
+export { LIVE_UNDER_S, OFFLINE_AFTER_S } from "../../lib/sync-state";
 
 export type Change = FeedResponse["changes"][number];
 type Snapshot = Omit<FeedResponse, "changes" | "reset">;

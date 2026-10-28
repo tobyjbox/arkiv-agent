@@ -155,12 +155,12 @@ function QueryingRows({ columns }: { columns: number }) {
 
 function NoResults({ result, onRemove }: { result: Interpreted; onRemove: (path: number[]) => void }) {
   const leaves = leafPaths(result.plan.where);
-  const typed = leaves.find((l) => l.leaf.op !== "startsWith" && l.leaf.type !== "str");
+  const typed = leaves.map((l) => l.leaf).find((l): l is Extract<typeof l, { type: string }> => "type" in l && l.type !== "str");
   return (
     <div className="space-y-3 px-4 py-5">
       <p className="text-text-primary">No records match this query.</p>
       <ul className="list-disc space-y-0.5 pl-5 caption text-text-secondary">
-        <li>Values are type-strict and case-sensitive{typed && typed.leaf.op !== "startsWith" ? <>: <span className="font-mono">{typed.leaf.attr}</span> is <span className="font-mono">{typed.leaf.type}</span></> : ""}.</li>
+        <li>Values are type-strict and case-sensitive{typed ? <>: <span className="font-mono">{typed.attr}</span> is <span className="font-mono">{typed.type}</span></> : ""}.</li>
         <li>Records may have expired; Ask reads live records only.</li>
       </ul>
       {leaves.length > 0 && (

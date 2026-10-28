@@ -60,20 +60,35 @@ function Chip({ leaf, negated, path, onEdit, isBusy }: { leaf: Leaf; negated: bo
   return (
     <span className="relative">
       <button type="button" disabled={isBusy} onClick={() => setOpen((o) => !o)} aria-expanded={isOpen}
-        aria-label={`Edit condition: ${negated ? "not " : ""}${leaf.attr} ${OP_WORDS[leaf.op]} ${leaf.value}`}
+        aria-label={leaf.op === "exists" ? `Edit condition: ${chipText(leaf, negated)}` : `Edit condition: ${negated ? "not " : ""}${leaf.attr} ${OP_WORDS[leaf.op]} ${leaf.value}`}
         className="inline-flex items-center gap-1.5 rounded-sm border border-border-default bg-canvas px-2 py-1 mono-sm text-text-primary hover:border-ai/60 disabled:opacity-60">
         <span className="max-w-[28ch] truncate" title={chipText(leaf, negated)}>{chipText(leaf, negated)}</span>
         <span className="rounded-[4px] bg-raised px-1 text-[11px] leading-4 text-text-tertiary">{type}</span>
         <Pencil size={12} className="text-text-tertiary" aria-hidden />
       </button>
-      {isOpen && <ChipEditor leaf={leaf} negated={negated} onClose={() => setOpen(false)} onApply={(next) => { setOpen(false); onEdit(path, next); }} />}
+      {isOpen && (leaf.op === "exists"
+        ? <PresenceEditor leaf={leaf} negated={negated} onClose={() => setOpen(false)} onApply={(next) => { setOpen(false); onEdit(path, next); }} />
+        : <ChipEditor leaf={leaf} negated={negated} onClose={() => setOpen(false)} onApply={(next) => { setOpen(false); onEdit(path, next); }} />)}
     </span>
   );
 }
 
-function ChipEditor({ leaf, negated, onClose, onApply }: { leaf: Leaf; negated: boolean; onClose: () => void; onApply: (next: AskQuery | null) => void }) {
-  const type = typeOf(leaf);
-  const [op, setOp] = useState<Leaf["op"]>(leaf.op);
+/** "has guild" / "no parent_key": nothing to edit but whether the condition stays. */
+function PresenceEditor({ leaf, negated, onClose, onApply }: { leaf: Leaf; negated: boolean; onClose: () => void; onApply: (next: AskQuery | null) => void }) {
+  return (
+    <div role="dialog" aria-label={`Edit ${leaf.attr}`} className="absolute left-0 top-full z-20 mt-1.5 w-[260px] space-y-2 rounded-md border border-border-default bg-overlay p-3 shadow-[0_12px_32px_rgb(0_0_0/0.45)] fade-in">
+      <p className="caption text-text-secondary">Records {negated ? "without" : "with"} any value for <span className="font-mono text-text-primary">{leaf.attr}</span>.</p>
+      <div className="flex gap-2">
+        <button type="button" onClick={() => onApply(null)} className="h-8 rounded-sm bg-accent px-3 font-medium text-on-accent">Remove condition</button>
+        <button type="button" onClick={onClose} className="h-8 rounded-sm px-2 text-text-secondary hover:text-text-primary">Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+function ChipEditor({ leaf, negated, onClose, onApply }: { leaf: Exclude<Leaf, { op: "exists" }>; negated: boolean; onClose: () => void; onApply: (next: AskQuery | null) => void }) {
+  const type = leaf.op === "startsWith" ? "str" : leaf.type;
+  const [op, setOp] = useState<Exclude<Leaf["op"], "exists">>(leaf.op);
   const [value, setValue] = useState(leaf.value);
   const panel = useRef<HTMLDivElement>(null);
   const problem = invalidValue(type, value);
@@ -97,7 +112,7 @@ function ChipEditor({ leaf, negated, onClose, onApply }: { leaf: Leaf; negated: 
       </div>
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); apply(); }}>
         <div className="flex gap-2">
-          <select value={op} onChange={(e) => setOp(e.target.value as Leaf["op"])} aria-label="Operator"
+          <select value={op} onChange={(e) => setOp(e.target.value as Exclude<Leaf["op"], "exists">)} aria-label="Operator"
             className="h-8 rounded-sm border border-border-control bg-canvas px-2 mono-sm text-text-primary">
             {opsFor(type).map((o) => <option key={o} value={o}>{OP_SYMBOL[o]}</option>)}
           </select>
