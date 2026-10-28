@@ -29,6 +29,7 @@
   on its three examples; fixed generally by scoring the top candidates on index values), then 15/15. Main eval 20/20,
   held-out 15/15 (unchanged). Vitest 487 (415 of them a robustness test), Playwright 9. A trailing comparator
   ("lag_d 30 or more") crashed the rules (index past the end); fixed and covered by the robustness test.
+- 2026-10-28T22:55:13Z Flipped to review, candidate c260c44. Notification intent: key `2026-10-28-arkiv-agent:T14@c260c44:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
 
 ## Handoff
 
