@@ -9,3 +9,4 @@
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 adjudicated: accepted; integrated dc89dc9; row -> merged 285dd84
 - 2026-10-28T17:08:22Z HANDOFF T02@dc160e1 dispatched: T09 (draft -> ready, UX nudged). T04 still waits on T03.
 - 2026-10-28T17:08:33Z HANDOFF T02@dc160e1 adjudicated: accepted; canonical row flip re-applied 5426f84 (prior commit missed the row)
+- 2026-10-28T17:08:48Z NUDGE T09 -> arkiv-agent_ux_designer_claude-code_opus-5.5-med no-watcher; session message queued <id>; worktree design/pulse-cost created
