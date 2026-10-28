@@ -1,4 +1,4 @@
-# ArkivAgent design specs (T02)
+# ArkivAgent design specs (T02, T09)
 
 Dark mode only. Specs, not code: Coder lifts the token tables into the theme config.
 
@@ -8,6 +8,8 @@ Dark mode only. Specs, not code: Coder lifts the token tables into the theme con
 | [02-feels-live.md](02-feels-live.md) | Sync indicator, skeletons, number roll, row transitions, streaming/optimistic UI, update announcements, freshness |
 | [03-catalogue.md](03-catalogue.md) | App shell, `/catalogue`, `/catalogue/[id]`, all states, responsive |
 | [04-ask-arkiv.md](04-ask-arkiv.md) | Ask Arkiv flow, interpretation chips, results tabs, all states, responsive |
+| [05-pulse.md](05-pulse.md) | Stretch (T09): ecosystem pulse, hackathon retention, activity, states, responsive |
+| [06-cost.md](06-cost.md) | Stretch (T09): cost calculator, observed spend, fee model charts, states, responsive |
 
 ## Rationale in brief
 
