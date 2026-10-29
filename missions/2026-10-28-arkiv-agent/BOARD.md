@@ -29,4 +29,4 @@
 | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21 | 2026-10-29T13:10:00Z |
 | T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | merged | 2/2 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | — | 2026-10-29T12:10:00Z |
 | T26 | Build decode progress bar (design/07) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T14:00:00Z |
-| T27 | GLM/USDT price chart on /financials | coder | fast | ready | 0/1 | | T24 | 2026-10-29T14:00:00Z |
+| T27 | GLM/USDT price chart on /financials | coder | fast | claimed | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T24 | 2026-10-29T12:19:51Z |
