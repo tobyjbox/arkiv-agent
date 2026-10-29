@@ -1,4 +1,4 @@
-import { estimatedSpend, feeModel } from "@arkiv-agent/cost";
+import { estimatedSpend, feeSummary } from "@arkiv-agent/cost";
 import Link from "next/link";
 import { Calculator } from "../../components/cost/calculator";
 import { PriceChart } from "../../components/cost/price-chart";
@@ -8,6 +8,7 @@ import { financialsPrice } from "../../lib/financials-price";
 import { usd } from "../../lib/glm-price";
 import { formatCount } from "../../lib/format";
 import { isIndexReady } from "../../lib/db";
+import { ResultsPending } from "../../components/ui/results-pending";
 
 export const dynamic = "force-dynamic";
 
@@ -27,16 +28,14 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   if (!isIndexReady()) return null;
   const q = await searchParams;
   const includeLoad = q.load === "1";
-  const { rows, model, fittedAt } = feeModel();
+  const fees = feeSummary();
+  if (!fees) return <ResultsPending title="Financials" />;
+  const { model, fittedAt, receipts, points: dots, maxCalldataBytes: maxX, maxGasUsed: maxY } = fees;
   const spend = estimatedSpend(30, includeLoad);
   const { price, status: priceStatus } = financialsPrice();
   const $ = (x: number) => (price ? usd(x * price.usd) : null);
   const unit = (["hours", "days", "months"] as const).find((u) => u === q.unit) ?? "days";
   const initial = { writes: int(q.writes, 1, 1_000_000, 1_000), payload: int(q.payload, 1, 100_000, 200), lifetime: int(q.lifetime, 1, 100_000, 7), unit };
-  // Scatter: at most 2,000 points, evenly picked.
-  const step = Math.max(1, Math.ceil(rows.length / 2_000));
-  const dots = rows.filter((_, i) => i % step === 0);
-  const maxX = Math.max(1, ...rows.map((r) => r.calldataBytes)), maxY = Math.max(1, ...rows.map((r) => r.gasUsed));
   const X = (v: number) => 40 + (Math.log10(Math.max(1, v)) / Math.log10(maxX)) * 540, Y = (v: number) => 190 - (Math.log10(Math.max(1, v)) / Math.log10(maxY)) * 180;
 
   return (
@@ -51,7 +50,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
       {priceStatus === "off" ? <p className="caption text-text-tertiary">The GLM price chart is off (GLM_PRICE=off).</p> : <PriceChart spot={price} />}
 
       {model ? <Calculator model={model} fittedAt={fittedAt} initial={initial} price={price} />
-        : <p className="rounded-md border border-border-subtle bg-surface p-5 text-text-secondary">Not enough observed fees to estimate yet (have {rows.length} receipts; need about 30). Run <code className="font-mono">pnpm fees</code>.</p>}
+        : <p className="rounded-md border border-border-subtle bg-surface p-5 text-text-secondary">Not enough observed fees to estimate yet (have {receipts} receipts; need about 30). Run <code className="font-mono">pnpm fees</code>.</p>}
 
       <section aria-labelledby="spend" className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -105,7 +104,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
             <figcaption className="caption text-text-secondary">
               gas = {Math.round(model.gas.intercept).toLocaleString("en")} + {model.gas.slope.toFixed(2)} × calldata bytes (R² {model.gas.r2.toFixed(2)}, {model.gas.n} transactions); calldata = {Math.round(model.calldata.intercept).toLocaleString("en")} + {model.calldata.slope.toFixed(2)} × payload bytes (R² {model.calldata.r2.toFixed(2)}, {model.calldata.n} single-record creates); price {(model.gasPrice * 1e9).toPrecision(3)} gwei (median).
               {" "}Range: observed fees are {model.band.low.toFixed(2)}× to {model.band.high.toFixed(2)}× the estimate for 90% of fitted creates; on {model.coverage.of} held-out creates, {model.coverage.inside} ({Math.round((model.coverage.inside / Math.max(1, model.coverage.of)) * 100)}%) fell inside it.
-              {dots.length < rows.length ? ` Showing ${formatCount(dots.length)} of ${formatCount(rows.length)} transactions.` : ""} Fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC.
+              {dots.length < receipts ? ` Showing ${formatCount(dots.length)} of ${formatCount(receipts)} transactions.` : ""} Fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC.
             </figcaption>
           </figure>
         </section>

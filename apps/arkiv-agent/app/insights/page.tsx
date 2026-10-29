@@ -9,6 +9,7 @@ import { formatCount } from "../../lib/format";
 import { AboutInfo } from "../../components/ui/about-info";
 import { glm } from "../../lib/glm";
 import { isIndexReady } from "../../lib/db";
+import { ResultsPending } from "../../components/ui/results-pending";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Insights · ArkivAgent" };
@@ -26,6 +27,7 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
   const period = (PERIODS as readonly number[]).includes(Number(params.period)) ? (Number(params.period) as Period) : 30;
   const includeLoad = params.load === "1";
   const p = getPulse({ period, includeLoad });
+  if (!p) return <ResultsPending title="Insights" />;
   const spend = estimatedSpend(period, includeLoad);
   const days = p.days.map((d) => ({ ...d, day: dayLabel(d.day) }));
   const opensIn = (c: (typeof p.cohorts)[number]) =>

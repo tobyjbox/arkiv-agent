@@ -6,6 +6,7 @@
 import { createArkivClient } from "@arkiv-agent/core";
 import { busyOwners, countTxFees, createFeeCandidates, type FeeCandidate, openSqlite, readCursor, txFeeWriter, updateFeeCandidates } from "@arkiv-agent/db";
 import type { Hex } from "viem";
+import { missingTable, storeAggregates } from "./aggregates.ts";
 import { rateLimited } from "./enrich.ts";
 
 const arg = (name: string) => process.argv[process.argv.indexOf(name) + 1];
@@ -59,3 +60,9 @@ for (const c of picked) {
 }
 const total = countTxFees(db);
 console.log(`fees: stored ${done}, failed ${failed}; TxFee now holds ${total} transactions`);
+// The Financials page reads the model the indexer stores: refit it now rather than at its next refresh.
+try {
+  console.log(`fees: refitted the fee model and stored the Financials results in ${storeAggregates(db).seconds}s`);
+} catch (error) {
+  console.error(`fees: the Financials results update when the indexer next runs. ${missingTable(error) ?? error}`);
+}

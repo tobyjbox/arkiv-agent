@@ -1,3 +1,4 @@
+export * from "./aggregates.ts";
 export * from "./attributes.ts";
 export * from "./candles.ts";
 export * from "./decode-store.ts";

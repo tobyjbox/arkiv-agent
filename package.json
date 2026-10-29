@@ -22,7 +22,8 @@
     "describe": "pnpm --filter @arkiv-agent/catalogue describe",
     "test:e2e": "pnpm --filter arkiv-agent test:e2e",
     "start": "pnpm --filter arkiv-agent start",
-    "fees": "pnpm --filter @arkiv-agent/indexer fees"
+    "fees": "pnpm --filter @arkiv-agent/indexer fees",
+    "aggregates": "pnpm --filter @arkiv-agent/indexer aggregates"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

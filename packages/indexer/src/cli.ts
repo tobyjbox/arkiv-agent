@@ -5,6 +5,7 @@ import { dirname } from "node:path";
 import { createArkivClient } from "@arkiv-agent/core";
 import { countLive, createIndexStore, databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
+import { storeAggregates } from "./aggregates.ts";
 import { stateFromSdk } from "./attributes.ts";
 import { createEnricher, rateLimited } from "./enrich.ts";
 import { acquireIndexerLock, migrate } from "./lock.ts";
@@ -15,6 +16,8 @@ const TICK_MS = 2_000;
 const MAX_BACKOFF_MS = 30_000;
 /** Recent history that gets attributes (activity charts): 7 days of 2 s blocks. */
 const HISTORY_BLOCKS = 7n * 43_200n;
+/** Insights and Financials results are recomputed this often in --watch (the pages move by the day). */
+const AGGREGATES_MS = 30_000;
 /** Public RPC allows 600 requests/min; leave headroom for sync. Raise with an access key. */
 const RPS = Number(process.env.ARKIV_RPS) || (process.env.ARKIV_API_KEY ? 25 : 8);
 
@@ -73,6 +76,7 @@ if (!isWatch) {
     await syncTick(isQuiet);
     await enrich(Number.POSITIVE_INFINITY, 200);
   }
+  console.log(`stored the Insights and Financials results in ${storeAggregates(db).seconds}s`);
   console.log("done");
 } else {
   // Two loops: sync keeps the feed within a tick of the head; decoding drains its queue alongside.
@@ -118,8 +122,17 @@ if (!isWatch) {
     console.log(`  decoded ${decodedSinceStatus} in the last ${STATUS_MS / 1000}s`);
     decodedSinceStatus = 0;
   }, STATUS_MS);
+  let isFirstStore = true;
+  const aggregateStep = async () => {
+    const r = storeAggregates(db);
+    if (isFirstStore) console.log(`stored the Insights and Financials results in ${r.seconds}s; recomputed every ${AGGREGATES_MS / 1000}s`);
+    isFirstStore = false;
+    await new Promise((resolve) => setTimeout(resolve, AGGREGATES_MS));
+    return true;
+  };
   await Promise.all([
     loop("sync", async () => (await syncTick(true), false)),
     loop("decode", decodeStep),
+    loop("aggregates", aggregateStep),
   ]);
 }

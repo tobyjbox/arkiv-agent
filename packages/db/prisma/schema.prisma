@@ -127,3 +127,13 @@ model TxFee {
   @@index([block])
   @@index([sender])
 }
+
+/// Results the indexer computes after a sync, for pages to read as they are (Insights, Financials):
+/// one JSON value per key, e.g. `pulse:30:apps`.
+model Aggregate {
+  key          String @id
+  value        String
+  /// The index block the value was computed from.
+  indexedBlock BigInt
+  computedAtMs BigInt
+}
