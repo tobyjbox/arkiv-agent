@@ -131,3 +131,5 @@
 - 2026-10-29T17:08:07Z HANDOFF adjudicated T33 accept: 624 tests, build OK on merged main; owner's indexer restarted (migration applied, 13 aggregates stored); /insights 38 ms, /financials 62 ms; merged
 - 2026-10-29T17:08:07Z RELEASE T34 -> ready (T32, T33 merged)
 - 2026-10-29T17:08:07Z DISPATCH T34 -> arkiv-agent_coder_claude-code_opus-5.5-extra
+- 2026-10-29T17:16:15Z HANDOFF detected T34 review candidate=498ae65 (coder message)
+- 2026-10-29T17:16:15Z HANDOFF adjudicated T34 accept: spike code and scripts gone; 628 tests, build OK on merged main; app restarted, pages 200; merged. Part B complete.
