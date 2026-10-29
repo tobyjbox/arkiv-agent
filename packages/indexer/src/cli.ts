@@ -3,13 +3,12 @@
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { createArkivClient } from "@arkiv-agent/core";
-import { databasePath, openSqlite } from "@arkiv-agent/db";
+import { countLive, createIndexStore, databasePath, openSqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
 import { stateFromSdk } from "./attributes.ts";
 import { createEnricher, rateLimited } from "./enrich.ts";
 import { acquireIndexerLock, migrate } from "./lock.ts";
-import { createStore, feedFloor } from "./store.ts";
-import { openChain, syncEvents } from "./sync.ts";
+import { feedFloor, openChain, syncEvents } from "./sync.ts";
 
 const isWatch = process.argv.includes("--watch");
 const TICK_MS = 2_000;
@@ -24,7 +23,7 @@ acquireIndexerLock(databasePath());
 migrate();
 const client = createArkivClient();
 const db = openSqlite();
-const store = createStore(db);
+const store = createIndexStore(db);
 const enricher = createEnricher(db, rateLimited(async (hash: Hex) => (await client.getTransaction({ hash })).input, RPS), {
   current: rateLimited(async (key: Hex) => {
     const entity = await client.getEntity(key).catch(() => null);
@@ -95,7 +94,7 @@ if (!isWatch) {
   const status = () => {
     const s = store.readState();
     const indexed = s?.indexedBlock ?? 0n;
-    const live = db.prepare(`SELECT COUNT(*) FROM "Entity" WHERE status = 'live'`).pluck().get();
+    const live = countLive(db);
     const queue = enricher.pendingCount(indexed > HISTORY_BLOCKS ? indexed - HISTORY_BLOCKS : 0n);
     console.log(`${new Date().toISOString()} head ${s?.chainHead} · indexed ${indexed} · ${live} live · ${queue} to decode`);
   };

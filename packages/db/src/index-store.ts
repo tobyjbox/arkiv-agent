@@ -1,6 +1,4 @@
-import type { Sqlite } from "@arkiv-agent/db";
-import { FEED_WINDOW_BLOCKS } from "@arkiv-agent/db";
-import type { EntityEvent } from "./chain.ts";
+import type { Sqlite } from "./sqlite.ts";
 
 const I64_MAX = 2n ** 63n - 1n;
 /** SQLite integers are signed 64-bit; "never" expiries (u64 max) are stored as i64 max. */
@@ -8,8 +6,17 @@ export const clampExpiry = (block: bigint) => (block > I64_MAX ? I64_MAX : block
 
 export type SyncRow = { chainId: number; genesisHash: string; indexedBlock: bigint; chainHead: bigint; syncedAtMs: bigint };
 
-/** Prepared statements over the Prisma-managed schema. Every write path is idempotent. */
-export function createStore(db: Sqlite) {
+type EventBase = { block: bigint; logIndex: number; tx: string; op: number; key: string; owner: string };
+/** One entity event to apply, as the indexer reads them from the chain (packages/indexer/src/chain.ts). */
+export type EntityWrite =
+  | (EventBase & { kind: "created"; expiresAt: bigint; flags: number })
+  | (EventBase & { kind: "patched" })
+  | (EventBase & { kind: "extended"; expiresAt: bigint })
+  | (EventBase & { kind: "transferred" })
+  | (EventBase & { kind: "deleted" });
+
+/** The indexer's writes: prepared statements over the Prisma-managed schema. Every write path is idempotent. */
+export function createIndexStore(db: Sqlite) {
   const s = {
     create: db.prepare(`INSERT INTO "Entity" (key, owner, creator, createdAtBlock, createdTx, createdOp, updatedAtBlock, expiresAt, status, creationFlags)
       VALUES (@key, @owner, @owner, @block, @tx, @op, @block, @expiresAt, 'live', @flags)
@@ -32,7 +39,7 @@ export function createStore(db: Sqlite) {
   };
 
   /** Applies one span's events, expires what lapsed by `to`, and advances the cursor, atomically. */
-  const applySpan = db.transaction((events: readonly EntityEvent[], to: bigint, feedFloor: bigint, state: SyncRow) => {
+  const applySpan = db.transaction((events: readonly EntityWrite[], to: bigint, feedFloor: bigint, state: SyncRow) => {
     for (const e of events) {
       const row = { key: e.key, owner: e.owner, block: e.block };
       if (e.kind === "created") s.create.run({ ...row, tx: e.tx, op: e.op, expiresAt: clampExpiry(e.expiresAt), flags: e.flags });
@@ -58,7 +65,4 @@ export function createStore(db: Sqlite) {
   };
 }
 
-export type Store = ReturnType<typeof createStore>;
-
-/** Feed rows older than the window are never written, so a backfill does not flood the feed. */
-export const feedFloor = (head: bigint) => (head > FEED_WINDOW_BLOCKS ? head - FEED_WINDOW_BLOCKS : 0n);
+export type IndexStore = ReturnType<typeof createIndexStore>;

@@ -1,7 +1,7 @@
 import type { Hex } from "viem";
 import { describe, expect, it } from "vitest";
 import { type EntityEvent, toEvents } from "../src/chain.ts";
-import { clampExpiry, createStore, type SyncRow } from "../src/store.ts";
+import { clampExpiry, createIndexStore, type SyncRow } from "@arkiv-agent/db";
 import { fixture, tempDb } from "./helpers.ts";
 
 const k = (n: number) => `0x${n.toString(16).padStart(64, "0")}` as Hex;
@@ -26,14 +26,14 @@ function snapshot(db: ReturnType<typeof tempDb>["db"]) {
     entities: db.prepare(`SELECT key, owner, status, expiresAt, deletedAtBlock, updatedAtBlock FROM "Entity" ORDER BY key`).safeIntegers().all(),
     patches: db.prepare(`SELECT * FROM "Patch"`).safeIntegers().all(),
     changes: db.prepare(`SELECT block, kind, entityKey FROM "Change" ORDER BY seq`).safeIntegers().all() as { block: bigint; kind: string; entityKey: string }[],
-    cursor: createStore(db).readState()?.indexedBlock,
+    cursor: createIndexStore(db).readState()?.indexedBlock,
   };
 }
 
 describe("applySpan", () => {
   it("tracks live, expired and deleted, and clamps a u64-max expiry", () => {
     const { db } = tempDb();
-    createStore(db).applySpan(lifecycle, 100n, 0n, state);
+    createIndexStore(db).applySpan(lifecycle, 100n, 0n, state);
     const s = snapshot(db);
     expect(s.entities).toEqual([
       { key: k(1), owner: O2, status: "live", expiresAt: clampExpiry(2n ** 64n - 1n), deletedAtBlock: null, updatedAtBlock: 40n },
@@ -47,7 +47,7 @@ describe("applySpan", () => {
 
   it("is safe to re-run: the same span twice leaves the same state", () => {
     const { db } = tempDb();
-    const store = createStore(db);
+    const store = createIndexStore(db);
     store.applySpan(lifecycle, 100n, 0n, state);
     const once = snapshot(db);
     store.applySpan(lifecycle, 100n, 0n, state);
@@ -56,7 +56,7 @@ describe("applySpan", () => {
 
   it("writes feed rows only above the floor, and prunes below it", () => {
     const { db } = tempDb();
-    createStore(db).applySpan(lifecycle, 100n, 40n, state);
+    createIndexStore(db).applySpan(lifecycle, 100n, 40n, state);
     expect(snapshot(db).changes.map((c) => [c.kind, c.block])).toEqual([["created", 45n], ["deleted", 60n], ["expired", 50n]]);
   });
 
@@ -64,7 +64,7 @@ describe("applySpan", () => {
     const f = fixture();
     const events = toEvents(f.logs);
     const { db } = tempDb();
-    createStore(db).applySpan(events, f.toBlock, 0n, state);
+    createIndexStore(db).applySpan(events, f.toBlock, 0n, state);
     const created = events.filter((e) => e.kind === "created");
     const live = created.filter((e) => e.kind === "created" && e.expiresAt > f.toBlock).length;
     const count = (status: string) => (db.prepare(`SELECT COUNT(*) AS n FROM "Entity" WHERE status = ?`).get(status) as { n: number }).n;

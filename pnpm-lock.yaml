@@ -121,16 +121,10 @@ importers:
       '@arkiv-network/sdk':
         specifier: ~0.8.1
         version: 0.8.1(typescript@5.9.3)(viem@2.57.13(typescript@5.9.3)(zod@4.6.7))
-      better-sqlite3:
-        specifier: ^12.11.1
-        version: 12.11.1
       zod:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
-      '@types/better-sqlite3':
-        specifier: ^9.6.0
-        version: 9.6.0
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -149,6 +143,9 @@ importers:
       '@arkiv-agent/catalogue':
         specifier: workspace:*
         version: link:../catalogue
+      '@arkiv-agent/db':
+        specifier: workspace:*
+        version: link:../db
       '@arkiv-agent/pulse':
         specifier: workspace:*
         version: link:../pulse
@@ -183,16 +180,10 @@ importers:
       '@arkiv-network/sdk':
         specifier: ~0.8.1
         version: 0.8.1(typescript@5.9.3)(viem@2.57.13(typescript@5.9.3)(zod@4.6.7))
-      better-sqlite3:
-        specifier: ^12.11.1
-        version: 12.11.1
       viem:
         specifier: ^2.57.13
         version: 2.57.13(typescript@5.9.3)(zod@4.6.7)
     devDependencies:
-      '@types/better-sqlite3':
-        specifier: ^9.6.0
-        version: 9.6.0
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -202,6 +193,9 @@ importers:
       '@arkiv-agent/catalogue':
         specifier: workspace:*
         version: link:../catalogue
+      '@arkiv-agent/db':
+        specifier: workspace:*
+        version: link:../db
 
 packages:
 

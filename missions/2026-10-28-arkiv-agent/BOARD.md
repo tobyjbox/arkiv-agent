@@ -32,7 +32,7 @@
 | T27 | GLM/USDT price chart on /financials | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T24 | 2026-10-29T14:40:00Z |
 | T28 | Part A: remove arkiv-agent everywhere -> arkiv-agent (mechanical) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T27 | 2026-10-29T15:20:00Z |
 | T29 | Drop pre-rename compatibility; seed spot price from chart history | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T28 | 2026-10-29T16:00:00Z |
-| T30 | B1: db package owns all database access | coder | frontier | ready | 0/1 | | T29 | 2026-10-29T16:00:00Z |
+| T30 | B1: db package owns all database access | coder | frontier | in-progress | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T29 | 2026-10-29T14:34:56Z |
 | T31 | B2: shared projects module | coder | fast | draft | 0/1 | | T30 | 2026-10-29T16:00:00Z |
 | T32 | B3: Ask interpret() as a pipeline | coder | frontier | draft | 0/1 | | T31 | 2026-10-29T16:00:00Z |
 | T33 | B4: indexer stores Insights/Financials aggregates | coder | frontier | draft | 0/1 | | T31 | 2026-10-29T16:00:00Z |

@@ -2,7 +2,7 @@ import type { Hex } from "viem";
 import { describe, expect, it } from "vitest";
 import { toEvents } from "../src/chain.ts";
 import { createEnricher } from "../src/enrich.ts";
-import { createStore, type SyncRow } from "../src/store.ts";
+import { createIndexStore, type SyncRow } from "@arkiv-agent/db";
 import { executeInput, fixture, str, tempDb, u64, unset } from "./helpers.ts";
 
 const state: SyncRow = { chainId: 1, genesisHash: "0x00", indexedBlock: 0n, chainHead: 0n, syncedAtMs: 0n };
@@ -17,7 +17,7 @@ describe("enricher", () => {
       [T1!]: executeInput([{ create: [str("$contentType", "application/json"), str("$payload", '{"a":1}'), str("kind", "note"), u64("v", 1n)] }]),
       [T2!]: executeInput([{ other: 3 }, { patch: KEY, cells: [u64("v", 2n), unset("kind")] }]),
     };
-    createStore(db).applySpan([
+    createIndexStore(db).applySpan([
       { kind: "created", block: 10n, logIndex: 0, tx: T1!, op: 0, key: KEY, owner: OWNER, expiresAt: 1_000n, flags: 0 },
       { kind: "patched", block: 20n, logIndex: 1, tx: T2!, op: 1, key: KEY, owner: OWNER },
     ], 30n, 0n, state);
@@ -32,7 +32,7 @@ describe("enricher", () => {
 
   it("marks an operation that is not a create as undecodable instead of retrying it", async () => {
     const { db } = tempDb();
-    createStore(db).applySpan([{ kind: "created", block: 10n, logIndex: 0, tx: T3!, op: 0, key: KEY, owner: OWNER, expiresAt: 1_000n, flags: 0 }], 30n, 0n, state);
+    createIndexStore(db).applySpan([{ kind: "created", block: 10n, logIndex: 0, tx: T3!, op: 0, key: KEY, owner: OWNER, expiresAt: 1_000n, flags: 0 }], 30n, 0n, state);
     const enricher = createEnricher(db, async () => executeInput([{ other: 5 }]));
     expect(await enricher.run(0n, 10, 0n)).toMatchObject({ written: 0, failed: 1 });
     expect(enricher.pendingCount(0n)).toBe(0);
@@ -41,7 +41,7 @@ describe("enricher", () => {
   it("decodes every recorded load-generator create into a dataset signature", async () => {
     const f = fixture();
     const { db } = tempDb();
-    createStore(db).applySpan(toEvents(f.logs), f.toBlock, 0n, state);
+    createIndexStore(db).applySpan(toEvents(f.logs), f.toBlock, 0n, state);
     const enricher = createEnricher(db, async (tx) => f.inputs[tx]!);
     const { written, failed } = await enricher.run(0n, 1_000, 0n);
     expect(failed).toBe(0);
@@ -53,7 +53,7 @@ describe("enricher", () => {
   it("samples a high-volume owner's live entities 1 in 16 by key, and skips its history", async () => {
     const { db } = tempDb();
     const keys = Array.from({ length: 32 }, (_, i) => `0x${i.toString(16).padStart(64, "0")}` as Hex);
-    createStore(db).applySpan(keys.map((key, i) => (
+    createIndexStore(db).applySpan(keys.map((key, i) => (
       { kind: "created" as const, block: 10n, logIndex: i, tx: T1!, op: i, key, owner: OWNER, expiresAt: i < 16 ? 1_000n : 20n, flags: 0 }
     )), 30n, 0n, state);
     const enricher = createEnricher(db, async () => "0x", { busyCreates: 10 });
@@ -66,7 +66,7 @@ describe("enricher", () => {
     const patches = Array.from({ length: 30 }, (_, i) => (
       { kind: "patched" as const, block: 20n + BigInt(i), logIndex: 0, tx: `0x${(i + 10).toString(16).padStart(64, "0")}` as Hex, op: 0, key: KEY, owner: OWNER }
     ));
-    createStore(db).applySpan([
+    createIndexStore(db).applySpan([
       { kind: "created", block: 10n, logIndex: 0, tx: T1!, op: 0, key: KEY, owner: OWNER, expiresAt: 1_000n, flags: 0 }, ...patches,
     ], 60n, 0n, state);
     const fetched: Hex[] = [];

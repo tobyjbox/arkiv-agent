@@ -1,4 +1,5 @@
-import { catalogueDb, loadCatalogue } from "./load.ts";
+import { findTextValues } from "@arkiv-agent/db";
+import { loadCatalogue } from "./load.ts";
 
 export type ValueHit = { field: string; value: string; count: number };
 
@@ -14,9 +15,7 @@ export function findValues(datasetId: string, text: string, fields: readonly str
   if (!members?.length || !fields.length || !text.trim()) return [];
   let keys = keySets.get(members);
   if (!keys) keySets.set(members, (keys = new Set(members.map((m) => m.key))));
-  const rows = catalogueDb()
-    .prepare(`SELECT entityKey, name, value FROM "Attribute" WHERE name IN (${fields.map(() => "?").join(",")}) AND type = 'str' AND value = ? COLLATE NOCASE LIMIT 5000`)
-    .all(...fields, text.trim()) as { entityKey: string; name: string; value: string }[];
+  const rows = findTextValues(fields, text.trim());
   const counts = new Map<string, ValueHit>();
   for (const r of rows) {
     if (!keys.has(r.entityKey)) continue;

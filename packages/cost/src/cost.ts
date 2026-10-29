@@ -1,4 +1,5 @@
-import { catalogueDb, loadGeneratorOwners } from "@arkiv-agent/catalogue";
+import { loadGeneratorOwners } from "@arkiv-agent/catalogue";
+import { createsByWallet, readCursor, readTxFees, type TxFeeRow, updatesByWallet } from "@arkiv-agent/db";
 import { projectsByWallet } from "@arkiv-agent/pulse";
 import { type FeeModel, type FeeRow, fitFeeModel, GLM_PER_WEI } from "./model.ts";
 
@@ -9,9 +10,9 @@ let cache: { at: number; rows: FeeRow[]; model: FeeModel | null; fittedAt: strin
 /** Sampled receipts (TxFee) and the model fitted on them; refitted at most every minute. */
 export function feeModel(): { rows: FeeRow[]; model: FeeModel | null; fittedAt: string } {
   if (cache && Date.now() - cache.at < TTL_MS) return cache;
-  let raw: { creates: number; updates: number; calldataBytes: number; payloadBytes: number; lifetimeBlocks: number | null; gasUsed: number; gasPriceWei: string; feeWei: string; sender: string }[] = [];
+  let raw: TxFeeRow[] = [];
   try {
-    raw = catalogueDb().prepare(`SELECT creates, updates, calldataBytes, payloadBytes, lifetimeBlocks, gasUsed, gasPriceWei, feeWei, sender FROM "TxFee" ORDER BY block, tx`).all() as typeof raw; // fixed order: the hold-out takes every fifth row
+    raw = readTxFees(); // fixed order: the hold-out takes every fifth row
   } catch {
     // Table not migrated yet: `pnpm index` applies migrations.
   }
@@ -34,11 +35,10 @@ export type Spend = { days: number; writes: number; glm: number; low: number; hi
 export function estimatedSpend(days: number, includeLoad: boolean): Spend | null {
   const { rows, model } = feeModel();
   if (!model) return null;
-  const d = catalogueDb();
-  const indexed = Number(d.prepare(`SELECT indexedBlock FROM "SyncState" WHERE id = 1`).pluck().get() ?? 0);
+  const indexed = readCursor()?.indexedBlock ?? 0;
   const since = indexed - days * BLOCKS_PER_DAY;
-  const creates = d.prepare(`SELECT lower(creator) AS w, COUNT(*) AS n, SUM(COALESCE(payloadBytes, 0)) AS bytes FROM "Entity" WHERE createdAtBlock >= ? GROUP BY w`).all(since) as { w: string; n: number; bytes: number }[];
-  const updates = d.prepare(`SELECT lower(e.owner) AS w, COUNT(*) AS n FROM "Patch" p JOIN "Entity" e ON e.key = p.entityKey WHERE p.block >= ? GROUP BY w`).all(since) as { w: string; n: number }[];
+  const creates = createsByWallet(since);
+  const updates = updatesByWallet(since);
   const perUpdate = median(rows.filter((r) => r.creates === 0 && r.updates > 0).map((r) => r.fee / r.updates)) ?? perCreateBase(model);
   const load = new Set([...loadGeneratorOwners()].map((w) => w.toLowerCase()));
   const projectOf = projectsByWallet();
