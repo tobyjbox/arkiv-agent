@@ -107,3 +107,4 @@
 - 2026-10-29T12:40:00Z HANDOFF T23@81751db adjudicated: accepted (520 tests + build verified on merged main; QA H1/L2/L4, Sec L1/L2 fixed; residual legacy-iframe one-time render accepted, B4 removes cost); integrated; row -> merged. Coder moving to T24.
 - 2026-10-29T13:10:00Z HANDOFF T24@02c1bfb adjudicated: accepted (533 tests + build verified on merged main; M1 all 81 shape datasets queryable without EXISTS/!=, M2 no-index page, M3 price never blocks (0.70 s), L3 e2e stable x4); integrated; row -> merged. T26, T27 draft -> ready, coder messaged (T26 then T27).
 - 2026-10-29T13:11:00Z DISPATCH T26, T27 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
+- 2026-10-29T13:30:00Z RECONCILE 8 refs, 1 changed (rollup timestamp), 0 decisions
