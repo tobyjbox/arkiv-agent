@@ -1,0 +1,14 @@
+{
+  "name": "@arkiv-agent/projects",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@arkiv-agent/catalogue": "workspace:*"
+  }
+}

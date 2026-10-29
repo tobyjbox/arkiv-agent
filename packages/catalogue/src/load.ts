@@ -13,7 +13,8 @@ const MIN_REBUILD_MS = 10_000;
 /** High-volume owners change slowly and the query scans a week of creates (~1.7 s): cache it. */
 const BUSY_TTL_MS = 5 * 60_000;
 
-export type Loaded = Catalogue & { membersById: Map<string, Member[]> };
+/** The catalogue, with each dataset's records and the owners the build counted as load generators. */
+export type Loaded = Catalogue & { membersById: Map<string, Member[]>; busyOwners: ReadonlySet<string> };
 let cache: { at: number; value: Loaded } | null = null;
 let isRebuilding = false;
 let busy: { at: number; since: number; owners: Set<string> } | null = null;
@@ -35,12 +36,6 @@ export function loadCatalogue(): Loaded {
     });
   }
   return cache.value;
-}
-
-/** Wallets with over 5,000 creates in the last 7 days (Arkiv's load generators), as the last build saw them. */
-export function loadGeneratorOwners(): ReadonlySet<string> {
-  loadCatalogue();
-  return busy?.owners ?? new Set();
 }
 
 function busyOwners(since: number): Set<string> {
@@ -77,7 +72,7 @@ function build(): Loaded {
       liveRecords: counts.live, undecodedLive: counts.undecoded,
       writes24h: hourlyWrites24h.reduce((a, b) => a + b, 0), hourlyWrites24h,
     },
-    datasets, membersById,
+    datasets, membersById, busyOwners: busyOwnerSet,
   };
   return value;
 }
