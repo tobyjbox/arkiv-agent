@@ -7,3 +7,4 @@ Done criteria: T01 merged to main and pushed; README shows every top-level scree
 Approval: owner request in chat counts as approval for this one-task plan.
 
 ## Amendments
+- 2026-10-29T21:02:14Z: owner (chat) approved T02 Insights label-overlap fix as in-scope follow-up.
