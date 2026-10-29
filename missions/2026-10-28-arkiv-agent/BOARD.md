@@ -1,4 +1,4 @@
-**Mission progress:** 24 tasks — 22 merged, 2 ready · updated 2026-10-29T10:00:00Z
+**Mission progress:** 25 tasks — 22 merged, 3 ready · updated 2026-10-29T10:00:00Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -27,3 +27,4 @@
 | T22 | Full security review of ArkivAgent (pre-publish) | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T20 |  2026-10-29T10:40:00Z |
 | T23 | C1: quick fixes (README, postcss, Sec-Fetch, detail title, narrow sync) | coder | fast | ready | 0/2 | | T21, T22 | 2026-10-29T11:30:00Z |
 | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | ready | 0/3 | | T21 | 2026-10-29T11:30:00Z |
+| T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | ready | 0/2 | | — | 2026-10-29T11:40:00Z |

@@ -101,3 +101,4 @@
 - 2026-10-29T11:00:00Z HANDOFF T21@26c2a0a adjudicated: accepted (ready after H1 README + M1 schema-shape EXISTS; M2, M3, L1-L4); integrated; row -> merged. Plan docs/plan-rename-architecture.md complete, sent to owner for review.
 - 2026-10-29T11:30:00Z OWNER decisions: rewrite history for rename, B4 now, publish via new repo (old renamed arkiv-agent-archive, local origin repointed; new empty tobyjbox/arkiv-agent). T23 (C1), T24 (C2) ready.
 - 2026-10-29T11:31:00Z DISPATCH T23, T24 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id> (T23 first; no push)
+- 2026-10-29T11:40:00Z OWNER request: decoding banner -> futuristic progress bar; T25 (ux_designer) ready
