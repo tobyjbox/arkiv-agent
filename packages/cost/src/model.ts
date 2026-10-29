@@ -83,7 +83,7 @@ export function fitFeeModel(rows: FeeRow[]): FeeModel | null {
   };
 }
 
-export type Estimate = { glm: number; low: number; high: number; perWrite: number; breakdown: { base: number; encoding: number; payload: number }; outside: boolean };
+export type Estimate = { glm: number; low: number; high: number; perWrite: number; breakdown: { base: number; encoding: number; payload: number }; outside: boolean; widenedBy: number };
 
 /** GLM for `writesPerDay` writes of `payloadBytes` each over `days`. Lifetime doesn't enter: see FeeModel.lifetime. */
 export function estimate(m: FeeModel, writesPerDay: number, payloadBytes: number, days = 30): Estimate {
@@ -94,8 +94,13 @@ export function estimate(m: FeeModel, writesPerDay: number, payloadBytes: number
   const encoding = m.gas.slope * m.calldata.intercept * m.gasPrice;
   const payload = m.gas.slope * m.calldata.slope * payloadBytes * m.gasPrice;
   const total = base + encoding + payload || 1;
+  // Outside the payloads seen, the fit is an extrapolation: widen the band by half for every tenfold
+  // step beyond the data (so 10× the largest payload seen gives ×1.5 on each side).
+  const [minSeen, maxSeen] = m.observed.payloadBytes;
+  const beyond = payloadBytes > maxSeen ? payloadBytes / Math.max(1, maxSeen) : payloadBytes < minSeen ? Math.max(1, minSeen) / Math.max(1, payloadBytes) : 1;
+  const widenedBy = 1 + 0.5 * Math.log10(beyond);
   return {
-    glm, low: glm * m.band.low, high: glm * m.band.high, perWrite,
+    glm, low: (glm * m.band.low) / widenedBy, high: glm * m.band.high * widenedBy, perWrite, widenedBy,
     breakdown: { base: base / total, encoding: encoding / total, payload: payload / total },
     outside: payloadBytes > m.observed.payloadBytes[1] || payloadBytes < m.observed.payloadBytes[0],
   };

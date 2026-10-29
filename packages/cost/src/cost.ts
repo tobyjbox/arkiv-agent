@@ -11,7 +11,7 @@ export function feeModel(): { rows: FeeRow[]; model: FeeModel | null; fittedAt: 
   if (cache && Date.now() - cache.at < TTL_MS) return cache;
   let raw: { creates: number; updates: number; calldataBytes: number; payloadBytes: number; lifetimeBlocks: number | null; gasUsed: number; gasPriceWei: string; feeWei: string; sender: string }[] = [];
   try {
-    raw = catalogueDb().prepare(`SELECT creates, updates, calldataBytes, payloadBytes, lifetimeBlocks, gasUsed, gasPriceWei, feeWei, sender FROM "TxFee"`).all() as typeof raw;
+    raw = catalogueDb().prepare(`SELECT creates, updates, calldataBytes, payloadBytes, lifetimeBlocks, gasUsed, gasPriceWei, feeWei, sender FROM "TxFee" ORDER BY block, tx`).all() as typeof raw; // fixed order: the hold-out takes every fifth row
   } catch {
     // Table not migrated yet: `pnpm index` applies migrations.
   }
