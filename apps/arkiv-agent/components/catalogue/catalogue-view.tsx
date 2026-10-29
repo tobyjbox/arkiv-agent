@@ -8,6 +8,7 @@ import { applyView, countBy, FRESHNESS, SORTS, type Sort, type View, viewFromPar
 import { formatCount } from "../../lib/format";
 import { useLive, useSecondsSince } from "../live/live-provider";
 import { DatasetRow } from "./dataset-row";
+import { DecodeProgress } from "./decode-progress";
 import { FilterPopover } from "./filter-popover";
 import { StatTiles } from "./stat-tiles";
 import { useLiveRows } from "./use-live-rows";
@@ -27,10 +28,13 @@ export function CatalogueView({ initial }: { initial: CatalogueData }) {
   const rows = applyView(data.rows, view, ageOf);
   const base = applyView(data.rows, { ...view, project: [], ownership: [], content: [], freshness: null }, ageOf);
   const s = data.summary;
+  // One polite region for the page (Pattern 6): list updates and the decode bar both speak through it.
+  const [spoken, setSpoken] = useState("");
+  useEffect(() => { if (announcement) setSpoken(announcement); }, [announcement]);
 
   return (
     <div className="space-y-6">
-      <p className="sr-only" aria-live="polite">{announcement}</p>
+      <p className="sr-only" aria-live="polite">{spoken}</p>
       <StatTiles tiles={[
         { label: "Datasets", value: s.datasets, tooltip: "Datasets with decoded records, load generators excluded. From ArkivAgent index." },
         { label: "Live records", value: s.liveRecords, tooltip: `Excludes expired and deleted. From ArkivAgent index, block ${formatCount(s.indexedBlock)}.` },
@@ -38,11 +42,7 @@ export function CatalogueView({ initial }: { initial: CatalogueData }) {
         { label: "Writes / 24h", value: s.writes24h, series: s.hourlyWrites24h, tooltip: "Records created in the last 24 hours, load generators excluded." },
       ]} />
 
-      {s.undecodedLive > 0 && (
-        <p className="rounded-md px-4 py-2.5 tint-warn">
-          {formatCount(s.undecodedLive)} of {formatCount(s.liveRecords)} live records are still being decoded, so their datasets are not listed yet. They appear as the indexer catches up.
-        </p>
-      )}
+      <DecodeProgress onAnnounce={setSpoken} />
 
       <div className="flex flex-wrap items-center gap-2">
         <label className="relative flex min-w-64 flex-1 items-center">

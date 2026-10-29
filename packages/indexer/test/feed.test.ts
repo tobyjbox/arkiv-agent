@@ -16,11 +16,11 @@ describe("readFeed", () => {
     const prisma = createPrisma(`file:${path}`);
 
     const first = await readFeed(prisma, null);
-    expect(first).toMatchObject({ reset: true, cursor: "1", indexedBlock: "100", lagBlocks: "20", isBehind: true, liveCount: 1 });
+    expect(first).toMatchObject({ reset: true, cursor: "1", indexedBlock: "100", lagBlocks: "20", isBehind: true, liveCount: 1, undecodedLive: 1 });
 
     store.applySpan([{ kind: "deleted", block: 110n, logIndex: 0, tx: key(8), op: 0, key: key(1), owner: OWNER }], 118n, 0n, state);
     const next = await readFeed(prisma, Number(first.cursor));
-    expect(next).toMatchObject({ reset: false, cursor: "2", indexedBlock: "118", isBehind: false, liveCount: 0 });
+    expect(next).toMatchObject({ reset: false, cursor: "2", indexedBlock: "118", isBehind: false, liveCount: 0, undecodedLive: 0 });
     expect(next.changes.map((c) => [c.kind, c.block])).toEqual([["deleted", "110"]]);
     expect(await readFeed(prisma, 2)).toMatchObject({ reset: false, changes: [] });
     await prisma.$disconnect();

@@ -19,6 +19,8 @@ export type FeedResponse = {
   isBehind: boolean;
   syncedAt: string | null;
   liveCount: number;
+  /** Live records whose attributes aren't decoded yet (the catalogue's decode progress bar, design/07). */
+  undecodedLive: number;
   /** True when `since` is missing, older than the feed window, or too much changed: refetch page data. */
   reset: boolean;
   changes: { seq: number; block: string; kind: ChangeKind; entityKey: string; owner: string }[];
@@ -26,9 +28,10 @@ export type FeedResponse = {
 
 /** Changes after cursor `since`, plus the numbers every page header needs. */
 export async function readFeed(prisma: Prisma, since: number | null): Promise<FeedResponse> {
-  const [state, liveCount, bounds] = await Promise.all([
+  const [state, liveCount, undecodedLive, bounds] = await Promise.all([
     prisma.syncState.findUnique({ where: { id: 1 } }),
     prisma.entity.count({ where: { status: "live" } }),
+    prisma.entity.count({ where: { status: "live", decodedBlock: null } }),
     prisma.change.aggregate({ _min: { seq: true }, _max: { seq: true } }),
   ]);
   const indexed = state?.indexedBlock ?? 0n;
@@ -37,7 +40,7 @@ export async function readFeed(prisma: Prisma, since: number | null): Promise<Fe
   const maxSeq = bounds._max.seq ?? 0;
   const base = {
     indexedBlock: indexed.toString(), chainHead: head.toString(), lagBlocks: lag.toString(), isBehind: lag > LAG_WARN_BLOCKS,
-    syncedAt: state ? new Date(Number(state.syncedAtMs)).toISOString() : null, liveCount,
+    syncedAt: state ? new Date(Number(state.syncedAtMs)).toISOString() : null, liveCount, undecodedLive,
   };
   const reset = { ...base, cursor: String(maxSeq), reset: true, changes: [] };
   if (since === null || since > maxSeq) return reset;
