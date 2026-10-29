@@ -28,6 +28,7 @@
   Ask showed a misleading 15 s timeout; Ask reads now stop at the first 429 and say so (runner only, not the parser).
   After the budget recovered, all demo questions returned rows (0.2-1.3 s). Vitest 501, Playwright 9.
 - 2026-10-29T02:32:49Z Flipped to review, candidate 24d7146. Notification intent: key `2026-10-28-arkiv-agent:T08@24d7146:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
+- 2026-10-29T02:33:09Z Notification result for `2026-10-28-arkiv-agent:T08@24d7146:review`: sent once via SendMessage to local_<session>; tool reported delivered, message_id <id>. Do not resend.
 
 ## Handoff
 
