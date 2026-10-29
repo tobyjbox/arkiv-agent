@@ -3,4 +3,4 @@
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
 |---|---|---|---|---|---|---|---|---|
-| T01 | README screenshots of all main screens + commentary | coder | fast | ready | 0/3 | | — | 2026-10-29T20:55:51Z |
+| T01 | README screenshots of all main screens + commentary | coder | fast | review | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-29T21:00:58Z |

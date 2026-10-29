@@ -6,6 +6,8 @@ query, the results and the SDK code.
 
 ![ArkivAgent data catalogue: stat tiles, filters and a live list of datasets on Arkiv's Tiramisu testnet](docs/screenshots/catalogue.png)
 
+A tour of every screen is under [Screens](#screens).
+
 ## What it is
 
 Arkiv is Golem's queryable data layer: apps write records (entities) with typed attributes, a payload
@@ -35,14 +37,60 @@ shows the level above that: **projects and datasets**.
 - **Read-only.** ArkivAgent holds no wallet and writes nothing to Arkiv. It runs on your machine against
   Arkiv's public Tiramisu testnet.
 
-![Ask Arkiv: a question becomes editable query chips, then live results from Arkiv](docs/screenshots/ask.png)
-
 | Feature | Status |
 |---|---|
 | Data catalogue | Built |
 | Ask Arkiv | Built |
 | Insights | Built (stretch; differences from `design/05-pulse.md` under [Known gaps](#known-gaps)) |
 | Financials | Built (stretch; needs `pnpm fees`; differences from `design/06-cost.md` under [Known gaps](#known-gaps)) |
+
+## Screens
+
+The four screens in the top bar, plus the page for a single dataset. Captured on 29 Oct 2026 from a
+local index of the Tiramisu testnet, at 1280 px in dark mode.
+
+### Data catalogue (`/catalogue`)
+
+![Data catalogue: tiles for datasets, live records, projects and writes in the last 24 hours; the decode progress bar; search and filters; and the dataset list with project, live count, writers, lifetime and last write](docs/screenshots/catalogue.png)
+
+Every dataset on Arkiv, grouped by project label and record kind, with its live count, writers,
+ownership, typical lifetime and last write. This is the view Golem's explorers don't have: what is
+stored and who writes it, without opening single records. The decode bar shows how far the indexer
+is with new records, and the sync indicator in the top bar says how fresh everything is.
+
+### Dataset page (`/catalogue/<id>`)
+
+![Dataset page for tideland / structure: actions to ask, copy an SDK snippet or open Data Explorer; live, writers, median life and payload tiles; the inferred schema with types, examples and how often each attribute is set; and a 7-day chart of writes and expiries](docs/screenshots/dataset.png)
+
+One dataset in full: the schema inferred from its records (each attribute's type, examples and how
+often it is set), live stats, and a 7-day chart of writes against expiries. Weak attribution is
+flagged (here, a label also used by unrelated wallets), and one click copies SDK code to read the data
+back or opens the same query in Data Explorer.
+
+### Ask Arkiv (`/ask`)
+
+![Ask Arkiv answering "tideland parcels with x greater than 20": interpreted as the tideland parcel dataset with an editable x > 20 chip, then a live results table with tabs for the query and the TypeScript](docs/screenshots/ask.png)
+
+A plain-English question becomes a typed Arkiv query built from the catalogue's schema, then runs
+live. Each condition is a chip you can edit, and the query, the TypeScript and a Data Explorer link
+sit one tab away, so you can check the answer before trusting it. This one ran on catalogue rules
+alone; add `ANTHROPIC_API_KEY` to have Claude read the question.
+
+### Insights (`/insights`)
+
+![Insights over 30 days: tiles for active wallets, active projects, writes, new projects and estimated GLM spent; a retention chart for one weekly cohort with its projects; and writes over time](docs/screenshots/insights.png)
+
+Who is building on Arkiv, and who keeps building: active wallets and projects, writes, new projects
+and estimated spend over 7, 30 or 90 days, retention by the week a project first wrote, and activity
+over time. Arkiv's own load generators are left out by default, so the numbers reflect real apps.
+
+### Financials (`/financials`)
+
+![Financials: the GLM/USD price over 30 days; the cost calculator with writes per day, payload size and lifetime giving a 30-day fee estimate, its range and what drives it; and estimated spend across all projects for the last 30 days](docs/screenshots/financials.png)
+
+What writing to Arkiv costs. The calculator turns writes per day, payload size and lifetime into a
+30-day fee with its range and what drives it, using a fee model fitted to sampled Tiramisu receipts.
+The GLM price chart and the spend figures put that in dollars and show what projects actually spend.
 
 ## Run it locally
 
