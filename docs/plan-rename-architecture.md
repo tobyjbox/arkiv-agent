@@ -1,14 +1,14 @@
 # Plan: arkiv-agent rename, architecture, review fixes
 
-Status: **draft**. Waiting on the QA (T21) and security (T22) review reports, which go into Part C.
+Status: **ready for owner review**. Includes the QA (T21) and security (T22) findings in Part C.
 Base: local `main` a09f1e6.
 
 ## Order
 
-1. **Part C, high and medium fixes from QA and security**: these come first, because they may block publishing.
+1. **Part C, C1 and C2**: the QA and security fixes come first (C1 and C2 can run in parallel; they touch different files).
 2. **Part A, the rename**: one mechanical pass, made before the refactors so they use the new names.
 3. **Part B, architecture**: B1 → B2 → B3/B4 (B3 and B4 can run in parallel), then B5 and B6.
-4. **QA re-check** of the whole app; owner publishes.
+4. **QA re-check** of the whole app, then **C3**: the owner publishes from a new repo (security H1).
 
 Each numbered item becomes one coder task with its own branch. Tests, build and production e2e must stay green after each.
 
@@ -63,12 +63,27 @@ Do this as one task, with no other change mixed in, so the diff can be reviewed 
 | L2 | Low | The T19 guard on the heavy pages relies on Origin/Referer; it should also check `Sec-Fetch-Site`/`Sec-Fetch-Mode`. | Fix in C1; B4 removes the underlying cost. |
 | Info | — | No secrets in any commit; the GLM price fetch is safe; the T07 and T19 fixes still hold. | — |
 
-### QA (T21)
+### QA (T21, accepted): ready to publish after H1 and M1; the USD view is correct
 
-_Pending._
+| # | Severity | Finding | Decision |
+|---|---|---|---|
+| H1 | High (docs) | README still lists Pulse and Cost as "Planned"; it doesn't mention `pnpm fees` or the outbound price calls (CoinGecko, Binance). | Fix in C1. |
+| M1 | Medium | 81 datasets named by schema shape use `EXISTS` base queries, which the RPC rejects, so Ask, the SDK snippet and the Explorer link fail for them (T17 N1 was only partly fixed). | Fix in C2: a base query without `EXISTS`, or list these datasets as browse-only with a reason. |
+| M2 | Medium | With no index (for example, before the first `pnpm index` finishes migrating), every page is a blank 500, and an empty DB file gets created. | Fix in C2: an "index not built yet, run `pnpm index`" page; don't create the file. |
+| M3 | Medium | `/cost` waits for the price lookup; when both APIs hang it takes 7.8 s. | Fix in C2: render without USD when no price is cached, and refresh the price in the background. B5 moves this code to the cost package. |
+| L1 | Low | Leftover "ArkivAgent" text: `pulse/aggregate.ts:142`, `ask/interpret.ts:596,620`, `.env.example:14`. | Covered by Part A. |
+| L2 | Low | The dataset detail tab title is just "ArkivAgent". | Fix in C1: "<dataset> · ArkivAgent". |
+| L3 | Low | e2e is still load-sensitive (one cost pageerror in 3 runs; timeouts under `--repeat-each 4`); one unreproduced React #418. | Fix in C2: wait on network idle or state, not timers; record #418 if it comes back. |
+| L4 | Low | On narrow screens the sync indicator shows only "642s", and "Ask Arkiv" wraps. | Fix in C1. |
+
+### Part C tasks
+- **C1 (coder, fast):** README (QA H1), postcss override (security L1), Sec-Fetch check (security L2), detail-page title (QA L2), narrow sync indicator and nav (QA L4).
+- **C2 (coder, frontier):** M1 schema-shape base query, M2 no-index page, M3 non-blocking price, L3 e2e stability.
+- **C3 (owner):** security H1, publishing from a clean repo. Do it last, after Parts A and B, so the new repo starts from the final history.
 
 ---
 
 ## Owner decisions needed
 1. Keep the old names in git history (planned), or rewrite history again?
 2. Is B4 (storing results in the indexer) wanted now, or later?
+3. Security H1: publish from a new repo (recommended), or ask GitHub Support to purge the old commits?

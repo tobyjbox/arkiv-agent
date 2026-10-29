@@ -98,3 +98,4 @@
 - 2026-10-29T10:01:00Z DISPATCH T22 -> arkiv-agent_security-whitehat_claude-code_opus-5.5-low delivered <id>
 - 2026-10-29T10:20:00Z OWNER request: remove 'arkiv-agent' everywhere (-> arkiv-agent) + architecture fixes; draft plan docs/plan-rename-architecture.md; Part C waits on T21/T22
 - 2026-10-29T10:40:00Z HANDOFF T22@6b95384 adjudicated: accepted (NO-GO until H1: old commits still served by hash, spot-checked 0194123); integrated 064095b; row -> merged. H1 owner action; L1/L2 into plan Part C. Note: T21 worktree landed inside repo at worktrees/ (orchestrator spec path), not tracked.
+- 2026-10-29T11:00:00Z HANDOFF T21@26c2a0a adjudicated: accepted (ready after H1 README + M1 schema-shape EXISTS; M2, M3, L1-L4); integrated; row -> merged. Plan docs/plan-rename-architecture.md complete, sent to owner for review.
