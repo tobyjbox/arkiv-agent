@@ -14,7 +14,7 @@
 | T09 | Stretch: pulse + cost specs | ux_designer | fast | merged | 3/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:10:46Z |
 | T10 | Stretch: ecosystem pulse | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T08, T09 | 2026-10-29T02:43:06Z |
 | T11 | Stretch: cost view | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T10 | 2026-10-29T02:56:12Z |
-| T12 | Stretch: QA review of T10/T11 (pulse, cost) | qa | fast | ready | 0/3 | | T11 | 2026-10-29T02:56:12Z |
+| T12 | Stretch: QA review of T10/T11 (pulse, cost) | qa | fast | in-progress | 0/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T11 | 2026-10-29T02:56:44Z |
 | T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T07 | 2026-10-28T22:41:56Z |
 | T14 | Fix T06 findings: F1 Ask rules drop conditions, F2 'is false' negation, F3 owner-only binds wrong project; F5 e2e port/reuse, F6 time-dependent e2e, F7 verify values | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T06, T13 | 2026-10-28T22:55:53Z |
 | T15 | QA re-check: fresh blind Ask set (>= 80%) + T13/T14 fixes | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T14 | 2026-10-28T23:01:56Z |
