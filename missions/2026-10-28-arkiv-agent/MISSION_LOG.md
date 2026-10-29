@@ -73,3 +73,4 @@
 - 2026-10-29T02:47:33Z HANDOFF T17@43db1dd detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-final@43db1dd:missions/2026-10-28-arkiv-agent/tasks/T17-qa-final.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T02:47:33Z HANDOFF T17@43db1dd adjudicated: accepted (blind 13/15 = 87% on pre-committed rule, 11/15 strict; criterion >= 80% met on the declared rule; N1 Medium real bug -> T18 with Q5, Q6, N4); integrated c91a71c; row -> merged 65c1f29. QA correctly declined to merge outside its grant.
 - 2026-10-29T02:47:33Z HANDOFF T17@43db1dd dispatched: T18 (new, ready, coder messaged; priority over T11)
+- 2026-10-29T02:47:44Z NUDGE T18 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message queued <id>
