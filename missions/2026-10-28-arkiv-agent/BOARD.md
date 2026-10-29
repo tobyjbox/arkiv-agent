@@ -36,4 +36,4 @@
 | T31 | B2: shared projects module | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T30 | 2026-10-29T16:26:41Z |
 | T32 | B3: Ask interpret() as a pipeline | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T16:55:32Z |
 | T33 | B4: indexer stores Insights/Financials aggregates | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T17:08:07Z |
-| T34 | B5+B6: thin pages, PriceSource in cost, remove spike code | coder | fast | ready | 0/1 | | T32, T33 | 2026-10-29T17:08:07Z |
+| T34 | B5+B6: thin pages, PriceSource in cost, remove spike code | coder | fast | claimed | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T32, T33 | 2026-10-29T17:08:29Z |
