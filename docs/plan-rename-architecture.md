@@ -86,4 +86,4 @@ Do this as one task, with no other change mixed in, so the diff can be reviewed 
 ## Owner decisions needed
 1. ~~Keep old names in history?~~ Decided: rewrite history.
 2. ~~B4 now or later?~~ Decided: now.
-3. Security H1: publish from a new repo (recommended), or ask GitHub Support to purge the old commits?
+3. ~~Security H1 route?~~ Decided: new repo. Old repo renamed `tobyjbox/arkiv-agent-archive` (private; local `origin` now points there); new empty private `tobyjbox/arkiv-agent` created 2026-10-29. Only the final checked history is pushed to it.
