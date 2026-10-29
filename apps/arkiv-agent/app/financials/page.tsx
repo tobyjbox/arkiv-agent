@@ -1,6 +1,7 @@
 import { estimatedSpend, feeModel } from "@arkiv-agent/cost";
 import Link from "next/link";
 import { Calculator } from "../../components/cost/calculator";
+import { PriceChart } from "../../components/cost/price-chart";
 import { RefreshForPrice } from "../../components/cost/refresh-for-price";
 import { glm } from "../../lib/glm";
 import { glmPrice, usd } from "../../lib/glm-price";
@@ -45,6 +46,8 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
         <p className="caption text-text-tertiary">{price ? `USD amounts use the mainnet GLM price, $${price.usd.toPrecision(4)} (${price.source}, ${price.at.slice(11, 16)} UTC); Tiramisu testnet GLM itself has no value.` : PRICE_NOTE[priceStatus as Exclude<typeof priceStatus, "ok">]}</p>
         {priceStatus === "loading" && <RefreshForPrice />}
       </header>
+
+      {priceStatus === "off" ? <p className="caption text-text-tertiary">The GLM price chart is off (GLM_PRICE=off).</p> : <PriceChart spot={price} />}
 
       {model ? <Calculator model={model} fittedAt={fittedAt} initial={initial} price={price} />
         : <p className="rounded-md border border-border-subtle bg-surface p-5 text-text-secondary">Not enough observed fees to estimate yet (have {rows.length} receipts; need about 30). Run <code className="font-mono">pnpm fees</code>.</p>}

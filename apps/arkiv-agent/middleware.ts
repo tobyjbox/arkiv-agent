@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { isAllowedHost, isCrossSiteEmbed } from "./lib/guard";
 
-/** Pages that aggregate the whole index on request (seconds of work). */
-const HEAVY = /^\/(insights|pulse|financials|cost)(\/|$)/;
+/** Routes another site mustn't make do heavy work: pages that aggregate the whole index, and the price history (outbound calls). */
+const HEAVY = /^\/(insights|pulse|financials|cost|api\/glm-history)(\/|$)/;
 
 /**
  * Every request, pages included: refuse host names that aren't local (DNS rebinding). The heavy pages
