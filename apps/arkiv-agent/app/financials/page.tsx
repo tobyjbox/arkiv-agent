@@ -14,7 +14,7 @@ const PRICE_NOTE = {
   failed: "No GLM price source answered, so amounts are shown in GLM only.",
   off: "USD amounts are off (GLM_PRICE=off), so amounts are shown in GLM only.",
 };
-export const metadata = { title: "Cost · ArkivAgent" };
+export const metadata = { title: "Financials · ArkivAgent" };
 
 const int = (v: string | undefined, min: number, max: number, fallback: number) => {
   const n = Number(v);
@@ -40,7 +40,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   return (
     <div className="mx-auto max-w-[1280px] space-y-10 px-4 pb-16 pt-8 sm:px-6">
       <header className="space-y-1">
-        <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Cost</h1>
+        <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Financials</h1>
         <p className="text-text-secondary">What writing to Arkiv costs, in GLM, from fees observed on Tiramisu. Every estimate shows its range.</p>
         <p className="caption text-text-tertiary">{price ? `USD amounts use the mainnet GLM price, $${price.usd.toPrecision(4)} (${price.source}, ${price.at.slice(11, 16)} UTC); Tiramisu testnet GLM itself has no value.` : PRICE_NOTE[priceStatus as Exclude<typeof priceStatus, "ok">]}</p>
         {priceStatus === "loading" && <RefreshForPrice />}
@@ -52,7 +52,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
       <section aria-labelledby="spend" className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 id="spend" className="text-[20px] font-semibold">Estimated spend, last 30 days</h2>
-          <Link href={includeLoad ? "/cost" : "/cost?load=1"} className="caption text-text-secondary hover:text-text-primary">{includeLoad ? "Exclude load generators" : "Include load generators"}</Link>
+          <Link href={includeLoad ? "/financials" : "/financials?load=1"} className="caption text-text-secondary hover:text-text-primary">{includeLoad ? "Exclude load generators" : "Include load generators"}</Link>
         </div>
         {spend ? (
           <>

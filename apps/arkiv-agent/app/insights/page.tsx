@@ -11,7 +11,7 @@ import { glm } from "../../lib/glm";
 import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Ecosystem pulse · ArkivAgent" };
+export const metadata = { title: "Insights · ArkivAgent" };
 
 const delta = (now: number, before: number | undefined, period: number) => {
   if (before === undefined) return "first period on Tiramisu";
@@ -43,7 +43,7 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
       <RefreshOnChange />
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Ecosystem pulse</h1>
+          <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Insights</h1>
           <p className="text-text-secondary">Who is building on Arkiv, and who keeps building.</p>
           <p className="caption text-text-tertiary">
             Raw activity:{" "}
@@ -67,7 +67,7 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
             <Sparkline points={t.series} height={28} className="mt-2 text-accent" />
           </div>
         ))}
-        <a href="/cost" className="rounded-md bg-surface p-5 hover:bg-raised" title="Estimated from the fee model and each write's payload size; see Cost for the model and its error.">
+        <a href="/financials" className="rounded-md bg-surface p-5 hover:bg-raised" title="Estimated from the fee model and each write's payload size; see Cost for the model and its error.">
           <div className="label text-text-tertiary">GLM spent (est.)</div>
           <div className="stat mt-1">{spend ? glm(spend.glm) : "—"}</div>
           <div className="caption mt-1 text-text-secondary">{spend ? `range ${glm(spend.low)} to ${glm(spend.high)}` : "needs sampled fees (pnpm fees)"}</div>
