@@ -7,6 +7,7 @@ import { SpendTable } from "../../components/cost/spend-table";
 import { RefreshForPrice } from "../../components/cost/refresh-for-price";
 import { glm, usd } from "../../lib/glm";
 import { formatCount } from "../../lib/format";
+import { parseRange } from "../../lib/price-range";
 import { isIndexReady } from "../../lib/db";
 import { ResultsPending } from "../../components/ui/results-pending";
 
@@ -46,7 +47,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
         {priceStatus === "loading" && <RefreshForPrice />}
       </header>
 
-      {priceStatus === "off" ? <p className="caption text-text-tertiary">The GLM price chart is off (GLM_PRICE=off).</p> : <PriceChart spot={price} />}
+      {priceStatus === "off" ? <p className="caption text-text-tertiary">The GLM price chart is off (GLM_PRICE=off).</p> : <PriceChart spot={price} initialDays={parseRange(q.range)} />}
 
       {model ? <Calculator model={model} fittedAt={fittedAt} initial={initial} price={price} />
         : <p className="rounded-md border border-border-subtle bg-surface p-5 text-text-secondary">Not enough observed fees to estimate yet (have {receipts} receipts; need about 30). Run <code className="font-mono">pnpm fees</code>.</p>}

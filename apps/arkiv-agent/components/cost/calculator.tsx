@@ -5,6 +5,7 @@ import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { GlmPrice } from "@arkiv-agent/cost";
 import { glm, usd } from "../../lib/glm";
+import { replaceQuery } from "../../lib/url-query";
 import { CopyButton } from "../ui/copy-button";
 
 const LIMITS = { writes: [1, 1_000_000], payload: [1, 100_000] } as const;
@@ -39,7 +40,7 @@ export function Calculator({ model, fittedAt, initial, price }: { model: FeeMode
   const [lifetime, setLifetime] = useState(initial.lifetime);
   const [unit, setUnit] = useState<Unit>(initial.unit);
   useEffect(() => {
-    const t = setTimeout(() => window.history.replaceState(null, "", `/financials?writes=${writes}&payload=${payload}&lifetime=${lifetime}&unit=${unit}`), 60);
+    const t = setTimeout(() => replaceQuery({ writes: String(writes), payload: String(payload), lifetime: String(lifetime), unit }), 60);
     return () => clearTimeout(t);
   }, [writes, payload, lifetime, unit]);
   const e = estimate(model, writes, payload, 30);
