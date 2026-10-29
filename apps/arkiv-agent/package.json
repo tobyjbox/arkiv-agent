@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev -H ${ARKIV_AGENT_HOST:-127.0.0.1} -p ${PORT:-3101}",
+    "dev": "next dev -H ${ARKIV_AGENT_HOST:-${ARKIV_AGENT_HOST:-127.0.0.1}} -p ${PORT:-3101}",
     "build": "next build",
-    "start": "next start -H ${ARKIV_AGENT_HOST:-127.0.0.1} -p ${PORT:-3101}",
+    "start": "next start -H ${ARKIV_AGENT_HOST:-${ARKIV_AGENT_HOST:-127.0.0.1}} -p ${PORT:-3101}",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "screenshot": "node scripts/screenshot.mjs"

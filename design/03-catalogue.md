@@ -9,7 +9,7 @@ Primary user: a developer looking for data on Arkiv to build on. Their questions
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────┐
-│ ◆ ArkivAgent   Catalogue  Ask Arkiv  (Pulse) (Cost)        [⌘K Search]  ● Synced 3s │  top bar 56px, bg.canvas, border.subtle bottom
+│ ◆ ArkivAgent   Catalogue  Ask Arkiv  (Pulse) (Cost)   [⌘K Search]  ● Synced 3s │  top bar 56px, bg.canvas, border.subtle bottom
 ├───────────────────────────────────────────────────────────────────────────────┤
 │                         (hero glow behind header)                             │
 │  page content, max 1280px                                                     │

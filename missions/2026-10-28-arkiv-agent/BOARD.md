@@ -30,4 +30,4 @@
 | T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | merged | 2/2 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | — | 2026-10-29T12:10:00Z |
 | T26 | Build decode progress bar (design/07) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T14:00:00Z |
 | T27 | GLM/USDT price chart on /financials | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T24 | 2026-10-29T14:40:00Z |
-| T28 | Part A: remove arkiv-agent everywhere -> arkiv-agent (mechanical) | coder | fast | ready | 0/1 | | T27 | 2026-10-29T14:40:00Z |
+| T28 | Part A: remove arkiv-agent everywhere -> arkiv-agent (mechanical) | coder | fast | in-progress | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T27 | 2026-10-29T12:34:52Z |
