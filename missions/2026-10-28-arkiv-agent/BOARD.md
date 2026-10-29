@@ -19,4 +19,4 @@
 | T14 | Fix T06 findings: F1 Ask rules drop conditions, F2 'is false' negation, F3 owner-only binds wrong project; F5 e2e port/reuse, F6 time-dependent e2e, F7 verify values | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T06, T13 | 2026-10-28T22:55:53Z |
 | T15 | QA re-check: fresh blind Ask set (>= 80%) + T13/T14 fixes | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T14 | 2026-10-28T23:01:56Z |
 | T16 | Fix T15 findings R1-R6 (multi-clause comparisons, 'is known', whole-chain questions, 'latest', Not-used duplicates, stale-index sync label) | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T15 | 2026-10-28T23:11:09Z |
-| T17 | QA final blind Ask check (>= 80%) + R1-R6 confirm | qa | fast | ready | 0/3 | | T16 | 2026-10-28T23:11:09Z |
+| T17 | QA final blind Ask check (>= 80%) + R1-R6 confirm | qa | fast | review | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T16 | 2026-10-29T02:47:01Z |
