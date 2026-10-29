@@ -5,7 +5,7 @@ import type { RecordView } from "../src/detail.ts";
 import type { Dataset } from "../src/types.ts";
 
 const dataset: Dataset = {
-  id: "abc123", name: "note", nameSource: "discriminator", discriminator: { name: "kind", value: "note" },
+  id: "abc123", name: "note", nameSource: "discriminator", discriminator: { name: "kind", value: "note" }, shape: null, unqueryable: null,
   project: { label: "tideland", method: "label", labelAttr: "app", isPrefix: false, confidence: 0.92, conflictWallets: null },
   schema: [{ name: "body", type: "str", presence: 1, examples: ["x".repeat(100)] }, { name: "kind", type: "str", presence: 1, examples: ["note"] }],
   liveCount: 3, writers: 2, ownership: "app", medianLifetimeBlocks: 900, firstWriteBlock: 1, lastWriteBlock: 2, writes24h: 1,

@@ -1,4 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
+import { open, SERVER_RENDER } from "./open";
 
 /** Fails the test on any console error (hydration mismatches surface here). */
 function watchErrors(page: Page): string[] {
@@ -10,7 +11,7 @@ function watchErrors(page: Page): string[] {
 
 test("catalogue list renders live data, filters through the URL, and syncs", async ({ page }) => {
   const errors = watchErrors(page);
-  await page.goto("/catalogue");
+  await open(page, "/catalogue");
   // Scope to #main: until streaming finishes, React keeps a hidden copy of streamed HTML in <body>.
   const main = page.locator("#main");
   await expect(main.getByRole("heading", { level: 1, name: "Data catalogue" })).toBeVisible();
@@ -23,7 +24,7 @@ test("catalogue list renders live data, filters through the URL, and syncs", asy
 
   const firstName = (await rows.first().locator("td").first().locator(".font-mono").first().textContent())!.trim();
   await main.getByPlaceholder("Search datasets, attributes, projects…").fill(firstName);
-  await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(firstName).replace(/%20/g, "\\+")}`));
+  await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(firstName).replace(/%20/g, "\\+")}`), SERVER_RENDER);
   await expect(rows.first()).toContainText(firstName);
   expect(errors).toEqual([]);
 });
@@ -33,7 +34,7 @@ test("dataset detail shows schema, activity, records and a runnable snippet", as
   await page.goto("/catalogue");
   // Open the first row's link directly: live updates can reorder rows between finding and clicking one.
   const href = await page.locator("#main tbody tr").first().locator("a").first().getAttribute("href");
-  await page.goto(href!);
+  await open(page, href!);
   await expect(page).toHaveURL(/\/catalogue\/[0-9a-f]{12}$/);
   const datasetName = (await page.getByRole("heading", { level: 1 }).textContent())!.trim();
   await expect(page).toHaveTitle(`${datasetName} · ArkivAgent`);
@@ -47,7 +48,7 @@ test("dataset detail shows schema, activity, records and a runnable snippet", as
 
 test("on a 375 px screen the nav stays on one line and the sync indicator keeps its words", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/catalogue");
+  await open(page, "/catalogue");
   for (const link of await page.getByRole("navigation", { name: "Main" }).getByRole("link").all()) {
     const box = (await link.boundingBox())!;
     expect(box.height).toBeLessThan(48);

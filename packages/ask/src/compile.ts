@@ -1,11 +1,11 @@
 import { addr, bool, bytes32, dec, i32, key, str, u256, u64 } from "@arkiv-network/sdk/attr";
-import { and, eq, type Expression, gt, gte, lt, lte, ne, not, or, render, startsWith } from "@arkiv-network/sdk/query";
-import { type Dataset, datasetPredicates, type Predicate, querySnippet } from "@arkiv-agent/catalogue";
+import { and, eq, type Expression, gt, gte, lt, lte, not, or, render, startsWith } from "@arkiv-network/sdk/query";
+import { type Dataset, datasetPredicates, PRESENCE_TYPES, type Predicate, presence, querySnippet } from "@arkiv-agent/catalogue";
 import { type Result, err, ok } from "@arkiv-agent/core";
 import type { AskPlan, AskQuery, AttrType, Comparison } from "./query.ts";
 
 const J = JSON.stringify;
-const OPS = { eq, ne, gt, gte, lt, lte } as const;
+const OPS = { eq, gt, gte, lt, lte } as const;
 const HEX = /^0x[0-9a-fA-F]+$/;
 const CROSS_DATASET = new Set(["$owner", "$creator", "$key"]);
 
@@ -60,6 +60,14 @@ export function toPredicate(q: AskQuery): Predicate {
     default: {
       const c = q as Comparison;
       const { value, code } = typedValue(c.type, c.value);
+      if (c.op === "ne") {
+        // Tiramisu rejects != (-32002), as it does EXISTS. "Is not" becomes NOT =, plus "has it" where
+        // the type allows, so records without the attribute don't count as different.
+        const neq = { expr: not(eq(c.attr, value)), code: `not(eq(${J(c.attr)}, ${code}))` };
+        if (!PRESENCE_TYPES.has(c.type) || c.attr.startsWith("$")) return neq;
+        const has = presence({ name: c.attr, type: c.type });
+        return { expr: and([has.expr, neq.expr]), code: `and(${has.code}, ${neq.code})` };
+      }
       return { expr: OPS[c.op](c.attr, value), code: `${c.op}(${J(c.attr)}, ${code})` };
     }
   }
@@ -76,6 +84,7 @@ export function compile(plan: Pick<AskPlan, "where" | "limit">, dataset: Dataset
   if (!dataset && plan.where && !isLookup(plan.where)) {
     return err("Choose a dataset first: across all datasets Ask only looks up records by $owner, $creator or $key.");
   }
+  if (dataset?.unqueryable) return err(`One query can't read ${dataset.name} back yet: ${dataset.unqueryable}`);
   try {
     const preds = [...(dataset ? datasetPredicates(dataset) : []), ...(plan.where ? [toPredicate(plan.where)] : [])];
     if (!preds.length) return err("The question has no conditions to query on.");

@@ -1,4 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
+import { open } from "./open";
 
 function watchErrors(page: Page): string[] {
   const errors: string[] = [];
@@ -11,7 +12,7 @@ function watchErrors(page: Page): string[] {
 // the interpretation, query and code never depend on the chain.
 test("an example question shows chips, then live results, the query and the code", async ({ page }) => {
   const errors = watchErrors(page);
-  await page.goto("/ask");
+  await open(page, "/ask");
   const main = page.locator("#main");
   await expect(main.getByRole("heading", { level: 1, name: "Ask Arkiv" })).toBeVisible();
   const example = main.getByText("Try:").locator("..").getByRole("button").first();
@@ -32,7 +33,7 @@ test("an example question shows chips, then live results, the query and the code
 });
 
 test("a question ArkivAgent can't ground says so and offers examples", async ({ page }) => {
-  await page.goto("/ask");
+  await open(page, "/ask");
   const main = page.locator("#main");
   await main.getByLabel("Ask a question about data on Arkiv").fill("what's the weather in Lisbon today?");
   await main.getByLabel("Ask a question about data on Arkiv").press("Enter");
@@ -58,11 +59,26 @@ test("the ask APIs refuse cross-site requests (T07 M1)", async ({ request }) => 
 });
 
 test("words ArkivAgent can't use are reported, not dropped (T06 F1)", async ({ page }) => {
-  await page.goto("/ask");
+  await open(page, "/ask");
   const main = page.locator("#main");
   const example = (await main.getByText("Try:").locator("..").getByRole("button").first().textContent())!.trim();
   const input = main.getByLabel("Ask a question about data on Arkiv");
   await input.fill(`${example} zebrafish`);
   await input.press("Enter");
   await expect(main.getByRole("region", { name: "Interpretation" }).getByText(/Not used: “zebrafish”/)).toBeVisible();
+});
+
+test("a dataset named by its attribute shape runs live without EXISTS (T21 M1)", async ({ page }) => {
+  await open(page, "/ask");
+  const main = page.locator("#main");
+  const input = main.getByLabel("Ask a question about data on Arkiv");
+  await input.fill("nazar-in-batch-alerts alerts");
+  await input.press("Enter");
+  await expect(main.getByRole("region", { name: "Interpretation" }).getByText("Interpreted as")).toBeVisible();
+  // Live: rows, or a rate limit or timeout panel, but never the node rejecting the query.
+  await expect(main.locator("tbody tr").first().or(main.getByText(/No records match|didn't respond|returned an error|budget is used up/))).toBeVisible({ timeout: 20_000 });
+  await expect(main.getByText(/-32002|Query rejected/)).toHaveCount(0);
+  await main.getByRole("tab", { name: "Query" }).click();
+  await expect(main.locator("pre code")).toContainText("project = str('nazar-in-batch-alerts')");
+  await expect(main.locator("pre code")).not.toContainText("EXISTS");
 });

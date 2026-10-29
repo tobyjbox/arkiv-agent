@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchGlmPrice, usd } from "./glm-price";
+import { fetchGlmPrice, priceCache, usd } from "./glm-price";
 
 const reply = (body: unknown, ok = true) => Promise.resolve({ ok, json: () => Promise.resolve(body) });
 const at = () => new Date("2026-10-29T10:00:00Z");
@@ -24,5 +24,46 @@ describe("usd", () => {
     expect(usd(1234.5)).toBe("$1,234.50");
     expect(usd(0.000123456)).toBe("$0.000123");
     expect(usd(0)).toBe("$0");
+  });
+});
+
+describe("priceCache (T21 M3)", () => {
+  const price = { golem: { usd: 0.107 } };
+  it("never waits: the first read has no price and starts a lookup, later reads get it", async () => {
+    let t = 0;
+    let calls = 0;
+    type Reply = { ok: boolean; json(): Promise<unknown> };
+    let answer: (v: Reply) => void = () => {};
+    const cache = priceCache(() => { calls++; return new Promise<Reply>((r) => { answer = r; }); }, () => t, () => false);
+    expect(cache.read()).toEqual({ price: null, status: "loading" });
+    expect(cache.read().status).toBe("loading");
+    expect(calls).toBe(1);
+    answer({ ok: true, json: () => Promise.resolve(price) });
+    await cache.settled();
+    expect(cache.read()).toMatchObject({ price: { usd: 0.107, source: "CoinGecko" }, status: "ok" });
+    t = 11 * 60_000; // stale: still shown while one new lookup runs
+    expect(cache.read().status).toBe("ok");
+    expect(calls).toBe(2);
+  });
+
+  it("says when both sources failed, and retries after a minute", async () => {
+    let t = 0;
+    let calls = 0;
+    const cache = priceCache(() => { calls++; return Promise.reject(new Error("down")); }, () => t, () => false);
+    cache.read();
+    await cache.settled();
+    expect(cache.read()).toEqual({ price: null, status: "failed" });
+    expect(calls).toBe(2); // CoinGecko, then Binance
+    t = 61_000;
+    expect(cache.read().status).toBe("loading");
+    await cache.settled();
+    expect(calls).toBe(4);
+  });
+
+  it("makes no requests when GLM_PRICE=off", () => {
+    let calls = 0;
+    const cache = priceCache(() => { calls++; return Promise.reject(new Error("x")); }, () => 0, () => true);
+    expect(cache.read()).toEqual({ price: null, status: "off" });
+    expect(calls).toBe(0);
   });
 });

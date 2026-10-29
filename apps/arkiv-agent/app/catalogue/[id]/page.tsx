@@ -10,6 +10,7 @@ import { DatasetLive } from "../../../components/dataset/dataset-live";
 import { SchemaTable } from "../../../components/dataset/schema-table";
 import { SdkSnippet } from "../../../components/dataset/sdk-snippet";
 import { CopyButton } from "../../../components/ui/copy-button";
+import { isIndexReady } from "../../../lib/db";
 import { BLOCK_SECONDS, formatCount, middle, percent } from "../../../lib/format";
 
 export const dynamic = "force-dynamic";
@@ -18,11 +19,13 @@ export const dynamic = "force-dynamic";
 const datasetFor = cache(getDataset);
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  if (!isIndexReady()) return {};
   const detail = datasetFor((await params).id);
   return { title: `${detail ? detail.dataset.name : "Dataset not found"} · ArkivAgent` };
 }
 
 export default async function DatasetPage({ params }: { params: Promise<{ id: string }> }) {
+  if (!isIndexReady()) return null;
   const { id } = await params;
   const detail = datasetFor(id);
   if (!detail) notFound();
@@ -43,7 +46,7 @@ export default async function DatasetPage({ params }: { params: Promise<{ id: st
           <span className={`caption rounded-full px-2 py-0.5 ${d.liveCount === 0 ? "tint-warn" : isActive ? "tint-live" : "border border-border-default text-text-secondary"}`}>
             {d.liveCount === 0 ? "All expired" : isActive ? "● Active" : "Quiet"}
           </span>
-          <div className="ml-auto flex gap-2">
+          {!d.unqueryable && <div className="ml-auto flex gap-2">
             <Link href={`/ask?scope=${d.id}`} className="inline-flex h-9 items-center gap-1.5 rounded-md border border-ai/40 px-4 text-text-primary hover:bg-raised">
               <Sparkles size={16} className="text-ai" aria-hidden /> Ask about this dataset
             </Link>
@@ -51,7 +54,7 @@ export default async function DatasetPage({ params }: { params: Promise<{ id: st
             <a href={`https://data.arkiv.network/?q=${encodeURIComponent(snippet.query)}`} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default px-4 text-text-primary hover:bg-raised">
               <ExternalLink size={16} className="text-info" aria-hidden /> Open Data Explorer<span className="sr-only"> (opens in a new tab)</span>
             </a>
-          </div>
+          </div>}
         </div>
         <p className="flex flex-wrap items-center gap-2 text-text-secondary">
           <span className={d.project.method === "creator" ? "font-mono" : ""}>{project}</span>
@@ -66,6 +69,7 @@ export default async function DatasetPage({ params }: { params: Promise<{ id: st
       {d.liveCount === 0 && (
         <p className="rounded-md px-4 py-2.5 tint-warn">All records in this dataset have expired. Showing what ArkivAgent saw last, up to block {formatCount(d.lastWriteBlock)}.</p>
       )}
+      {d.unqueryable && <p className="rounded-md px-4 py-2.5 tint-info">Browse-only: one query can&apos;t read this dataset back from Arkiv yet. {d.unqueryable}</p>}
 
       <div className="grid gap-4 xl:grid-cols-12">
         <div className="xl:col-span-7"><Suspense fallback={<AiSummarySkeleton />}><AiSummary id={d.id} /></Suspense></div>

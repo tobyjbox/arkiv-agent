@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { open, SERVER_RENDER } from "./open";
 
 test("pulse shows totals, retention and activity, with load generators excluded by default", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/pulse");
+  await open(page, "/pulse");
   const main = page.locator("#main");
   await expect(main.getByRole("heading", { level: 1, name: "Ecosystem pulse" })).toBeVisible();
   for (const label of ["Active wallets", "Active projects", "Writes", "New projects"]) await expect(main.locator(".label", { hasText: label })).toBeVisible();
@@ -13,10 +14,11 @@ test("pulse shows totals, retention and activity, with load generators excluded 
   await expect(toggle).toBeChecked();
   // The box follows the URL, so it flips once the page navigates.
   await toggle.click();
-  await expect(page).toHaveURL(/load=1/);
+  await expect(page).toHaveURL(/load=1/, SERVER_RENDER);
   await expect(toggle).not.toBeChecked();
   await expect(main.getByText(/Load generators included/)).toBeVisible();
   await main.getByRole("link", { name: "7d" }).click();
-  await expect(page).toHaveURL(/period=7/);
+  await expect(page).toHaveURL(/period=7/, SERVER_RENDER);
+  await expect(main.getByRole("link", { name: "7d" })).toHaveAttribute("aria-current", "page");
   expect(errors).toEqual([]);
 });

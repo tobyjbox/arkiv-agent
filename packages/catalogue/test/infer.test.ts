@@ -93,3 +93,47 @@ describe("buildDatasets", () => {
     expect(median([])).toBeNull();
   });
 });
+
+describe("read-back queries without EXISTS (T21 M1)", () => {
+  const ctx = { indexedBlock: 2_000, busyOwners: new Set<string>() };
+  const build = (ms: Member[]) => buildDatasets(ms, ctx).datasets;
+  const byName = (ds: ReturnType<typeof build>, name: string) => ds.find((d) => d.name === name)!;
+
+  it("adds attributes a dataset has or lacks until no other record of its label matches", () => {
+    const ds = build([
+      member("0x1", attrs({ project: "p", x: ["u64", "1"], y: "a" })),
+      member("0x1", attrs({ project: "p", y: "b" })),
+      member("0x1", attrs({ project: "p", x: ["u64", "2"], y: "c", z: "d" })),
+    ]);
+    expect(byName(ds, "x · y").shape).toEqual({ has: [{ name: "x", type: "u64" }], lacks: [{ name: "z", type: "str" }] });
+    expect(byName(ds, "y").shape).toEqual({ has: [], lacks: [{ name: "x", type: "u64" }] });
+    expect(byName(ds, "x · y · z").shape).toEqual({ has: [{ name: "z", type: "str" }], lacks: [] });
+  });
+
+  it("needs nothing extra when its label or wallet writes nothing else, and ignores expired records", () => {
+    const ds = build([
+      member("0xa", attrs({ q: "1" })),
+      member("0xa", attrs({ r: "1" }), { status: "expired" }),
+      member("0xb", attrs({ s: "1" })),
+    ]);
+    expect(byName(ds, "q").shape).toEqual({ has: [], lacks: [] });
+    expect(byName(ds, "s").shape).toEqual({ has: [], lacks: [] });
+  });
+
+  it("is browse-only, with the reason, when records differ only in attributes with no presence check", () => {
+    const ds = build([
+      member("0xa", attrs({ k: "1", h: ["bytes32", `0x${"1".repeat(64)}`] })),
+      member("0xa", attrs({ k: "2" })),
+    ]);
+    const d = byName(ds, "h · k");
+    expect(d.shape).toBeNull();
+    expect(d.unqueryable).toMatch(/^1 other live record from the same wallet differs from these only in attributes .*no EXISTS/);
+    expect(byName(ds, "k").shape).toBeNull();
+  });
+
+  it("leaves datasets with a discriminator to it", () => {
+    const [d] = build([member("0x1", attrs({ app: "t", kind: "note", body: "x" }))]);
+    expect(d!.shape).toBeNull();
+    expect(d!.unqueryable).toBeNull();
+  });
+});

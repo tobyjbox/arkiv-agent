@@ -8,6 +8,7 @@ import { estimatedSpend } from "@arkiv-agent/cost";
 import { formatCount } from "../../lib/format";
 import { AboutInfo } from "../../components/ui/about-info";
 import { glm } from "../../lib/glm";
+import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ecosystem pulse · ArkivAgent" };
@@ -20,6 +21,7 @@ const delta = (now: number, before: number | undefined, period: number) => {
 };
 
 export default async function PulsePage({ searchParams }: { searchParams: Promise<{ period?: string; load?: string }> }) {
+  if (!isIndexReady()) return null;
   const params = await searchParams;
   const period = (PERIODS as readonly number[]).includes(Number(params.period)) ? (Number(params.period) as Period) : 30;
   const includeLoad = params.load === "1";

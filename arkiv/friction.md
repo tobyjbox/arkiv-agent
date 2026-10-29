@@ -4,8 +4,8 @@ Versions: `@arkiv-network/sdk` **0.8.1**, `viem` **2.57.13**, Node **22.22.0**, 
 **Tiramisu** (chain `7738577`), 28 October 2026, blocks ~1,178,500–1,179,300. All reads used the
 public RPC with no access key. Nothing was written to the chain (no wallet).
 
-Items 1–9 come from the Phase 0 spike (T01); items 10–13 were found while building the indexer, the
-catalogue and Ask Arkiv (T03–T05, T14–T16), with the same versions and access. Spike numbers come from a
+Items 1–9 come from the Phase 0 spike (T01); items 10–14 were found while building the indexer, the
+catalogue and Ask Arkiv (T03–T05, T14–T16, T24), with the same versions and access. Spike numbers come from a
 script in `packages/indexer/src/spike/` (`pnpm spike:read`,
 `spike:history`, `spike:logs`, `spike:decode`, `spike:fees`). Each writes its raw result to
 `data/spike/*.json`, which is gitignored because it holds third-party chain data.
@@ -30,6 +30,7 @@ Items marked **Issue** cost us time or would mislead a builder; **Worked** items
 | 11 | Observation | Some entities are patched thousands of times, so replaying patches is costly | "Attributes at block N", or snapshots |
 | 12 | Issue | `$expiresAt` ranges are slow; `$createdAt` can't be filtered | Index `$createdAt`; plan equality first |
 | 13 | Issue | Queries can't sort or count | `ORDER BY` on indexed attributes, and a count |
+| 14 | Issue | The SDK builds `EXISTS` and `!=`, but Tiramisu rejects both | Support them on the node, or have the SDK refuse them |
 
 ---
 
@@ -181,3 +182,15 @@ cursor. Ask Arkiv therefore applies "first/top N" as a page size, reports "lates
 (rather than pretending), and says it can't count. A full count means walking every page, which runs into
 item 2's budget on any large dataset. **What would help:** `ORDER BY` on indexed attributes (at least
 `$expiresAt` and numeric user attributes) and a `COUNT` (or a total on the first page).
+
+## 14. Issue: the SDK builds `EXISTS` and `!=`, but Tiramisu rejects both
+
+`exists("a")` renders `EXISTS(a)` and `ne("a", str("x"))` renders `a != str('x')`, and the node answers
+both with `-32002 Requested resource not available` (checked 2026-10-29, anonymous). The catalogue
+needs "has attribute a" to read back the 81 datasets it names by their attribute shape, so this broke
+Ask, the SDK snippet and the Data Explorer link for all of them. The workaround is a comparison every
+value passes: `a STARTSWITH str('')` for text, `a >= u64(0)` and `a >= i32(-2147483648)` for numbers.
+`NOT` of it selects records without `a`, and "is not" becomes `NOT a = v`. Live counts matched the index
+for 11 datasets. `bytes32`, `addr`, `key` and `bool` are equality-only, so for them "has a" can't be
+asked at all. **What would help:** `EXISTS` and `!=` on the node (the SDK already builds them), or an SDK
+that refuses them until the node supports them.

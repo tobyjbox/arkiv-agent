@@ -1,9 +1,10 @@
-import { readFeed } from "@arkiv-agent/db";
+import { indexStatus, readFeed } from "@arkiv-agent/db";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { LiveProvider } from "../components/live/live-provider";
 import { AboutInfo } from "../components/ui/about-info";
+import { IndexNotBuilt } from "../components/shell/index-not-built";
 import { TopBar } from "../components/shell/top-bar";
 import { prisma } from "../lib/db";
 import "./globals.css";
@@ -15,18 +16,16 @@ const mono = localFont({ src: "../node_modules/@fontsource-variable/jetbrains-mo
 export const metadata: Metadata = { title: "ArkivAgent", description: "Projects and datasets on Arkiv, live." };
 export const dynamic = "force-dynamic";
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  const { changes: _, reset: __, ...initial } = await readFeed(prisma, null);
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Without an index, say how to build one: reading it would create an empty file (T21 M2).
+  const status = indexStatus();
   return (
     <html lang="en" className={`${inter.variable} ${mono.variable}`}>
       <body className="min-h-dvh">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-sm focus:bg-overlay focus:px-3 focus:py-2">
           Skip to content
         </a>
-        <LiveProvider initial={initial}>
-          <TopBar />
-          <main id="main" className="hero-glow">{children}</main>
-        </LiveProvider>
+        {status === "ready" ? <Live>{children}</Live> : <IndexNotBuilt status={status} />}
         <footer className="mx-auto max-w-[1280px] px-4 py-10 caption text-text-tertiary sm:px-6">
           ArkivAgent reads Arkiv&apos;s public testnet. Read-only. Not affiliated with Golem.{" "}
           <a href="https://data.arkiv.network/activity?chain=tiramisu" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Data explorer</a>
@@ -38,5 +37,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </footer>
       </body>
     </html>
+  );
+}
+
+/** The app shell, started from the index's change feed. */
+async function Live({ children }: { children: ReactNode }) {
+  const { changes: _, reset: __, ...initial } = await readFeed(prisma, null);
+  return (
+    <LiveProvider initial={initial}>
+      <TopBar />
+      <main id="main" className="hero-glow">{children}</main>
+    </LiveProvider>
   );
 }

@@ -91,6 +91,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 | `ANTHROPIC_API_KEY` | Switches on Claude. Ask Arkiv reads questions with Claude (still checked against the catalogue) instead of the built-in rules, and each dataset page gets a short AI summary, cached per schema. `pnpm describe --limit 20` writes summaries ahead of time. Without the key, every feature works; dataset pages say "No AI summary yet". |
 | `ARKIV_API_KEY` | Arkiv Hub access key (hub.arkiv.network/api-keys). Raises the public RPC limits, so the first decode is much faster. |
 | `ARKIV_RPS` | Indexer decode rate in requests per second (default 8, or 25 with `ARKIV_API_KEY`). |
+| `GLM_PRICE` | `off` stops the GLM/USD price lookups (see [Outbound calls](#outbound-calls)); the cost view then shows GLM only. |
 | `ARKIV_FEE_RPS` | `pnpm fees` rate in requests per second (default 3, to leave the indexer its budget). |
 | `DATABASE_URL` | Where the SQLite index lives (default `file:./data/arkiv-agent.db`). |
 | `PORT` | App port (default 3101). |
@@ -128,6 +129,9 @@ Arkiv's query language has limits that Ask states rather than hides:
 - Values are exact and case-sensitive.
 - Creation time can't be filtered.
 - There is no sort ("latest" is reported as not applied) and no count.
+- There is no `EXISTS` or `!=` on Tiramisu yet. "Has x" is written as `x STARTSWITH ''` (text) or `x >= 0`
+  (numbers), and "is not" as `NOT x = …`. Datasets told apart only by other attribute types would be
+  browse-only, with the reason on their page.
 - Across all datasets, only owner, creator or key lookups run.
 
 Accuracy is measured by the question sets in `packages/ask/test` (`pnpm test` prints the scores). Blind
@@ -172,7 +176,8 @@ call: for the cost view's dollar figures it fetches the mainnet GLM/USD price fr
 GLM has no value of its own, so this only puts a real-world scale on the fees. The requests carry no
 data from your index or your questions, but the providers see your IP address. A price is reused for
 10 minutes, so there's at most one lookup every 10 minutes while you use the cost view (one a minute
-while both sources are down). If neither source answers, amounts are shown in GLM only.
+while both sources are down). Pages never wait for it: until a price arrives, and whenever neither source
+answers, amounts are shown in GLM only. `GLM_PRICE=off` turns the lookups off.
 
 ## Project layout
 

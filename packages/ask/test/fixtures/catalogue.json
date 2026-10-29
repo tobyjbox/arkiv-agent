@@ -44,6 +44,8 @@
     "name": "kind",
     "value": "structure"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tideland",
@@ -176,6 +178,8 @@
     "name": "kind",
     "value": "call"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "supercall-test-*",
@@ -279,6 +283,8 @@
     "name": "kind",
     "value": "status"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "supercall-test-*",
@@ -419,6 +425,8 @@
     "name": "kind",
     "value": "chunk"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "kinetic",
@@ -533,6 +541,8 @@
     "name": "kind",
     "value": "caller"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "supercall-test-*",
@@ -655,6 +665,8 @@
     "name": "kind",
     "value": "sign"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tideland",
@@ -747,6 +759,8 @@
     "name": "kind",
     "value": "execution"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "canton-venues",
@@ -849,6 +863,8 @@
     "name": "kind",
     "value": "quotecheck"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "canton-venues",
@@ -951,6 +967,8 @@
     "name": "kind",
     "value": "parcel"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tideland",
@@ -1063,6 +1081,8 @@
     "name": "kind",
     "value": "settlement"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "supercall-test-*",
@@ -1167,6 +1187,8 @@
     "name": "type",
     "value": "protocol_day"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "lcrd-open-registry",
@@ -1309,6 +1331,8 @@
     "name": "kind",
     "value": "tend"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tideland",
@@ -1411,6 +1435,8 @@
     "name": "kind",
     "value": "listed"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "claim-check",
@@ -1600,6 +1626,8 @@
     "name": "type",
     "value": "alert"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "kharab",
@@ -1831,6 +1859,8 @@
     "name": "kind",
     "value": "alert"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "dawa-alert",
@@ -2012,6 +2042,8 @@
     "name": "kind",
     "value": "delisted"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "claim-check",
@@ -2201,6 +2233,8 @@
     "name": "kind",
     "value": "dla"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "sayso",
@@ -2341,6 +2375,8 @@
     "name": "type",
     "value": "vote"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -2449,6 +2485,24 @@
    "name": "alert_ym · batch · batch_raw",
    "nameSource": "schema",
    "discriminator": null,
+   "shape": {
+    "has": [
+     {
+      "name": "plant",
+      "type": "str"
+     },
+     {
+      "name": "mfg_ym",
+      "type": "i32"
+     },
+     {
+      "name": "state",
+      "type": "str"
+     }
+    ],
+    "lacks": []
+   },
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "nazar-in-batch-alerts",
@@ -2749,6 +2803,8 @@
     "name": "kind",
     "value": "obs"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "jalsaakshya/v1",
@@ -2921,6 +2977,8 @@
     "name": "type",
     "value": "comment"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -3033,6 +3091,8 @@
     "name": "kind",
     "value": "receipt"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "prometheus",
@@ -3167,6 +3227,8 @@
     "name": "type",
     "value": "ic_order"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "haqclock",
@@ -3313,6 +3375,8 @@
     "name": "type",
     "value": "ic_order_corrected"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "haqclock",
@@ -3467,6 +3531,8 @@
     "name": "kind",
     "value": "appointment"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "muhurat",
@@ -3600,6 +3666,8 @@
     "name": "type",
     "value": "tip"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "sealdrop-v1",
@@ -3684,6 +3752,8 @@
     "name": "type",
     "value": "rti_decision"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "haqclock",
@@ -3830,6 +3900,8 @@
     "name": "type",
     "value": "rti_decision_corrected"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "haqclock",
@@ -3984,6 +4056,8 @@
     "name": "type",
     "value": "tolmol.report"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tolmol",
@@ -4213,6 +4287,8 @@
     "name": "type",
     "value": "trg.receipt"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0xf856952a77f9439a55ad418f5bb3928f4ce807db",
@@ -4342,6 +4418,29 @@
    "name": "alert_ym · batch · batch_raw",
    "nameSource": "schema",
    "discriminator": null,
+   "shape": {
+    "has": [
+     {
+      "name": "state",
+      "type": "str"
+     },
+     {
+      "name": "mfg_ym",
+      "type": "i32"
+     },
+     {
+      "name": "exp_ym",
+      "type": "i32"
+     }
+    ],
+    "lacks": [
+     {
+      "name": "plant",
+      "type": "str"
+     }
+    ]
+   },
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "nazar-in-batch-alerts",
@@ -4631,6 +4730,8 @@
     "name": "type",
     "value": "record"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "switched-off",
@@ -4831,6 +4932,8 @@
     "name": "kind",
     "value": "jjmsample"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "jalsaakshya/v1",
@@ -5005,6 +5108,8 @@
     "name": "kind",
     "value": "sealed_bank"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "muhurat",
@@ -5137,6 +5242,8 @@
     "name": "type",
     "value": "trg.receipt"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0x1c92087ec55b3b4114c7647ecade3ab0b494c9b6",
@@ -5268,6 +5375,8 @@
     "name": "entity_type",
     "value": "listing"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "example_marketplace",
@@ -5404,6 +5513,8 @@
     "name": "type",
     "value": "confirmation"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -5506,6 +5617,8 @@
     "name": "type",
     "value": "tolmol.witness"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tolmol",
@@ -5656,6 +5769,8 @@
     "name": "kind",
     "value": "remark"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "load-1",
@@ -5776,6 +5891,8 @@
     "name": "type",
     "value": "salary"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -5938,6 +6055,8 @@
     "name": "kind",
     "value": "shift"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "nexora",
@@ -6109,6 +6228,8 @@
     "name": "type",
     "value": "wsprobe"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "kharab-test",
@@ -6196,6 +6317,25 @@
    "name": "alert_ym · batch · batch_raw",
    "nameSource": "schema",
    "discriminator": null,
+   "shape": {
+    "has": [
+     {
+      "name": "mfg_ym",
+      "type": "i32"
+     }
+    ],
+    "lacks": [
+     {
+      "name": "state",
+      "type": "str"
+     },
+     {
+      "name": "plant",
+      "type": "str"
+     }
+    ]
+   },
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "nazar-in-batch-alerts",
@@ -6475,6 +6615,8 @@
     "name": "kind",
     "value": "receipt"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "sayso",
@@ -6618,6 +6760,8 @@
     "name": "kind",
     "value": "leak_claim"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "muhurat",
@@ -6711,6 +6855,8 @@
     "name": "kind",
     "value": "added_late"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "kharab",
@@ -6875,6 +7021,8 @@
     "name": "type",
     "value": "key_share"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "examseal",
@@ -6986,6 +7134,8 @@
     "name": "type",
     "value": "unit"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0x86d0886835480cfee3a0dbfb7814434dab851381",
@@ -7111,6 +7261,8 @@
     "name": "type",
     "value": "unit"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0xb926a5eeefbde3dcb4ac648a76031c69d815d6fd",
@@ -7236,6 +7388,8 @@
     "name": "type",
     "value": "link"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "kharab",
@@ -7393,6 +7547,8 @@
     "name": "type",
     "value": "observation"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tagwitness-v1",
@@ -7506,6 +7662,8 @@
     "name": "type",
     "value": "audit"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0x0a4aa86b07db12093053a79714c7fc37df0e27cf",
@@ -7611,6 +7769,8 @@
     "name": "kind",
     "value": "edge"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0x4feade3ff513a7954e9f7420aaa7bdedc0ba4bdc",
@@ -7734,6 +7894,8 @@
     "name": "entity_type",
     "value": "receipt"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "arkivate",
@@ -7897,6 +8059,8 @@
     "name": "kind",
     "value": "fact"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "stet",
@@ -8030,6 +8194,8 @@
     "name": "kind",
     "value": "episode"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "doorledger",
@@ -8173,6 +8339,8 @@
     "name": "kind",
     "value": "copy"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "supercall-test-*",
@@ -8277,6 +8445,8 @@
     "name": "kind",
     "value": "other"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "onrecord",
@@ -8399,6 +8569,8 @@
     "name": "type",
     "value": "contract"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "lcrd-open-registry",
@@ -8547,6 +8719,8 @@
     "name": "kind",
     "value": "node"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "creator",
     "label": "0x4feade3ff513a7954e9f7420aaa7bdedc0ba4bdc",
@@ -8660,6 +8834,8 @@
     "name": "type",
     "value": "cut_log"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "bijlilog-v1",
@@ -8822,6 +8998,8 @@
     "name": "kind",
     "value": "exam"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "muhurat",
@@ -8942,6 +9120,8 @@
     "name": "type",
     "value": "centre_seal"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "examseal",
@@ -9053,6 +9233,8 @@
     "name": "kind",
     "value": "entry"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "safejournal",
@@ -9146,6 +9328,8 @@
     "name": "type",
     "value": "price_report"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "mandi_board_v1",
@@ -9288,6 +9472,8 @@
     "name": "type",
     "value": "review"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -9431,6 +9617,8 @@
     "name": "type",
     "value": "ack"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "proof-of-life",
@@ -9533,6 +9721,8 @@
     "name": "type",
     "value": "envelope"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "proof-of-life",
@@ -9645,6 +9835,8 @@
     "name": "kind",
     "value": "form17c"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "form17c.v1",
@@ -9786,6 +9978,8 @@
     "name": "type",
     "value": "discussion"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "tankha",
@@ -9908,6 +10102,8 @@
     "name": "type",
     "value": "case"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "haqclock",
@@ -10131,6 +10327,8 @@
     "name": "type",
     "value": "attestation"
    },
+   "shape": null,
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "mene-v1",
@@ -10231,6 +10429,11 @@
    "name": "random_number_0_* · random_string_0_*",
    "nameSource": "schema",
    "discriminator": null,
+   "shape": {
+    "has": [],
+    "lacks": []
+   },
+   "unqueryable": null,
    "project": {
     "method": "label",
     "label": "arkiv-chain-indexer-baseload",
