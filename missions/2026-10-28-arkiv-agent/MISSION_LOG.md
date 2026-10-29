@@ -70,3 +70,4 @@
 - 2026-10-29T02:43:06Z HANDOFF T10@f443c0e dispatched: T11 (draft -> ready, coder messaged)
 - 2026-10-29T02:43:22Z NUDGE T11 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message sent
 - 2026-10-29T02:43:44Z CHASE T17 -> arkiv-agent_QA_claude-code_opus-5.5-low: no branch commits since 23:11Z; suggested scoring on current integration (429 handling)
+- 2026-10-29T02:47:33Z HANDOFF T17@43db1dd detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-final@43db1dd:missions/2026-10-28-arkiv-agent/tasks/T17-qa-final.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
