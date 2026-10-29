@@ -31,7 +31,9 @@ test("catalogue list renders live data, filters through the URL, and syncs", asy
 test("dataset detail shows schema, activity, records and a runnable snippet", async ({ page }) => {
   const errors = watchErrors(page);
   await page.goto("/catalogue");
-  await page.locator("#main tbody tr").first().locator("a").first().click();
+  // Open the first row's link directly: live updates can reorder rows between finding and clicking one.
+  const href = await page.locator("#main tbody tr").first().locator("a").first().getAttribute("href");
+  await page.goto(href!);
   await expect(page).toHaveURL(/\/catalogue\/[0-9a-f]{12}$/);
   for (const name of ["Schema", "Activity", "Recent records", "Read this dataset"]) {
     await expect(page.getByRole("heading", { level: 2, name })).toBeVisible();

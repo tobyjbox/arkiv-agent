@@ -92,8 +92,14 @@ function tokenize(question: string): Token[] {
   return out;
 }
 
-const isNumber = (t: string) => /^-?\d[\d,]*(\.\d+)?(k|m)?$/i.test(t);
+const NUMBER_WORDS: Record<string, number> = Object.fromEntries(
+  ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty")
+    .split(" ").map((w, i) => [w, i] as [string, number])
+    .concat([["thirty", 30], ["forty", 40], ["fifty", 50], ["hundred", 100], ["thousand", 1_000], ["million", 1_000_000]]),
+);
+const isNumber = (t: string) => /^-?\d[\d,]*(\.\d+)?(k|m)?$/i.test(t) || t in NUMBER_WORDS;
 function parseNumber(t: string): number {
+  if (t in NUMBER_WORDS) return NUMBER_WORDS[t]!;
   const m = /^(-?\d[\d,]*(?:\.\d+)?)(k|m)?$/i.exec(t)!;
   const n = Number(m[1]!.replace(/,/g, ""));
   return m[2]?.toLowerCase() === "k" ? n * 1e3 : m[2]?.toLowerCase() === "m" ? n * 1e6 : n;
@@ -292,11 +298,12 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
     const byScore = (a: { score: number; d: Dataset }, b: { score: number; d: Dataset }) => b.score - a.score || b.d.liveCount - a.d.liveCount;
     let ranked = ctx.datasets
       .map((d) => ({ d, ...scoreDataset(d, visible) }))
-      .filter((r) => r.named && r.score >= 5 && (!r.d.isLoadGenerator || r.score >= 10))
+      .filter((r) => r.named && r.score >= (ctx.lookup ? 3 : 5) && (!r.d.isLoadGenerator || r.score >= 10))
       .sort(byScore);
     if (ctx.lookup) {
       const lookup = ctx.lookup;
-      ranked = [...ranked.slice(0, 6).map((r) => ({ ...r, score: r.score + 3 * lookupValueCount(r.d, visible, r.used, lookup) })).sort(byScore), ...ranked.slice(6)];
+      ranked = [...ranked.slice(0, 8).map((r) => ({ ...r, score: r.score + 3 * lookupValueCount(r.d, visible, r.used, lookup) })).sort(byScore), ...ranked.slice(8)]
+        .filter((r) => r.score >= 5);
     }
     // With an owner/creator address, only a clearly named dataset narrows it (else: all datasets).
     const best = ranked[0] && (conds.length === 0 || ranked[0].score >= 8) ? ranked[0] : undefined;
@@ -367,7 +374,8 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       const numIdx = i + phrase.length;
       const numTok = lows[numIdx];
       if (!numTok) continue;
-      const unitMatch = /^(-?\d[\d,]*(?:\.\d+)?[km]?)([a-z°%]+)?$/i.exec(numTok);
+      // "ten" as well as "10", "10k", "30°c".
+      const unitMatch = numTok in NUMBER_WORDS ? ([numTok, numTok] as const) : /^(-?\d[\d,]*(?:\.\d+)?[km]?)([a-z°%]+)?$/i.exec(numTok);
       if (!unitMatch || !isNumber(unitMatch[1]!)) continue;
       let value = parseNumber(unitMatch[1]!);
       let unitWord = unitMatch[2]?.toLowerCase() ?? lows[numIdx + 1];
@@ -466,9 +474,16 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
         const hit = orderedNear(i - 1, i + 4);
         if (!hit) continue;
         const [a, b] = [parseNumber(lows[i + 1]!), parseNumber(lows[i + 3]!)].sort((x, y) => x - y);
-        conds.push({ attr: hit.f.name, q: { op: "gte", attr: hit.f.name, type: hit.f.type, value: String(a) }, tokens: [i] });
-        conds.push({ attr: hit.f.name, q: { op: "lte", attr: hit.f.name, type: hit.f.type, value: String(b) }, tokens: [i] });
-        [i, i + 1, i + 2, i + 3, hit.k].forEach((k) => consumed.add(k));
+        const negs = [i - 1, i - 2].filter((j) => isFree(j) && NEGATION.has(lows[j]!));
+        const f = hit.f;
+        if (negs.length) {
+          // "not between 1000 and 5000": below the range or above it.
+          conds.push({ attr: f.name, q: { op: "or", terms: [{ op: "lt", attr: f.name, type: f.type, value: String(a) }, { op: "gt", attr: f.name, type: f.type, value: String(b) }] }, tokens: [i, ...negs] });
+        } else {
+          conds.push({ attr: f.name, q: { op: "gte", attr: f.name, type: f.type, value: String(a) }, tokens: [i] });
+          conds.push({ attr: f.name, q: { op: "lte", attr: f.name, type: f.type, value: String(b) }, tokens: [i] });
+        }
+        [i, i + 1, i + 2, i + 3, hit.k, ...negs].forEach((k) => consumed.add(k));
       } else if (isNumber(lows[i]!) && lows[i + 1] === "or" && /^(more|above|higher|greater|over|less|below|lower|fewer|under)$/.test(lows[i + 2] ?? "")) {
         const hit = orderedNear(i - 1, i + 3);
         if (!hit) continue;
@@ -551,7 +566,7 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       if (!field) continue;
       let k = fieldEnd(i, field);
       const fieldSpan = Array.from({ length: k - i }, (_, n) => i + n);
-      if (EQUALS.has(lows[k] ?? "") || lows[k] === "of") k++;
+      while (isFree(k) && /^(is|=|==|:|equals|equal|to|of|exactly)$/.test(lows[k]!)) k++;
       if (!isFree(k)) continue;
       if (ORDERED.has(field.type)) {
         if (!isNumber(lows[k]!)) continue;
@@ -605,22 +620,19 @@ export function interpret(question: string, ctx: AskContext): Result<AskPlan, No
       explain.push(`“${word.raw}” read as ${field.name} = “${value}”; ArkivAgent hasn't seen that value, so it may match nothing.`);
     }
 
-    // Presence: "without a parent_key", "with no guild", "missing parcel" → NOT exists; "with a guild",
-    // "that have a guild" → exists. Only when no value follows (a value was bound above).
+    // Presence ("without a parent_key", "with a guild") would be EXISTS, which Tiramisu's node rejects
+    // (-32002, checked 2026-10-29). Leave those words unused so they are reported, and say why.
     for (let i = 0; i < tokens.length; i++) {
       if (!isFree(i) || !/^(with|without|has|have|having|missing|lacking|no)$/.test(lows[i]!)) continue;
       let k = i + 1;
-      let isAbsent = /^(without|missing|lacking|no)$/.test(lows[i]!);
-      if (lows[k] === "no") { isAbsent = true; k++; }
+      if (lows[k] === "no") k++;
       if (/^(a|an|any|the)$/.test(lows[k] ?? "")) k++;
       const field = mentionAt(k);
       if (!field || conds.some((c) => c.attr === field.name)) continue;
       const end = fieldEnd(k, field);
       if (end < tokens.length && !STOP.has(lows[end]!) && !CONJUNCTION.test(lows[end]!)) continue;
-      const has: AskQuery = { op: "exists", attr: field.name };
-      const span = Array.from({ length: end - i }, (_, n) => i + n);
-      conds.push({ attr: field.name, q: isAbsent ? { op: "not", term: has } : has, tokens: span });
-      span.forEach((j) => consumed.add(j));
+      explain.push(`Arkiv can't yet filter on whether a record has ${field.name} at all (the node rejects EXISTS), so that part isn't applied.`);
+      break;
     }
 
     // Any other word that is a stored value: "the pricing category", "millet".
