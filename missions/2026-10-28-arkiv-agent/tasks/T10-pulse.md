@@ -19,8 +19,8 @@
 - [x] retention chart for Tiramisu-era cohorts (from 2026-10-01; PLAN amendment), per design/05-pulse.md; works with no keys (A01: AI weekly summary behind the key)
 
 ## Progress log
-- 2026-10-29T02:35:00Z Claimed and in-progress (653b14f, 138c4e6).
-- 2026-10-29T02:38:00Z Increment 1 (4856add): pulse data from the index. Daily writes (creates + patches), active
+- 2026-10-29T02:34:55Z Claimed and in-progress (653b14f, 138c4e6).
+- 2026-10-29T02:38:20Z Increment 1 (4856add): pulse data from the index. Daily writes (creates + patches), active
   wallets, labelled projects, new projects, previous-period totals, most active, retention cohorts; load generators
   excluded unless asked. Unit tests for windows, closed-window retention, exclusion and missing days. First build
   ~2 s, then cached (30 s).
