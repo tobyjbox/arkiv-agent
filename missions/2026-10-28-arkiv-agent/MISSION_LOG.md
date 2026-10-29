@@ -96,3 +96,4 @@
 - 2026-10-29T10:00:00Z OWNER request: full security + QA review of the whole app. T21 (qa), T22 (security) created ready on main@94b12a5
 - 2026-10-29T10:01:00Z DISPATCH T21 -> arkiv-agent_QA_claude-code_opus-5.5-low delivered <id>
 - 2026-10-29T10:01:00Z DISPATCH T22 -> arkiv-agent_security-whitehat_claude-code_opus-5.5-low delivered <id>
+- 2026-10-29T10:20:00Z OWNER request: remove 'arkiv-agent' everywhere (-> arkiv-agent) + architecture fixes; draft plan docs/plan-rename-architecture.md; Part C waits on T21/T22
