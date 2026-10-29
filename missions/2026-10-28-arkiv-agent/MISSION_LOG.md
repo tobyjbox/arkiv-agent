@@ -114,3 +114,4 @@
 - 2026-10-29T15:20:00Z HANDOFF T28@cf9c661 adjudicated: accepted (550 tests + build verified on merged main; DB moves on next start when unheld); integrated; row -> merged. Orchestrator renamed mission folder -> missions/2026-10-28-arkiv-agent and replaced arkiv-agent text in mission files/docs. Remaining arkiv-agent strings: one-release compat code only (to be dropped).
 - 2026-10-29T15:30:00Z DB moved arkiv-agent.db -> arkiv-agent.db on indexer restart (block 1217094); app restarted. T29 ready (drop compat + spot price seed).
 - 2026-10-29T15:31:00Z DISPATCH T29 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
+- 2026-10-29T16:00:00Z HANDOFF T29@61d1aab adjudicated: accepted (549 tests + build verified; no arkiv-agent left in code/docs; spot price seeded from latest candle); integrated; row -> merged. Part B created: T30 (B1, ready), T31-T34 draft.
