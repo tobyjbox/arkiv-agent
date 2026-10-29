@@ -11,7 +11,8 @@
 
 ## Progress log
 - 2026-10-29T16:18Z claimed; worktree <worktrees>/arkiv-agent-b2, branch refactor/b2-projects from local main 960e227. DB: `.backup` copy. Took the page-value snapshot (catalogue, details, value lookup, pulse 7/30/90 d with and without load, fee model, spend 7/30 d with and without load, wallet projects, load wallets, datasets per project) from the unchanged code; checked it's deterministic.
-- 2026-10-29T16:27Z refactor (2d91abc). Snapshot byte-identical after. `pnpm test` 553/553, typecheck, build, prod e2e on 3110 21/21.
+- 2026-10-29T16:25Z refactor (2d91abc). Snapshot byte-identical after. `pnpm test` 553/553, typecheck, build, prod e2e on 3110 21/21.
+- 2026-10-29T16:25:31Z notify intent: T31 review candidate=2d91abc to Orchestrator local_<session> via ccd send_message; key 2026-10-28-arkiv-agent:T31@2d91abc:review; attempt 1.
 
 ## Handoff
 Branch refactor/b2-projects (local only, not pushed), candidate 2d91abc, base local main 960e227. One commit.
