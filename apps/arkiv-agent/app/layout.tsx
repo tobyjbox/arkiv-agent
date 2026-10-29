@@ -28,6 +28,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </LiveProvider>
         <footer className="mx-auto max-w-[1280px] px-4 py-10 caption text-text-tertiary sm:px-6">
           ArkivAgent reads Arkiv&apos;s public testnet. Read-only. Not affiliated with Golem.{" "}
+          <a href="https://data.arkiv.network/activity?chain=tiramisu" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Data explorer</a>
+          {" · "}
+          <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Block explorer</a>
+          {" · "}
           <a href="https://github.com/tobyjbox/arkiv-agent" className="underline-offset-2 hover:underline">Source</a>
         </footer>
       </body>
