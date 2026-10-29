@@ -1,4 +1,4 @@
-**Mission progress:** 34 tasks — 30 merged, 1 ready, 3 draft · updated 2026-10-29T16:40:00Z
+**Mission progress:** 36 tasks — 36 merged · updated 2026-10-29T20:49:36Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
