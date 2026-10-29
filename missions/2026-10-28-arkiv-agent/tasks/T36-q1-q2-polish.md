@@ -42,3 +42,4 @@ Branch fix/q1-q2, candidate 70386228908f761744937fb9849eb8dcafb0d90b (base local
 - Build prints Next's "inferred your workspace root" warning because this worktree sits inside the main checkout (two lockfiles); harmless for `next start`.
 
 Next owner: Orchestrator (review and merge).
+- 2026-10-29T20:01:15Z notify intent: T36 review candidate=7038622 to Orchestrator local_<session> via ccd send_message; attempt 1.
