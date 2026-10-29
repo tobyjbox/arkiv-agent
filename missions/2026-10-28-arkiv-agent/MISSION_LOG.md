@@ -135,3 +135,5 @@
 - 2026-10-29T17:16:15Z HANDOFF adjudicated T34 accept: spike code and scripts gone; 628 tests, build OK on merged main; app restarted, pages 200; merged. Part B complete.
 - 2026-10-29T17:16:28Z RELEASE T35 (QA re-check) -> ready; DISPATCH -> arkiv-agent_QA_claude-code_opus-5.5-low
 - 2026-10-29T19:45:39Z CHASE T35 -> arkiv-agent_QA_claude-code_opus-5.5-low: first dispatch hit the session usage limit before claim; re-sent. RECONCILE: board matches main d7453b1; coder respawned 19:42Z (waker sent), idle, no task
+- 2026-10-29T19:52:57Z HANDOFF detected T35 review candidate=6aaf187 (QA message)
+- 2026-10-29T19:52:57Z HANDOFF adjudicated T35 accept: report only (mission files); verdict ready to publish; T21 findings all fixed; new low Q1 (chart range not in URL), Q2 (decode progressbar no accessible name) pending owner decision; merged

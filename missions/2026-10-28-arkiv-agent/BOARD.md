@@ -37,4 +37,4 @@
 | T32 | B3: Ask interpret() as a pipeline | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T16:55:32Z |
 | T33 | B4: indexer stores Insights/Financials aggregates | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T17:08:07Z |
 | T34 | B5+B6: thin pages, PriceSource in cost, remove spike code | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T32, T33 | 2026-10-29T17:16:15Z |
-| T35 | QA re-check after rename and architecture | qa | fast | review | 3/3 | qa (Claude Code, opus-5.5) | T34 | 2026-10-29T19:52:46Z |
+| T35 | QA re-check after rename and architecture | qa | fast | merged | 3/3 | qa (Claude Code, opus-5.5) | T34 | 2026-10-29T19:52:57Z |
