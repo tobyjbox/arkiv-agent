@@ -25,6 +25,6 @@
 | T20 | Fix T12 S1-S3 + T19 L1 (SSR sync label, deterministic hold-out, out-of-range widening, cross-site aggregation guard) | coder | fast | merged | 2/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T12, T19 | 2026-10-29T03:30:00Z |
 | T21 | Full QA review of ArkivAgent (pre-publish) | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T20 | 2026-10-29T11:00:00Z |
 | T22 | Full security review of ArkivAgent (pre-publish) | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T20 |  2026-10-29T10:40:00Z |
-| T23 | C1: quick fixes (README, postcss, Sec-Fetch, detail title, narrow sync) | coder | fast | claimed | 0/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21, T22 | 2026-10-29T11:04:53Z |
+| T23 | C1: quick fixes (README, postcss, Sec-Fetch, detail title, narrow sync) | coder | fast | in-progress | 0/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21, T22 | 2026-10-29T11:04:53Z |
 | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | ready | 0/3 | | T21 | 2026-10-29T11:30:00Z |
 | T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | ready | 0/2 | | — | 2026-10-29T11:40:00Z |
