@@ -176,6 +176,12 @@ importers:
         specifier: ^4.23.15
         version: 4.23.15
 
+  packages/pulse:
+    dependencies:
+      '@arkiv-agent/catalogue':
+        specifier: workspace:*
+        version: link:../catalogue
+
 packages:
 
   '@adraffy/ens-normalize@1.11.1':

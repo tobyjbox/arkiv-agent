@@ -51,6 +51,12 @@ export function loadCatalogue(): Loaded {
   return cache.value;
 }
 
+/** Wallets with over 5,000 creates in the last 7 days (Arkiv's load generators), as the last build saw them. */
+export function loadGeneratorOwners(): ReadonlySet<string> {
+  loadCatalogue();
+  return busy?.owners ?? new Set();
+}
+
 function busyOwners(d: Database.Database, since: number): Set<string> {
   if (!busy || Date.now() - busy.at > BUSY_TTL_MS) {
     const owners = d.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck().all(since, BUSY_OWNER_CREATES) as string[];
