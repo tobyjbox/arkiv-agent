@@ -1,0 +1,129 @@
+// ArkivAgent index: a rebuildable copy of Arkiv (Tiramisu) entity state. Arkiv stays the source of truth.
+// Block numbers and expiries are BigInt (SQLite INTEGER, signed 64-bit); expiries above i64 max
+// (some entities use u64 max, "never") are clamped to i64 max.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Entity {
+  key            String      @id
+  owner          String
+  creator        String
+  createdAtBlock BigInt
+  createdTx      String
+  /// Position of the create among the transaction's entity operations (one event per operation).
+  createdOp      Int
+  updatedAtBlock BigInt
+  expiresAt      BigInt
+  /// live | expired | deleted
+  status         String
+  deletedAtBlock BigInt?
+  creationFlags  Int
+  contentType    String?
+  payloadBytes   Int?
+  /// At most 256 bytes: UTF-8 text when it decodes cleanly, else 0x hex.
+  payloadPreview String?
+  /// Sorted "name:type" list of user attributes; groups entities into datasets.
+  schemaSig      String?
+  /// Block of the last transaction decoded into attributes; null until decoded.
+  decodedBlock   BigInt?
+  attributes     Attribute[]
+  patches        Patch[]
+
+  @@index([status, expiresAt])
+  @@index([owner])
+  @@index([schemaSig])
+  @@index([createdAtBlock])
+}
+
+model Attribute {
+  entityKey String
+  name      String
+  /// AttrType tag: bool i32 u64 u256 dec bytes32 str addr key
+  type      String
+  /// Canonical text: decimal for numbers, lowercase 0x hex for bytes32/addr/key, raw for str.
+  value     String
+  entity    Entity @relation(fields: [entityKey], references: [key], onDelete: Cascade)
+
+  @@id([entityKey, name])
+  @@index([name, type])
+}
+
+/// A patch's transaction and operation position, so attributes can be replayed: create, then patches.
+model Patch {
+  entityKey String
+  block     BigInt
+  logIndex  Int
+  tx        String
+  op        Int
+  entity    Entity @relation(fields: [entityKey], references: [key], onDelete: Cascade)
+
+  @@id([entityKey, block, logIndex])
+}
+
+/// Change feed for the UI: one row per entity change near the chain head, pruned after a window.
+model Change {
+  seq       Int    @id @default(autoincrement())
+  block     BigInt
+  /// created | patched | extended | transferred | deleted | expired
+  kind      String
+  entityKey String
+  owner     String
+
+  @@unique([block, kind, entityKey])
+  @@index([block])
+}
+
+model SyncState {
+  id           Int      @id @default(1)
+  chainId      Int
+  /// Block 0's hash: a testnet reset keeps the chain id, so this tells two chains apart.
+  genesisHash  String
+  indexedBlock BigInt
+  chainHead    BigInt
+  /// Unix ms of the last successful sync tick, even one that found no new blocks.
+  syncedAtMs   BigInt
+}
+
+/// AI dataset descriptions (T04), cached per dataset and regenerated only when its schema changes.
+model DatasetDescription {
+  datasetId     String @id
+  /// Hash of the dataset's attribute names and types when it was described.
+  schemaHash    String
+  summary       String
+  likelyUse     String
+  suggestedName String?
+  model         String
+  /// What the model saw, for the UI caption ("the schema and 5 samples").
+  inputs        String
+  createdAtMs   BigInt
+}
+
+/// Fees from transaction receipts for a sample of Arkiv writes (T11 cost view). `pnpm fees` adds to it;
+/// re-runs skip transactions already here. Amounts are wei of the chain's native token (GLM).
+model TxFee {
+  tx             String @id
+  block          BigInt
+  sender         String
+  /// Entities created and updated by the transaction (from the index).
+  creates        Int
+  updates        Int
+  calldataBytes  Int
+  /// Payload bytes of the entities it created.
+  payloadBytes   Int
+  /// Mean planned lifetime of the created entities, in blocks; null for update-only transactions.
+  lifetimeBlocks BigInt?
+  gasUsed        BigInt
+  gasPriceWei    String
+  feeWei         String
+  fetchedAtMs    BigInt
+
+  @@index([block])
+  @@index([sender])
+}

@@ -1,0 +1,10313 @@
+{
+ "summary": {
+  "indexedBlock": 1187658,
+  "chainHead": 1187660,
+  "syncedAt": "2026-10-28T22:07:05.308Z",
+  "datasets": 735,
+  "projects": 288,
+  "liveRecords": 37189,
+  "undecodedLive": 793,
+  "writes24h": 1875,
+  "hourlyWrites24h": [
+   91,
+   46,
+   44,
+   138,
+   42,
+   103,
+   132,
+   54,
+   137,
+   150,
+   42,
+   35,
+   57,
+   46,
+   53,
+   38,
+   132,
+   48,
+   21,
+   39,
+   44,
+   250,
+   78,
+   55
+  ]
+ },
+ "datasets": [
+  {
+   "id": "8743747487be",
+   "name": "structure",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "structure"
+   },
+   "project": {
+    "method": "label",
+    "label": "tideland",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tideland"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "structure"
+     ]
+    },
+    {
+     "name": "material",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jetty",
+      "seawall",
+      "driftwood"
+     ]
+    },
+    {
+     "name": "world",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "s1"
+     ]
+    },
+    {
+     "name": "x",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "31",
+      "23",
+      "6"
+     ]
+    },
+    {
+     "name": "y",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "25",
+      "29",
+      "28"
+     ]
+    },
+    {
+     "name": "guild",
+     "type": "key",
+     "presence": 0.9504504504504504,
+     "examples": [
+      "0x2695ce3fc4aa571810e0dbedccdc345413d869ae48f059…",
+      "0x34f16c7cd1f4400c5f52a55ce8c2ca6b1e73fc76ebf75d…",
+      "0xefbefb6e9dd241d35ccd4954decfb20ae11885b2db44fb…"
+     ]
+    },
+    {
+     "name": "parcel",
+     "type": "key",
+     "presence": 0.9504504504504504,
+     "examples": [
+      "0x1d9fae951e001d4ccb47598fe96428339f6347073753c7…",
+      "0x3c2f87cb7d26ed65eee3f6b971735bd6df62c74f50e52d…",
+      "0x802512d1c3fb3bbcbfea9b8d682ae1147bf7ae1074c092…"
+     ]
+    }
+   ],
+   "liveCount": 222,
+   "writers": 10,
+   "ownership": "user",
+   "medianLifetimeBlocks": 491640,
+   "lastWriteBlock": 1183633,
+   "firstWriteBlock": 612166,
+   "hourly24h": [
+    18,
+    0,
+    0,
+    22,
+    0,
+    0,
+    0,
+    0,
+    0,
+    25,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    26,
+    0,
+    0,
+    0,
+    0,
+    21,
+    0,
+    0
+   ],
+   "writes24h": 112,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 31,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "973e952b5a36",
+   "name": "call",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "call"
+   },
+   "project": {
+    "method": "label",
+    "label": "supercall-test-*",
+    "labelAttr": "project",
+    "isPrefix": true,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "asset",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "WETH",
+      "cirBTC"
+     ]
+    },
+    {
+     "name": "caller",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xababababababababababababababababababababababab…",
+      "0xb3eddde74021b9d62975d85181203eb41fcec4d24f3aab…",
+      "0x4427ccddf16cf0e17e3938fe048aa2d08085492cff7649…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "call"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supercall-test-1792605901026",
+      "supercall-test-1792605971447",
+      "supercall-test-1792606011435"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 1014,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1297798,
+   "lastWriteBlock": 1160458,
+   "firstWriteBlock": 878060,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    23,
+    46,
+    0,
+    39,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 108,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 698,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "0344946188a5",
+   "name": "status",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "status"
+   },
+   "project": {
+    "method": "label",
+    "label": "supercall-test-*",
+    "labelAttr": "project",
+    "isPrefix": true,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "asset",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "WETH",
+      "cirBTC"
+     ]
+    },
+    {
+     "name": "boost_bps",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0"
+     ]
+    },
+    {
+     "name": "call",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x2201a0180cce59526bc7377689c00c601900a209433255…",
+      "0x712bd807d8396bd9072dfa9f76960495e221d539289ba0…",
+      "0xf71cbafe1b50fd699b4906356388acbbadb35491217e76…"
+     ]
+    },
+    {
+     "name": "caller",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x5be1c894c5bb49bca66e8e0ae2386c105d6bdd790dcea2…",
+      "0x14216bb75e6ccf1de0d8e254554cd9d3e67fd7ec29e77c…",
+      "0x6ecce2ccca5c45fd2339e64fb980d61ffea619aaf0d087…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "status"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supercall-test-1792607816390",
+      "supercall-test-1792607871664",
+      "supercall-test-1792607923559"
+     ]
+    },
+    {
+     "name": "status",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "armed",
+      "pending",
+      "expired-profit"
+     ]
+    },
+    {
+     "name": "super_factor",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "50"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2"
+     ]
+    }
+   ],
+   "liveCount": 490,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1339189,
+   "lastWriteBlock": 1160461,
+   "firstWriteBlock": 879023,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    14,
+    28,
+    0,
+    37,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 79,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 282,
+   "isLoadGenerator": false,
+   "soleOwner": "0x1afaD35e8FF949bbbF45727A6578c27690dB5870"
+  },
+  {
+   "id": "0344cc0cac76",
+   "name": "chunk",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "chunk"
+   },
+   "project": {
+    "method": "label",
+    "label": "kinetic",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 3
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "kinetic"
+     ]
+    },
+    {
+     "name": "idx",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "job_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "job-mvsiruux-e765b5",
+      "job-mvsj0wn5-48e03a",
+      "job-mvsji5xu-9915f8"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "chunk"
+     ]
+    },
+    {
+     "name": "provider",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "",
+      "0x7db49eb7d37ba00de37518f26b704c57ebecf5ab",
+      "0x2d3a9cdf8fc2512c71d8393dbf2e2f2c1209fcda"
+     ]
+    },
+    {
+     "name": "status",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "pending",
+      "claimed",
+      "verified"
+     ]
+    }
+   ],
+   "liveCount": 64,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 302400,
+   "lastWriteBlock": 1184315,
+   "firstWriteBlock": 1183281,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    52,
+    12,
+    0
+   ],
+   "writes24h": 64,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 221,
+   "isLoadGenerator": false,
+   "soleOwner": "0x8ED8a58f08a2caA800cbB4083e3691e5cA1E73a6"
+  },
+  {
+   "id": "1a5f15326643",
+   "name": "caller",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "caller"
+   },
+   "project": {
+    "method": "label",
+    "label": "supercall-test-*",
+    "labelAttr": "project",
+    "isPrefix": true,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "handle",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "synthetic_raj",
+      "synthetic_raj_1792608645437",
+      "synthetic_raj_1792608673366"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "caller"
+     ]
+    },
+    {
+     "name": "nullifier",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c…"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supercall-test-1792607816390",
+      "supercall-test-1792607871664",
+      "supercall-test-1792607923559"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "wallet",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0x19e7e376e7c213b7e7e7e46cc70a5dd086daff2a",
+      "0x4425c9fe602e217892712ee4f9858cb4ec82465f",
+      "0xed222d3936967f0f3fa4545407c95764f2c7c1e3"
+     ]
+    },
+    {
+     "name": "privy",
+     "type": "str",
+     "presence": 0.1111111111111111,
+     "examples": [
+      "did:privy:synthetic-raj",
+      "did:privy:synthetic-1792608645437",
+      "did:privy:synthetic-1792608673366"
+     ]
+    }
+   ],
+   "liveCount": 243,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": null,
+   "lastWriteBlock": 1160413,
+   "firstWriteBlock": 879017,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    7,
+    14,
+    0,
+    17,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 38,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 540,
+   "isLoadGenerator": false,
+   "soleOwner": "0x1afaD35e8FF949bbbF45727A6578c27690dB5870"
+  },
+  {
+   "id": "f077658188ca",
+   "name": "sign",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "sign"
+   },
+   "project": {
+    "method": "label",
+    "label": "tideland",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tideland"
+     ]
+    },
+    {
+     "name": "home",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xdbf5de0218baf0cd0692909646c0fc6a91c0b3831828e1…",
+      "0x5ddb48d2035caac5738c5ebcc32447e7b0c2f77675ff9b…",
+      "0x3f6a42ecb999871da1506467444cda80dd1204db2e96ef…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sign"
+     ]
+    },
+    {
+     "name": "world",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "s1"
+     ]
+    }
+   ],
+   "liveCount": 422,
+   "writers": 15,
+   "ownership": "user",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 1183617,
+   "firstWriteBlock": 639557,
+   "hourly24h": [
+    6,
+    0,
+    0,
+    7,
+    0,
+    0,
+    0,
+    0,
+    0,
+    7,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    6,
+    0,
+    0,
+    0,
+    0,
+    5,
+    0,
+    0
+   ],
+   "writes24h": 31,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 38,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "11d9e431d22c",
+   "name": "execution",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "execution"
+   },
+   "project": {
+    "method": "label",
+    "label": "canton-venues",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "execution"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "canton-venues"
+     ]
+    },
+    {
+     "name": "schema",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "src_sha256",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x401ef94ab3f9feef6a1b46e539f487a9554afa8b1b3a0b…",
+      "0xc90c68f53ff3d9a2a08885ca68ea838a8cbc8bdc114d9a…",
+      "0x502faad963de138df5fcfa5931e6b8f8e6cb0807848652…"
+     ]
+    },
+    {
+     "name": "t",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792412373",
+      "1792415955",
+      "1792419556"
+     ]
+    }
+   ],
+   "liveCount": 226,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 1186407,
+   "firstWriteBlock": 781357,
+   "hourly24h": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "writes24h": 24,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 9786,
+   "isLoadGenerator": false,
+   "soleOwner": "0x2187a4c9A5CB1701A680950dE1b10A698A5cDABC"
+  },
+  {
+   "id": "df4eec4ff1fb",
+   "name": "quotecheck",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "quotecheck"
+   },
+   "project": {
+    "method": "label",
+    "label": "canton-venues",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "quotecheck"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "canton-venues"
+     ]
+    },
+    {
+     "name": "schema",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "src_sha256",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xe2c83268cfb42b4e0f961cca378c1a76e9cc9546ef83ed…",
+      "0xa1a545bcab4d59ca1811ea40382e76c95518c0759d8072…",
+      "0xf276394b65dba33616d2d979907bcb0fd524c02f8e68fc…"
+     ]
+    },
+    {
+     "name": "t",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792412460",
+      "1792416063",
+      "1792419660"
+     ]
+    }
+   ],
+   "liveCount": 226,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 1186405,
+   "firstWriteBlock": 781356,
+   "hourly24h": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "writes24h": 24,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 31655,
+   "isLoadGenerator": false,
+   "soleOwner": "0x2187a4c9A5CB1701A680950dE1b10A698A5cDABC"
+  },
+  {
+   "id": "8d34dcda4c56",
+   "name": "parcel",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "parcel"
+   },
+   "project": {
+    "method": "label",
+    "label": "tideland",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tideland"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "parcel"
+     ]
+    },
+    {
+     "name": "world",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "s1"
+     ]
+    },
+    {
+     "name": "x",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "15",
+      "26",
+      "10"
+     ]
+    },
+    {
+     "name": "y",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "11",
+      "6",
+      "13"
+     ]
+    },
+    {
+     "name": "guild",
+     "type": "key",
+     "presence": 0.8478260869565217,
+     "examples": [
+      "0xefbefb6e9dd241d35ccd4954decfb20ae11885b2db44fb…",
+      "0x2695ce3fc4aa571810e0dbedccdc345413d869ae48f059…",
+      "0x34f16c7cd1f4400c5f52a55ce8c2ca6b1e73fc76ebf75d…"
+     ]
+    }
+   ],
+   "liveCount": 322,
+   "writers": 9,
+   "ownership": "user",
+   "medianLifetimeBlocks": 604800,
+   "lastWriteBlock": 1183633,
+   "firstWriteBlock": 612166,
+   "hourly24h": [
+    2,
+    0,
+    0,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    5,
+    0,
+    0,
+    0,
+    0,
+    2,
+    0,
+    0
+   ],
+   "writes24h": 15,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 21,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "d55c64e09230",
+   "name": "settlement",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "settlement"
+   },
+   "project": {
+    "method": "label",
+    "label": "supercall-test-*",
+    "labelAttr": "project",
+    "isPrefix": true,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "call",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x17737e54a250b9b582846dcc4921fcf4ae583cd1fe888d…",
+      "0x1de72d8b5c2cd47c59ddcd77d420b7d16717b39386d2fa…",
+      "0x1af5be1418b50cc81830bfabe5b8941ae1ed6b6882d7c0…"
+     ]
+    },
+    {
+     "name": "caller",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x6d2c93ac92934adae1518efcc0e7331c636a66040978ac…",
+      "0xcdd78c8461f366bfd917342f3dbe6b198d2a86541e8846…",
+      "0xb01cc1322d9733a0c979d2bf42e41dd5737603763f9233…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "settlement"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supercall-test-1792987613796",
+      "supercall-test-1792989534509",
+      "supercall-test-1792991331715"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 119,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": null,
+   "lastWriteBlock": 1155923,
+   "firstWriteBlock": 1068885,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    5,
+    10,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 15,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 1105,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "0fb4f33507b2",
+   "name": "protocol_day",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "protocol_day"
+   },
+   "project": {
+    "method": "label",
+    "label": "lcrd-open-registry",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "active_contracts",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "3",
+      "8"
+     ]
+    },
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lcrd-open-registry"
+     ]
+    },
+    {
+     "name": "computed_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792057936289",
+      "1792143918140",
+      "1792228730852"
+     ]
+    },
+    {
+     "name": "day",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "20261014",
+      "20261015",
+      "20261016"
+     ]
+    },
+    {
+     "name": "events",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "16585",
+      "14009",
+      "6378"
+     ]
+    },
+    {
+     "name": "protocol",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ondo_usdy",
+      "etherfuse",
+      "aquarius"
+     ]
+    },
+    {
+     "name": "schema",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "protocol_day"
+     ]
+    },
+    {
+     "name": "wallets",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "38",
+      "65",
+      "127"
+     ]
+    }
+   ],
+   "liveCount": 183,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 604800,
+   "lastWriteBlock": 1168221,
+   "firstWriteBlock": 600086,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    13,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 13,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 376,
+   "isLoadGenerator": false,
+   "soleOwner": "0xFD52Dc5DBa1Aa937E90EE87AcD99a7e433AAa9B7"
+  },
+  {
+   "id": "f75de077a9c6",
+   "name": "tend",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "tend"
+   },
+   "project": {
+    "method": "label",
+    "label": "tideland",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tideland"
+     ]
+    },
+    {
+     "name": "home",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xac2580f159dfed94a1215ea43d04811d2778afa5011df9…",
+      "0xfeaa76d999d3314fdd1bd563843bbd84546734dfc83c1d…",
+      "0x3f2dc306e3b1b83b6acfab1358501cb2bf758a1a969abb…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tend"
+     ]
+    },
+    {
+     "name": "minutes",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "264",
+      "319",
+      "360"
+     ]
+    },
+    {
+     "name": "world",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "s1"
+     ]
+    }
+   ],
+   "liveCount": 160,
+   "writers": 16,
+   "ownership": "user",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 1150509,
+   "firstWriteBlock": 615662,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 2,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 32,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "473026c53192",
+   "name": "listed",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "listed"
+   },
+   "project": {
+    "method": "label",
+    "label": "claim-check",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "claim-check"
+     ]
+    },
+    {
+     "name": "city",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "KRISHNA",
+      "VISAKHAPATANAM",
+      "YSR"
+     ]
+    },
+    {
+     "name": "doc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hdfc-ergo-2023-12-28",
+      "hdfc-ergo-2024-03-18",
+      "hdfc-ergo-2026-03-18"
+     ]
+    },
+    {
+     "name": "effective",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1672531200",
+      "1675987200",
+      "1678060800"
+     ]
+    },
+    {
+     "name": "hospital",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "9a40ad45321fa02f",
+      "fe32e7a649a6ae25",
+      "df377c3f94a01bdc"
+     ]
+    },
+    {
+     "name": "insurer",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hdfc-ergo",
+      "tata-aig"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "listed"
+     ]
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "APHILAHOSPITALS",
+      "ADARSHAORTHOPAEDICCENTRE",
+      "SURAKSHAHEALTHPARKHOSPITALS530047"
+     ]
+    },
+    {
+     "name": "pin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "520002",
+      "530017",
+      "530047"
+     ]
+    },
+    {
+     "name": "seq",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ANDHRA PRADESH",
+      "ASSAM",
+      "BIHAR"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "event"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "version",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1",
+      "2"
+     ]
+    }
+   ],
+   "liveCount": 5416,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 31536000,
+   "lastWriteBlock": 726514,
+   "firstWriteBlock": 725515,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 276,
+   "isLoadGenerator": false,
+   "soleOwner": "0xE33A7E038837A75F5bDD891AFCFd48eAe6a2b703"
+  },
+  {
+   "id": "4b790fc3d088",
+   "name": "alert",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "alert"
+   },
+   "project": {
+    "method": "label",
+    "label": "kharab",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "kharab"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "09A",
+      "2512",
+      "TCW25029AL"
+     ]
+    },
+    {
+     "name": "class",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nsq",
+      "misbranded",
+      "spurious"
+     ]
+    },
+    {
+     "name": "exp_ok",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true",
+      "false"
+     ]
+    },
+    {
+     "name": "exp_ym",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "202610",
+      "202611",
+      "202612"
+     ]
+    },
+    {
+     "name": "lab",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "state",
+      "central",
+      "who"
+     ]
+    },
+    {
+     "name": "pname",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "INSIGHT MAKE UP FIXER SPRAY",
+      "TENOVATE CREAM (CLOBETASOL, PROPIONATE = NEOMYCI…",
+      "IRON AND FOLIC ACID TABLETS IP (LARGE)"
+     ]
+    },
+    {
+     "name": "ptok",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "insight",
+      "tenovate",
+      "iron"
+     ]
+    },
+    {
+     "name": "rid",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x1a0d3ee1d00c534541cd6287adadd4979968caf9e63b92…",
+      "0xb3a20591fc3c74388137d5ae401cfbf7cf586de59864a1…",
+      "0x0bafbc37b1948baac2b68d7f1256216eebe559d92666e5…"
+     ]
+    },
+    {
+     "name": "row",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x6625d72cd1a9f889cce68afff7652c4c9d7269d126c2d5…",
+      "0x3f0fdd1eb361a4fa35225ea25aa50fb0b922e8be44dd7a…",
+      "0x57abba94b386240ecc06b98f6befe38a5edef24e517cf6…"
+     ]
+    },
+    {
+     "name": "rstate",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mh",
+      "jk",
+      "in"
+     ]
+    },
+    {
+     "name": "snap",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x87b3ca310af2954ed6902b69a94877d06fd25912d7b98c…",
+      "0xe4befb721da6b58f90f0361be4b88610d08443df4526b5…",
+      "0xc4954e42a2667e8adf0a91a736094d50eb23f4eb1cf29f…"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mh",
+      "cdsco",
+      "ka"
+     ]
+    },
+    {
+     "name": "src_ym",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "202507",
+      "202510"
+     ]
+    },
+    {
+     "name": "src_ymd",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "20260207",
+      "20260109"
+     ]
+    },
+    {
+     "name": "test",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "other",
+      "assay",
+      "dissolution"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "alert"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 3019,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 11268248,
+   "lastWriteBlock": 782907,
+   "firstWriteBlock": 506688,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 377,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "ef25a3564038",
+   "name": "alert",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "alert"
+   },
+   "project": {
+    "method": "label",
+    "label": "dawa-alert",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "dawa-alert"
+     ]
+    },
+    {
+     "name": "authority",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "State drug lab",
+      "CDSCO",
+      "WHO"
+     ]
+    },
+    {
+     "name": "batch_norm",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "T24K557C",
+      "GTF3302A",
+      "LV24L320"
+     ]
+    },
+    {
+     "name": "dedupe",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "294322343cf50035095af51a",
+      "3fb2621314cdf12988627fa6",
+      "e60c608ef68c30955c63563b"
+     ]
+    },
+    {
+     "name": "expiry_known",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true",
+      "false"
+     ]
+    },
+    {
+     "name": "expiry_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202610",
+      "202611",
+      "202612"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "alert"
+     ]
+    },
+    {
+     "name": "list_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202609",
+      "202503",
+      "202504"
+     ]
+    },
+    {
+     "name": "mfr_norm",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "bajaj formulations khasra no 161",
+      "sun pharma laboratories ltd vill",
+      "lv lifesciences vpo gurumajra baddi"
+     ]
+    },
+    {
+     "name": "product_norm",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "aceclofenac and paracetamol tablets",
+      "ursodeoxycholic acid tablets ip",
+      "ranitidine oral solution ip"
+     ]
+    },
+    {
+     "name": "severity",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "3"
+     ]
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cdsco_portal_state_nsq",
+      "cdsco_portal_nsq",
+      "cdsco_nsq"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 2794,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 9744604,
+   "lastWriteBlock": 946017,
+   "firstWriteBlock": 734339,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 684,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "527c66cea25a",
+   "name": "delisted",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "delisted"
+   },
+   "project": {
+    "method": "label",
+    "label": "claim-check",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "claim-check"
+     ]
+    },
+    {
+     "name": "city",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "SURAT",
+      "REWARI",
+      "INDORE"
+     ]
+    },
+    {
+     "name": "doc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hdfc-ergo-2024-03-18",
+      "hdfc-ergo-2026-03-18",
+      "tata-aig-2025-05"
+     ]
+    },
+    {
+     "name": "effective",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1672531200",
+      "1679875200",
+      "1680566400"
+     ]
+    },
+    {
+     "name": "hospital",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "a2a11764851c4400",
+      "8e4c70c94584ff83",
+      "3c91ac544fa62292"
+     ]
+    },
+    {
+     "name": "insurer",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hdfc-ergo",
+      "tata-aig"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "delisted"
+     ]
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "NAVINORTHOANDTRAUMACENTER",
+      "CHMOOLCHANDMEMORIALHOSPITAL",
+      "VERMAUNIONHOSPITAL"
+     ]
+    },
+    {
+     "name": "pin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "395003",
+      "123401",
+      "452002"
+     ]
+    },
+    {
+     "name": "seq",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "2854",
+      "2855",
+      "2856"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "GUJARAT",
+      "HARYANA",
+      "MADHYA PRADESH"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "event"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "version",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "3"
+     ]
+    }
+   ],
+   "liveCount": 1852,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 31536000,
+   "lastWriteBlock": 726516,
+   "firstWriteBlock": 725896,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 276,
+   "isLoadGenerator": false,
+   "soleOwner": "0xE33A7E038837A75F5bDD891AFCFd48eAe6a2b703"
+  },
+  {
+   "id": "84869d2da5b4",
+   "name": "dla",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "dla"
+   },
+   "project": {
+    "method": "label",
+    "label": "sayso",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sayso"
+     ]
+    },
+    {
+     "name": "app_lc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "app_name",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "dla"
+     ]
+    },
+    {
+     "name": "lender",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "THE MIZORAM CO-OPERATIVE APEX BANK LTD.",
+      "KARUR VYSYA BANK LTD",
+      "GIRDHAR FINLEASE PVT LTD."
+     ]
+    },
+    {
+     "name": "lender_lc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "the mizoram co-operative apex bank ltd.",
+      "karur vysya bank ltd",
+      "girdhar finlease pvt ltd."
+     ]
+    },
+    {
+     "name": "lender_type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "BANK",
+      "NBFC",
+      "HOUSING FINANCE COMPANY"
+     ]
+    },
+    {
+     "name": "snapshot",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "2026-10-17"
+     ]
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "rbi_dla"
+     ]
+    }
+   ],
+   "liveCount": 1749,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 695394,
+   "firstWriteBlock": 692820,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 161,
+   "isLoadGenerator": false,
+   "soleOwner": "0x822BB671e6Ce0F2b69A500344764D9fedE31E725"
+  },
+  {
+   "id": "41cc9cff4c28",
+   "name": "vote",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "vote"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1749403408913",
+      "1751171845383",
+      "1752994365955"
+     ]
+    },
+    {
+     "name": "dir",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "up",
+      "down"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "target_key",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x19794d8cdf5b456625d4311fc9109bb576cf07d483bbd3…",
+      "0xadde491e3348cc915a04411d981b2f481c697c1822e83a…",
+      "0x0711a9a82ff3f0e5e3ae3b9688a9f7fd14951e6a457c80…"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "vote"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 1390,
+   "writers": 22,
+   "ownership": "user",
+   "medianLifetimeBlocks": 22929536,
+   "lastWriteBlock": 752375,
+   "firstWriteBlock": 752196,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "3df6b51781a4",
+   "name": "alert_ym · batch · batch_raw",
+   "nameSource": "schema",
+   "discriminator": null,
+   "project": {
+    "method": "label",
+    "label": "nazar-in-batch-alerts",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "alert_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202506",
+      "202605",
+      "202606"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "1172",
+      "s4h046",
+      "md23h12"
+     ]
+    },
+    {
+     "name": "batch_raw",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "1172",
+      "S4H046",
+      "MD23H12"
+     ]
+    },
+    {
+     "name": "brand",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cefotaxime-sodium-injection-ip-1g",
+      "methylcobalamin-injection",
+      "rabeprazole-sodium-injection-ip"
+     ]
+    },
+    {
+     "name": "case",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "817a50c30533084bf0eb4b4c",
+      "95d8833fcab9ac5c9d35bc91",
+      "d7750b99cf4c3a33f31d2dad"
+     ]
+    },
+    {
+     "name": "cat",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nsq",
+      "misbranded",
+      "adulterated"
+     ]
+    },
+    {
+     "name": "conf",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "100",
+      "97",
+      "95"
+     ]
+    },
+    {
+     "name": "exp_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202507",
+      "202601",
+      "202509"
+     ]
+    },
+    {
+     "name": "fail",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "other",
+      "particulate",
+      "dissolution"
+     ]
+    },
+    {
+     "name": "form",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "injection",
+      "tablet",
+      "capsule"
+     ]
+    },
+    {
+     "name": "juris",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "IN",
+      "IN-TN",
+      "IN-MH"
+     ]
+    },
+    {
+     "name": "method",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "text",
+      "api",
+      "curated"
+     ]
+    },
+    {
+     "name": "mfg_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202308",
+      "202408",
+      "202310"
+     ]
+    },
+    {
+     "name": "mfr",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hindustan-antibiotics",
+      "arion-healthcare",
+      "martin-brown-bio-sciences"
+     ]
+    },
+    {
+     "name": "notice",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x690e4e60479b20ca4357226d319c0f627de2743331c4de…",
+      "0xed481c35c5d2b08e0cc39408e042ae35565c73e95718a1…",
+      "0xbe0badf3efd62015de09622247222373119906f1b76a6b…"
+     ]
+    },
+    {
+     "name": "peds",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1"
+     ]
+    },
+    {
+     "name": "plant",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "hindustan-antibiotics-411018",
+      "arion-healthcare-174101",
+      "martin-brown-bio-sciences-173205"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nazar-in-batch-alerts"
+     ]
+    },
+    {
+     "name": "rid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "02658a65b18af95c1e973587",
+      "0abbdc954cc14782775693e5",
+      "27e44593819ca2debe25f0f6"
+     ]
+    },
+    {
+     "name": "sev",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "5",
+      "2"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cdsco-pdf",
+      "cdsco-online",
+      "tn-dc"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "IN-MH",
+      "IN-HP",
+      "IN-UP"
+     ]
+    },
+    {
+     "name": "t",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "alert"
+     ]
+    },
+    {
+     "name": "tier",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "auto",
+      "machine_read"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 1274,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 21297600,
+   "lastWriteBlock": 942788,
+   "firstWriteBlock": 725137,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 695,
+   "isLoadGenerator": false,
+   "soleOwner": "0xd06d85Eb20f126f796E4a341b711B1a757c66bD2"
+  },
+  {
+   "id": "4f710a5e2124",
+   "name": "obs",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "obs"
+   },
+   "project": {
+    "method": "label",
+    "label": "jalsaakshya/v1",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jalsaakshya/v1"
+     ]
+    },
+    {
+     "name": "contaminant",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "fluoride",
+      "arsenic"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Alipurduar",
+      "Bankura",
+      "Birbhum"
+     ]
+    },
+    {
+     "name": "doc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "gwq_west_bengal",
+      "amp_purulia",
+      "web_82587ba907b0"
+     ]
+    },
+    {
+     "name": "eid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "gwq_west_bengal:90:0:0:17",
+      "gwq_west_bengal:90:0:1:17",
+      "gwq_west_bengal:90:0:2:17"
+     ]
+    },
+    {
+     "name": "exceeds",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "false",
+      "true"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "obs"
+     ]
+    },
+    {
+     "name": "mgl",
+     "type": "dec",
+     "presence": 1,
+     "examples": [
+      "0.05",
+      "0.06",
+      "0"
+     ]
+    },
+    {
+     "name": "page",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "90",
+      "91",
+      "92"
+     ]
+    },
+    {
+     "name": "place",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Bengkandi",
+      "Falakata",
+      "Dabri"
+     ]
+    },
+    {
+     "name": "stat",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "single",
+      "max",
+      "range_min"
+     ]
+    },
+    {
+     "name": "year",
+     "type": "i32",
+     "presence": 0.9573742540494459,
+     "examples": [
+      "2022",
+      "2023",
+      "2013"
+     ]
+    }
+   ],
+   "liveCount": 1173,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 15768000,
+   "lastWriteBlock": 727121,
+   "firstWriteBlock": 603711,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 570,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "e5c690fcdc31",
+   "name": "comment",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "comment"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1763061833660",
+      "1766291891921",
+      "1766874328444"
+     ]
+    },
+    {
+     "name": "post_key",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x4ac8992f525862ee97e25f4a41027f6aff4c3f197e0f9d…",
+      "0x5baab7699de80fe25d145336f1f8921b3cbd0072faa58a…",
+      "0x576a617297529389cff312a3be5d41e2c7ec5519f406f5…"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "comment"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "parent_key",
+     "type": "key",
+     "presence": 0.36018957345971564,
+     "examples": [
+      "0x051d9f165e9aef36a6d7a24c1fe13df1324467e856a28d…",
+      "0x4a70c7d1088e6092d04ff25cc7cc262057e217e21d3b7c…",
+      "0x983bc0253f7c9e216af1a315bc6342accba71a898d9a04…"
+     ]
+    }
+   ],
+   "liveCount": 633,
+   "writers": 21,
+   "ownership": "user",
+   "medianLifetimeBlocks": 23245716,
+   "lastWriteBlock": 752338,
+   "firstWriteBlock": 752193,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 59,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "ff31b7daa8f1",
+   "name": "receipt",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "receipt"
+   },
+   "project": {
+    "method": "label",
+    "label": "prometheus",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "done_block",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "662520",
+      "662536",
+      "664140"
+     ]
+    },
+    {
+     "name": "event",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "warned",
+      "expired",
+      "kept"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "receipt"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "prometheus"
+     ]
+    },
+    {
+     "name": "subject",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x18bfcbb40a9e327d3ea07ce516c27952b3fe0006d046a7…",
+      "0xda70ca09282ebea252f8a0bf961f51823dabbc7785ecfd…",
+      "0x3536160d7dc809d6613d270a1151b92404e8b7d081618f…"
+     ]
+    },
+    {
+     "name": "subscription",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x19c4b73769a9401ebb8a0bed48820f8221f2838a566817…",
+      "0x1daa4bacccaed65273de06c5e05b9bfa09c0c2ee6fd620…",
+      "0x48b3f25504aee69088d4e7fd6ccec10aa31fc3aa46b240…"
+     ]
+    },
+    {
+     "name": "trigger_block",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "662520",
+      "662521",
+      "664140"
+     ]
+    },
+    {
+     "name": "trigger_id",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x5e3f88ce31c422d3b6a69c7689d94a21e577386aca4281…",
+      "0x6a752809aa221b9f5969e91f3b507f592f226753ef5bf0…",
+      "0xb89b749c0990f3339bfe466c1a5ccf5e971510c42b85d0…"
+     ]
+    }
+   ],
+   "liveCount": 533,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 1029839,
+   "firstWriteBlock": 662525,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 129,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "ca94b9d71728",
+   "name": "ic_order",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "ic_order"
+   },
+   "project": {
+    "method": "label",
+    "label": "haqclock",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "haqclock"
+     ]
+    },
+    {
+     "name": "authority",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "public-information-officer",
+      "south-delhi-municipal-corporation",
+      "life-insurance-corporation"
+     ]
+    },
+    {
+     "name": "case_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x2879bafe30fd1503346c5bd9c549d18fd9d584df88ba66…",
+      "0xb6b8a5f9f53430fe67acf7421ef6227599a33861d1d821…",
+      "0x8bffff07a063c72e48ad77ab957d9839cf24c1fde5fa6b…"
+     ]
+    },
+    {
+     "name": "cic_outcome",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "APPEAL_DISMISSED",
+      "PARTIAL_RELIEF",
+      "PENALTY_IMPOSED"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "national"
+     ]
+    },
+    {
+     "name": "historical",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "drill"
+     ]
+    },
+    {
+     "name": "penalty_inr",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "25000",
+      "10000"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ic_order"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 484,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 714201,
+   "firstWriteBlock": 712758,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 481,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "8d5ce22578cc",
+   "name": "ic_order_corrected",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "ic_order_corrected"
+   },
+   "project": {
+    "method": "label",
+    "label": "haqclock",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "haqclock"
+     ]
+    },
+    {
+     "name": "authority",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "public-information-officer",
+      "south-delhi-municipal-corporation",
+      "life-insurance-corporation"
+     ]
+    },
+    {
+     "name": "case_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x31e9b46a72dba1c5732a714813ce83c3e7f1e4ca55a1f1…",
+      "0xafbc69705e45d19e38e4173f16ef62bcb3e95019d65eb8…",
+      "0x2321a7802205512fa99e662eb957777524f388f9fe6516…"
+     ]
+    },
+    {
+     "name": "cic_outcome",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "APPEAL_DISMISSED",
+      "PARTIAL_RELIEF",
+      "PENALTY_IMPOSED"
+     ]
+    },
+    {
+     "name": "corrected",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "national"
+     ]
+    },
+    {
+     "name": "historical",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "drill"
+     ]
+    },
+    {
+     "name": "penalty_inr",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "25000",
+      "10000"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ic_order_corrected"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 484,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 740709,
+   "firstWriteBlock": 739153,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 559,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "81015db9fc0c",
+   "name": "appointment",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "appointment"
+   },
+   "project": {
+    "method": "label",
+    "label": "muhurat",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "muhurat"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mock-20261018-1006",
+      "mock-20261018-1030",
+      "mock-20261018-1120"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "appointment"
+     ]
+    },
+    {
+     "name": "member",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0xdb7d2d9d2c45ed2586f7619fb4897c3e1f7ecb6e",
+      "0x98b9c64a7e1a82e2bbf28a9103edd0cdb972458c",
+      "0xab571a9df98ba446dd45a663537a4469c5c2e811"
+     ]
+    },
+    {
+     "name": "role",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "setter",
+      "centre"
+     ]
+    },
+    {
+     "name": "centre",
+     "type": "str",
+     "presence": 0.5,
+     "examples": [
+      "MUM-01",
+      "PAT-01",
+      "HZB-01"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "str",
+     "presence": 0.5,
+     "examples": [
+      "biology",
+      "chemistry",
+      "physics"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 0.5,
+     "examples": [
+      "Maharashtra",
+      "Bihar",
+      "Jharkhand"
+     ]
+    }
+   ],
+   "liveCount": 420,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7876742,
+   "lastWriteBlock": 740125,
+   "firstWriteBlock": 733959,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": "0x97c2a64fEE201647BB667C1857Aee37aC06006d7"
+  },
+  {
+   "id": "cf383b4db0f5",
+   "name": "tip",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "tip"
+   },
+   "project": {
+    "method": "label",
+    "label": "sealdrop-v1",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sealdrop-v1"
+     ]
+    },
+    {
+     "name": "inbox",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x22a0e0e274de2c04efb12fc923c6b828cc6bcab1c0a68b…",
+      "0x79580cde80dae9afe96340e3382a3e7b24f7289f66758a…",
+      "0x65a2d0b97fe693af3916c4a954564dda4d44a584ee4ec2…"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tip"
+     ]
+    }
+   ],
+   "liveCount": 414,
+   "writers": 153,
+   "ownership": "user",
+   "medianLifetimeBlocks": 604800,
+   "lastWriteBlock": 718551,
+   "firstWriteBlock": 660726,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 1097,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "f1a21ef79fec",
+   "name": "rti_decision",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "rti_decision"
+   },
+   "project": {
+    "method": "label",
+    "label": "haqclock",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "haqclock"
+     ]
+    },
+    {
+     "name": "case_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x3eb472966deecf4c79a0f7797e7e056352dad228a609b9…",
+      "0x8abbe12e9d5381e1deeeb00578280ae069093c33fe2465…",
+      "0x4d73cfc34810a331a1534a3bbc277af5b86e32b3ba003f…"
+     ]
+    },
+    {
+     "name": "citation",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "(2011) 8 SCC 497",
+      "(2013) 1 SCC 212",
+      "(2013) 8 SCC 1"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "national"
+     ]
+    },
+    {
+     "name": "historical",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "drill"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "§2(f)",
+      "§8(1)(j)",
+      "§2(f), §8(1)(j)"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "rti_decision"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "year",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "2011",
+      "2013",
+      "2015"
+     ]
+    }
+   ],
+   "liveCount": 300,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 715161,
+   "firstWriteBlock": 714265,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 309,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "bfdcf57460eb",
+   "name": "rti_decision_corrected",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "rti_decision_corrected"
+   },
+   "project": {
+    "method": "label",
+    "label": "haqclock",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "haqclock"
+     ]
+    },
+    {
+     "name": "case_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x0de630f7dc62f19c7c69d97c900339a17c5c2e52f3ea0d…",
+      "0xb166c5074db337f3acf9f7e2fbe8314ff8a692dfd49822…",
+      "0x0ad23ef46e3dff66f6718da8612632f62f739ed05d0cc3…"
+     ]
+    },
+    {
+     "name": "citation",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "(2011) 8 SCC 497",
+      "(2013) 1 SCC 212",
+      "(2013) 8 SCC 1"
+     ]
+    },
+    {
+     "name": "corrected",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "national"
+     ]
+    },
+    {
+     "name": "historical",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "drill"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "§2(f)",
+      "§8(1)(j)",
+      "§2(f), §8(1)(j)"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "rti_decision_corrected"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "year",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "2011",
+      "2013",
+      "2015"
+     ]
+    }
+   ],
+   "liveCount": 300,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 737195,
+   "firstWriteBlock": 736267,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 292,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "5cc56d19c6d7",
+   "name": "tolmol.report",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "tolmol.report"
+   },
+   "project": {
+    "method": "label",
+    "label": "tolmol",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 5
+   },
+   "schema": [
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "gaya",
+      "ranchi",
+      "varanasi"
+     ]
+    },
+    {
+     "name": "entitled_g",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "10000",
+      "12000",
+      "18000"
+     ]
+    },
+    {
+     "name": "item",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "wheat",
+      "rice",
+      "total"
+     ]
+    },
+    {
+     "name": "month",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "2026-10",
+      "2026-08",
+      "2026-09"
+     ]
+    },
+    {
+     "name": "month_num",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202610",
+      "202608",
+      "202609"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tolmol"
+     ]
+    },
+    {
+     "name": "received_g",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "7000",
+      "11800",
+      "17900"
+     ]
+    },
+    {
+     "name": "reported_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792108800000",
+      "1791883525069",
+      "1791883525067"
+     ]
+    },
+    {
+     "name": "schema_version",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "shop_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "SYN-BR-0042",
+      "SYN-JH-0001",
+      "SYN-BR-0001"
+     ]
+    },
+    {
+     "name": "shortfall_bp",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3000",
+      "166",
+      "55"
+     ]
+    },
+    {
+     "name": "shortfall_g",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3000",
+      "200",
+      "100"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "BR",
+      "JH",
+      "UP"
+     ]
+    },
+    {
+     "name": "synthetic",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tolmol.report"
+     ]
+    },
+    {
+     "name": "issues",
+     "type": "i32",
+     "presence": 0.3971631205673759,
+     "examples": [
+      "0",
+      "65",
+      "2"
+     ]
+    },
+    {
+     "name": "scheme",
+     "type": "str",
+     "presence": 0.2765957446808511,
+     "examples": [
+      "mdm",
+      "nrega"
+     ]
+    },
+    {
+     "name": "issues2",
+     "type": "i32",
+     "presence": 0.03546099290780142,
+     "examples": [
+      "596",
+      "322",
+      "330"
+     ]
+    }
+   ],
+   "liveCount": 282,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 3888000,
+   "lastWriteBlock": 740377,
+   "firstWriteBlock": 516794,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "375206dbcf0e",
+   "name": "trg.receipt",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "trg.receipt"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0xf856952a77f9439a55ad418f5bb3928f4ce807db",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "action",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "receipt",
+      "webhook",
+      "telegram"
+     ]
+    },
+    {
+     "name": "deadline",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "686879",
+      "686941",
+      "686945"
+     ]
+    },
+    {
+     "name": "firedat",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "686914",
+      "686941",
+      "686949"
+     ]
+    },
+    {
+     "name": "rule",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0x7e79611c11ef53a72b779c922bcd76c632def1c2c1a75e…",
+      "0xa633d8fd7ce8506870aec8bdf828443e9346af88c1f045…",
+      "0xa9542ba21d06767fc1f5f0492369b7557235ee5105cbce…"
+     ]
+    },
+    {
+     "name": "rulecreator",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0x1c92087ec55b3b4114c7647ecade3ab0b494c9b6",
+      "0x85c54b01080992fffe78b3fe539494b8734a2210"
+     ]
+    },
+    {
+     "name": "status",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ok",
+      "failed"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "trg.receipt"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 264,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 751367,
+   "firstWriteBlock": 686925,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 50,
+   "isLoadGenerator": false,
+   "soleOwner": "0xf856952A77F9439a55Ad418f5BB3928f4CE807Db"
+  },
+  {
+   "id": "3da0c3a6678f",
+   "name": "alert_ym · batch · batch_raw",
+   "nameSource": "schema",
+   "discriminator": null,
+   "project": {
+    "method": "label",
+    "label": "nazar-in-batch-alerts",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "alert_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202506",
+      "202605",
+      "202505"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "t240267",
+      "iew1433b",
+      "jin24041"
+     ]
+    },
+    {
+     "name": "batch_raw",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "T-240267",
+      "IEW1433B",
+      "JIN24-041"
+     ]
+    },
+    {
+     "name": "brand",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "calciven-500",
+      "eldervit-12-injection",
+      "nuroark"
+     ]
+    },
+    {
+     "name": "case",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "68e20823c5d7c5136fd3246d",
+      "22ae5de83bebb7bc40013dbb",
+      "dfff8a5103d1274afeb7c8ab"
+     ]
+    },
+    {
+     "name": "cat",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nsq",
+      "misbranded",
+      "spurious"
+     ]
+    },
+    {
+     "name": "conf",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "95",
+      "97",
+      "90"
+     ]
+    },
+    {
+     "name": "exp_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202605",
+      "202606",
+      "202601"
+     ]
+    },
+    {
+     "name": "fail",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "assay",
+      "particulate",
+      "disintegration"
+     ]
+    },
+    {
+     "name": "form",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tablet",
+      "injection",
+      "other"
+     ]
+    },
+    {
+     "name": "juris",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "IN",
+      "IN-MH",
+      "IN-TN"
+     ]
+    },
+    {
+     "name": "method",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "text",
+      "api",
+      "html"
+     ]
+    },
+    {
+     "name": "mfg_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202406",
+      "202407",
+      "202408"
+     ]
+    },
+    {
+     "name": "mfr",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sunlife-sciences",
+      "e-g-pharmaceuticlas",
+      "janya-biocare"
+     ]
+    },
+    {
+     "name": "notice",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x690e4e60479b20ca4357226d319c0f627de2743331c4de…",
+      "0xed481c35c5d2b08e0cc39408e042ae35565c73e95718a1…",
+      "0x598bc11ec7cc6b90f3e727096d3bc400e48c8e1f0e30ea…"
+     ]
+    },
+    {
+     "name": "peds",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nazar-in-batch-alerts"
+     ]
+    },
+    {
+     "name": "rid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "31c6db82b6495383094de8c4",
+      "7762f2876390f5191443b4d5",
+      "fb4929c0f5dec679b4e80571"
+     ]
+    },
+    {
+     "name": "sev",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "5",
+      "4"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cdsco-pdf",
+      "cdsco-online",
+      "mh-fda"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "IN-UK",
+      "IN-HP",
+      "IN-HR"
+     ]
+    },
+    {
+     "name": "t",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "alert"
+     ]
+    },
+    {
+     "name": "tier",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "auto"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 255,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 20174400,
+   "lastWriteBlock": 942788,
+   "firstWriteBlock": 725158,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 681,
+   "isLoadGenerator": false,
+   "soleOwner": "0xd06d85Eb20f126f796E4a341b711B1a757c66bD2"
+  },
+  {
+   "id": "381a3ade5c1f",
+   "name": "record",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "record"
+   },
+   "project": {
+    "method": "label",
+    "label": "switched-off",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "switched-off"
+     ]
+    },
+    {
+     "name": "basis",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "not-stated",
+      "tsr-2017",
+      "crpc-144"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Statewide",
+      "multiple",
+      "Meerut"
+     ]
+    },
+    {
+     "name": "emergency",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "false"
+     ]
+    },
+    {
+     "name": "ends",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1576323000",
+      "1576477800"
+     ]
+    },
+    {
+     "name": "issued",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1564857000",
+      "1571034600",
+      "1576002600"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "live"
+     ]
+    },
+    {
+     "name": "order_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jk-2019-08-04",
+      "jk-2019-10-14",
+      "as-caa-2019-12-11"
+     ]
+    },
+    {
+     "name": "renews",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "",
+      "jk-2019-08-04",
+      "jk-2019-10-14"
+     ]
+    },
+    {
+     "name": "scope",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "voice-sms-too",
+      "all-internet",
+      "mobile-data"
+     ]
+    },
+    {
+     "name": "seq",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "3"
+     ]
+    },
+    {
+     "name": "starts",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1564857000",
+      "1571034600",
+      "1576071000"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "JK",
+      "AS",
+      "ML"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "record"
+     ]
+    },
+    {
+     "name": "corrects",
+     "type": "str",
+     "presence": 0.2076271186440678,
+     "examples": [
+      "0x5a55754bbdecb77c144c621695221cb8060bf552e7cf5e…",
+      "0xe27b2d373ccc263d0996d3855cd68f46965e5a981f7a53…",
+      "0xe06147c70511813e7ab9a5df570aa2ad2b1ea9af9c8b35…"
+     ]
+    }
+   ],
+   "liveCount": 236,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 31536000,
+   "lastWriteBlock": 731886,
+   "firstWriteBlock": 436392,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 861,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "bc66899b596e",
+   "name": "jjmsample",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "jjmsample"
+   },
+   "project": {
+    "method": "label",
+    "label": "jalsaakshya/v1",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jalsaakshya/v1"
+     ]
+    },
+    {
+     "name": "asof",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792368000"
+     ]
+    },
+    {
+     "name": "block",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Tehatta-i",
+      "Karimpur-ii",
+      "Ranaghat-ii"
+     ]
+    },
+    {
+     "name": "contaminant",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "arsenic"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Nadia"
+     ]
+    },
+    {
+     "name": "gp",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Patharghata-i",
+      "Tehatta",
+      "Natna"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jjmsample"
+     ]
+    },
+    {
+     "name": "limit",
+     "type": "dec",
+     "presence": 1,
+     "examples": [
+      "0.01"
+     ]
+    },
+    {
+     "name": "mgl",
+     "type": "dec",
+     "presence": 1,
+     "examples": [
+      "0.038",
+      "0.036",
+      "0.033"
+     ]
+    },
+    {
+     "name": "origin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jjm-wqmis"
+     ]
+    },
+    {
+     "name": "sid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "jjm/U706424L883S30536208",
+      "jjm/U722863L883S30536210",
+      "jjm/U698248L883S30536203"
+     ]
+    },
+    {
+     "name": "tested",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1749686400",
+      "1749513600",
+      "1749081600"
+     ]
+    },
+    {
+     "name": "village",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Pathar Ghata",
+      "Tehatta",
+      "Natna"
+     ]
+    }
+   ],
+   "liveCount": 220,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 15772748,
+   "lastWriteBlock": 754407,
+   "firstWriteBlock": 754332,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 648,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "7103924305ce",
+   "name": "sealed_bank",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "sealed_bank"
+   },
+   "project": {
+    "method": "label",
+    "label": "muhurat",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "muhurat"
+     ]
+    },
+    {
+     "name": "chain",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f66…"
+     ]
+    },
+    {
+     "name": "ct_sha256",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x1538a9ee502ca1cb48177d41ace8cabf054d707e1892b4…",
+      "0xd225a422c30443c642e7a58b2daf455623f7e3b49dbc93…",
+      "0xa9f857ba4a78ac2e963f702ebbadbc9782a82ceed0d54e…"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "spike-202610171928",
+      "spike-202610171930",
+      "mock-20261018-1006"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sealed_bank"
+     ]
+    },
+    {
+     "name": "opens_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792265421",
+      "1792265526",
+      "1792317987"
+     ]
+    },
+    {
+     "name": "round",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "33154019",
+      "33154054",
+      "33171541"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "physics",
+      "chemistry",
+      "biology"
+     ]
+    }
+   ],
+   "liveCount": 212,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7874947,
+   "lastWriteBlock": 740137,
+   "firstWriteBlock": 707784,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "text/plain"
+   ],
+   "medianPayloadBytes": 3530,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "34216e3e00d0",
+   "name": "trg.receipt",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "trg.receipt"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0x1c92087ec55b3b4114c7647ecade3ab0b494c9b6",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "action",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "receipt",
+      "webhook",
+      "extend"
+     ]
+    },
+    {
+     "name": "deadline",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "684921",
+      "684928",
+      "684931"
+     ]
+    },
+    {
+     "name": "firedat",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "684921",
+      "684930",
+      "684933"
+     ]
+    },
+    {
+     "name": "rule",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0xeb825181d2c1fb97ffabfd7be201d64d7b1eb6a48f309a…",
+      "0x924e950af9b19d1d49960c03bcdb9c6b9adf2e39347567…",
+      "0x516965b22a1e82d1c84b9c408b39a2ff5b03fb543a3c9e…"
+     ]
+    },
+    {
+     "name": "rulecreator",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0x1c92087ec55b3b4114c7647ecade3ab0b494c9b6"
+     ]
+    },
+    {
+     "name": "status",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "skipped",
+      "ok"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "trg.receipt"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 209,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 709956,
+   "firstWriteBlock": 684927,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 50,
+   "isLoadGenerator": false,
+   "soleOwner": "0x1c92087EC55B3B4114c7647ECADe3ab0b494C9b6"
+  },
+  {
+   "id": "43ddbe748505",
+   "name": "listing",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "entity_type",
+    "value": "listing"
+   },
+   "project": {
+    "method": "label",
+    "label": "example_marketplace",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "entity_type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "listing"
+     ]
+    },
+    {
+     "name": "listing_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "core-20261006121702-8de007a0-sequential",
+      "core-20261006121702-8de007a0-atomic",
+      "core-20261006121702-8de007a0-stale"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "example_marketplace"
+     ]
+    },
+    {
+     "name": "active",
+     "type": "bool",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "1700000000000",
+      "1700000000001",
+      "1700000000002"
+     ]
+    },
+    {
+     "name": "currency",
+     "type": "str",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "USD"
+     ]
+    },
+    {
+     "name": "price_minor",
+     "type": "u256",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "9007199254740994",
+      "7",
+      "9007199254741192"
+     ]
+    },
+    {
+     "name": "schema_version",
+     "type": "i32",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "seller",
+     "type": "addr",
+     "presence": 0.9901960784313726,
+     "examples": [
+      "0x62064c23418f0a7798cf5a432fb42655bd0f5095"
+     ]
+    }
+   ],
+   "liveCount": 204,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 219686,
+   "firstWriteBlock": 219660,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 59,
+   "isLoadGenerator": false,
+   "soleOwner": "0x62064C23418f0A7798cf5a432FB42655BD0f5095"
+  },
+  {
+   "id": "8111756715d0",
+   "name": "confirmation",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "confirmation"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1745957423664",
+      "1746130223664",
+      "1746735023664"
+     ]
+    },
+    {
+     "name": "entry_key",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x19794d8cdf5b456625d4311fc9109bb576cf07d483bbd3…",
+      "0xbf12a89367e550a0992a7a9aa73a43ceddfcd00d19c2b3…",
+      "0x1d9c329657701f92577e1b1d02d542efd11142fadda2da…"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "confirmation"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 199,
+   "writers": 21,
+   "ownership": "user",
+   "medianLifetimeBlocks": 20602056,
+   "lastWriteBlock": 752295,
+   "firstWriteBlock": 752222,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "00f7f7e9818c",
+   "name": "tolmol.witness",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "tolmol.witness"
+   },
+   "project": {
+    "method": "label",
+    "label": "tolmol",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 5
+   },
+   "schema": [
+    {
+     "name": "item",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "rice",
+      "wheat",
+      "total"
+     ]
+    },
+    {
+     "name": "month",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "2026-08",
+      "2026-10",
+      "2026-09"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tolmol"
+     ]
+    },
+    {
+     "name": "report_key",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xc9fd07e26318488031ace8d03269156885e0f53c7d1c26…",
+      "0xc4be3ce9b2d3dd0348e0910e4bc8b6535ffee20586203c…",
+      "0x934be4307bb7cba25a4f1e084870fcd99ba100619c70d6…"
+     ]
+    },
+    {
+     "name": "reported_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1791885201930",
+      "1791885175075",
+      "1791885205288"
+     ]
+    },
+    {
+     "name": "schema_version",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "shop_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "SYN-BR-0002",
+      "SYN-UP-0002",
+      "SYN-BR-0007"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "BR",
+      "UP",
+      "JH"
+     ]
+    },
+    {
+     "name": "synthetic",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tolmol.witness"
+     ]
+    }
+   ],
+   "liveCount": 194,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7775997,
+   "lastWriteBlock": 624850,
+   "firstWriteBlock": 516801,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "07618ea3411d",
+   "name": "remark",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "remark"
+   },
+   "project": {
+    "method": "label",
+    "label": "load-1",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 3
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sitelog"
+     ]
+    },
+    {
+     "name": "created_ts",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1791545687",
+      "1791545695",
+      "1791545704"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "remark"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "load-1"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "formwork",
+      "rebar",
+      "waterproofing"
+     ]
+    },
+    {
+     "name": "severity",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "3",
+      "5"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 161,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 3888000,
+   "lastWriteBlock": 349742,
+   "firstWriteBlock": 347977,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 164,
+   "isLoadGenerator": false,
+   "soleOwner": "0x6BEa8012E15605564cc67Bad1F8941262cC68f69"
+  },
+  {
+   "id": "011e76e5c32f",
+   "name": "salary",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "salary"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "city",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "coimbatore",
+      "noida",
+      "chennai"
+     ]
+    },
+    {
+     "name": "company",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "coromandel-digital",
+      "kaveri-systems",
+      "tungabhadra-tech"
+     ]
+    },
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1745907023664",
+      "1746076223664",
+      "1746699023664"
+     ]
+    },
+    {
+     "name": "ctc",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1240000",
+      "1730000",
+      "2320000"
+     ]
+    },
+    {
+     "name": "level",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sde-1",
+      "sde-2",
+      "senior"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "role",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "frontend-engineer",
+      "data-scientist",
+      "software-engineer"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "salary"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "yoe",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "8"
+     ]
+    },
+    {
+     "name": "base",
+     "type": "i32",
+     "presence": 0.5962732919254659,
+     "examples": [
+      "1030000",
+      "1410000",
+      "4870000"
+     ]
+    }
+   ],
+   "liveCount": 161,
+   "writers": 23,
+   "ownership": "user",
+   "medianLifetimeBlocks": 21332010,
+   "lastWriteBlock": 753698,
+   "firstWriteBlock": 752190,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "e5cdf38e16e3",
+   "name": "shift",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "shift"
+   },
+   "project": {
+    "method": "label",
+    "label": "nexora",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nexora"
+     ]
+    },
+    {
+     "name": "city",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "bengaluru",
+      "delhi_ncr",
+      "jaipur"
+     ]
+    },
+    {
+     "name": "cost_pct",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "10",
+      "30"
+     ]
+    },
+    {
+     "name": "demo",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true",
+      "false"
+     ]
+    },
+    {
+     "name": "hours_band",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "2",
+      "4"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "shift"
+     ]
+    },
+    {
+     "name": "net_hourly",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "390",
+      "440",
+      "360"
+     ]
+    },
+    {
+     "name": "period",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202608",
+      "202609",
+      "202610"
+     ]
+    },
+    {
+     "name": "platform",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "rapido",
+      "swiggy",
+      "zomato"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "vehicle",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "petrol_bike",
+      "ev_scooter",
+      "car"
+     ]
+    },
+    {
+     "name": "work",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "bike_taxi",
+      "food_delivery",
+      "grocery_delivery"
+     ]
+    }
+   ],
+   "liveCount": 161,
+   "writers": 11,
+   "ownership": "user",
+   "medianLifetimeBlocks": 15768000,
+   "lastWriteBlock": 681985,
+   "firstWriteBlock": 579403,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 25,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "05b1be44d2c6",
+   "name": "wsprobe",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "wsprobe"
+   },
+   "project": {
+    "method": "label",
+    "label": "kharab-test",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "kharab-test"
+     ]
+    },
+    {
+     "name": "run",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "wsdeliv-1791956455641"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "wsprobe"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 160,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 778543,
+   "lastWriteBlock": 553408,
+   "firstWriteBlock": 553356,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 9,
+   "isLoadGenerator": false,
+   "soleOwner": "0x43cBFAEe2420da081C94070B5E033AC5cb500516"
+  },
+  {
+   "id": "088cf258cf06",
+   "name": "alert_ym · batch · batch_raw",
+   "nameSource": "schema",
+   "discriminator": null,
+   "project": {
+    "method": "label",
+    "label": "nazar-in-batch-alerts",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "alert_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202506",
+      "202610",
+      "202505"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "24460967",
+      "gl2468",
+      "dt240523b"
+     ]
+    },
+    {
+     "name": "batch_raw",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "24460967",
+      "GL2468",
+      "DT240523B"
+     ]
+    },
+    {
+     "name": "brand",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "taxim-o-200-tablets",
+      "phencypik-t-cough-syrup-codeine-phosphate",
+      "ofloxacin-ornidazoletablets-ip"
+     ]
+    },
+    {
+     "name": "case",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "fffd69142dce86e689ce1f71",
+      "158ced96b46b5a710936cce1",
+      "5bc287cb23f2d19d9008544a"
+     ]
+    },
+    {
+     "name": "cat",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "spurious",
+      "nsq",
+      "misbranded"
+     ]
+    },
+    {
+     "name": "conf",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "95",
+      "92",
+      "97"
+     ]
+    },
+    {
+     "name": "exp_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202606",
+      "202604",
+      "202602"
+     ]
+    },
+    {
+     "name": "fail",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "spurious",
+      "assay",
+      "description"
+     ]
+    },
+    {
+     "name": "form",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tablet",
+      "syrup",
+      "other"
+     ]
+    },
+    {
+     "name": "juris",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "IN",
+      "IN-MH",
+      "IN-TN"
+     ]
+    },
+    {
+     "name": "method",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "text",
+      "html",
+      "api"
+     ]
+    },
+    {
+     "name": "mfg_ym",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "202407",
+      "202405",
+      "202403"
+     ]
+    },
+    {
+     "name": "mfr",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "unknown",
+      "globin-pharmaceuticals",
+      "indo-rama-health-care"
+     ]
+    },
+    {
+     "name": "notice",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x3b641eaf74473ccffbbf642685b03bf6c429c868d5a8c2…",
+      "0x719a37015bcc563dcecb51b91dd4c66c0d9cc50585dc56…",
+      "0x598bc11ec7cc6b90f3e727096d3bc400e48c8e1f0e30ea…"
+     ]
+    },
+    {
+     "name": "peds",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "0",
+      "1"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "nazar-in-batch-alerts"
+     ]
+    },
+    {
+     "name": "rid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "62ae5416459bb6ea5c4b3c31",
+      "d76e2202643d843f45cfeeb1",
+      "303a64123b98418d3dce6213"
+     ]
+    },
+    {
+     "name": "sev",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "5",
+      "3",
+      "1"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cdsco-pdf",
+      "mh-fda",
+      "cdsco-online"
+     ]
+    },
+    {
+     "name": "t",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "alert"
+     ]
+    },
+    {
+     "name": "tier",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "auto"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 157,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 25444800,
+   "lastWriteBlock": 942794,
+   "firstWriteBlock": 725155,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 625,
+   "isLoadGenerator": false,
+   "soleOwner": "0xd06d85Eb20f126f796E4a341b711B1a757c66bD2"
+  },
+  {
+   "id": "2f55d575814f",
+   "name": "receipt",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "receipt"
+   },
+   "project": {
+    "method": "label",
+    "label": "sayso",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "action",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "granted",
+      "withdrawn",
+      "renewed"
+     ]
+    },
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sayso"
+     ]
+    },
+    {
+     "name": "at_ms",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792223442159",
+      "1792223466120",
+      "1792223557022"
+     ]
+    },
+    {
+     "name": "fiduciary",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0xcc3f2990437ded5f3182335219bc30bbf64a6460",
+      "0x08dea599517ea7575b685bc37807f312125b7991"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "receipt"
+     ]
+    },
+    {
+     "name": "processor",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0x7b6b8d2e5b82de860048e6b9001d754b1fa89d3d",
+      "0x90db0cd8619d2ae921b51883947113ff5614d9d9",
+      "0x28cf78c5975664052b830828ac51e2f85b0426c3"
+     ]
+    },
+    {
+     "name": "purpose",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "credit_check",
+      "marketing",
+      "loan_servicing"
+     ]
+    },
+    {
+     "name": "notice",
+     "type": "key",
+     "presence": 0.8726114649681529,
+     "examples": [
+      "0xfc672b00bb132368d36c2dcdeeac5e7ac41d3349a21c56…",
+      "0xef363e9abc5104c3b7cb1864d7c043353cd52cd4e9ab4d…",
+      "0x1833e30ddbbc8337e295cb5813250eebab9642f779ae9e…"
+     ]
+    },
+    {
+     "name": "consent",
+     "type": "key",
+     "presence": 0.8662420382165605,
+     "examples": [
+      "0xe3e4e94a6aaac3e6d4d2b6af87e10e2ec2da7fec5ca58f…",
+      "0x7d08a554ce45b7c5b122cf1732552b860c866e3c872738…",
+      "0x4fe09a7b86198456d3dd67d51d971431a3f66bd00adc4d…"
+     ]
+    }
+   ],
+   "liveCount": 157,
+   "writers": 34,
+   "ownership": "user",
+   "medianLifetimeBlocks": 110376000,
+   "lastWriteBlock": 772088,
+   "firstWriteBlock": 686839,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 2,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "f887519ebcbb",
+   "name": "leak_claim",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "leak_claim"
+   },
+   "project": {
+    "method": "label",
+    "label": "muhurat",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "muhurat"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mock-20261018-1006",
+      "mock-20261018-1030",
+      "mock-20261018-1120"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "leak_claim"
+     ]
+    },
+    {
+     "name": "phrases",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "137",
+      "22"
+     ]
+    }
+   ],
+   "liveCount": 145,
+   "writers": 3,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7871363,
+   "lastWriteBlock": 740144,
+   "firstWriteBlock": 733973,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 2687,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "d5ff78656dd7",
+   "name": "added_late",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "added_late"
+   },
+   "project": {
+    "method": "label",
+    "label": "kharab",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "after",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x26216108b555500a35e046ef877b8bbc9df9696e72b777…",
+      "0xe3bd1739f7bdd3ac02d92d91096a747ed0cc99745dcfcf…",
+      "0xa2bb1636de9d763c0a818218329941796d37d8d6dde4eb…"
+     ]
+    },
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "kharab"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "GT501287A",
+      "2506006",
+      "URDT0328"
+     ]
+    },
+    {
+     "name": "before",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x341bdc965156f6fa9fb2c24032a4711146f2df6bc9cfe8…",
+      "0x05db1c4ec1d24a988090cba03d6a14b52628d4a91f7b08…",
+      "0x36650d2219d2451390814733723b7f441ba0df08dd7dd3…"
+     ]
+    },
+    {
+     "name": "evid",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "reconstructed"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "added_late"
+     ]
+    },
+    {
+     "name": "list_ym",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "202604",
+      "202512",
+      "202602"
+     ]
+    },
+    {
+     "name": "of",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x7028b74ed0c8260545d412636e4cc91088e071e71992c4…",
+      "0x8c85502b0f2db1d8be8544f61ce5caa38fec494374f899…",
+      "0x0000000000000000000000000000000000000000000000…"
+     ]
+    },
+    {
+     "name": "seen_ymd",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "20261013"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cdsco"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "change"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 137,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 17280000,
+   "lastWriteBlock": 515625,
+   "firstWriteBlock": 515606,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 650,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "9ff4bfb6ae5c",
+   "name": "key_share",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "key_share"
+   },
+   "project": {
+    "method": "label",
+    "label": "examseal",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "examseal"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "neet-mock-1",
+      "neet-ug-2027-mock",
+      "trial-exam"
+     ]
+    },
+    {
+     "name": "index",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1",
+      "7",
+      "2"
+     ]
+    },
+    {
+     "name": "shift",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "key_share"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 127,
+   "writers": 8,
+   "ownership": "user",
+   "medianLifetimeBlocks": 5184000,
+   "lastWriteBlock": 755078,
+   "firstWriteBlock": 692479,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 164,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "1528a5381e34",
+   "name": "unit",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "unit"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0x86d0886835480cfee3a0dbfb7814434dab851381",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "election",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "demo-2027",
+      "collate-demo-ng"
+     ]
+    },
+    {
+     "name": "lga",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Lagoon North",
+      "Lagoon South",
+      "Savanna East"
+     ]
+    },
+    {
+     "name": "registered",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1489",
+      "1065",
+      "776"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Lagos",
+      "Kano",
+      "Rivers"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "unit"
+     ]
+    },
+    {
+     "name": "unit_code",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "LA-LN1-01",
+      "LA-LN1-02",
+      "LA-LN1-03"
+     ]
+    },
+    {
+     "name": "ward",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Harbour Ward",
+      "Market Ward",
+      "Creek Ward"
+     ]
+    }
+   ],
+   "liveCount": 120,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 3888000,
+   "lastWriteBlock": 715426,
+   "firstWriteBlock": 616662,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 37,
+   "isLoadGenerator": false,
+   "soleOwner": "0x86d0886835480cfEe3a0dBFb7814434dAB851381"
+  },
+  {
+   "id": "35e72840cc2a",
+   "name": "unit",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "unit"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0xb926a5eeefbde3dcb4ac648a76031c69d815d6fd",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "election",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "demo-2027",
+      "collate-demo-ng"
+     ]
+    },
+    {
+     "name": "lga",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Lagoon North",
+      "Lagoon South",
+      "Savanna East"
+     ]
+    },
+    {
+     "name": "registered",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1489",
+      "1065",
+      "776"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Lagos",
+      "Kano",
+      "Rivers"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "unit"
+     ]
+    },
+    {
+     "name": "unit_code",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "LA-LN1-01",
+      "LA-LN1-02",
+      "LA-LN1-03"
+     ]
+    },
+    {
+     "name": "ward",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Harbour Ward",
+      "Market Ward",
+      "Creek Ward"
+     ]
+    }
+   ],
+   "liveCount": 120,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 3888000,
+   "lastWriteBlock": 715445,
+   "firstWriteBlock": 616666,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 37,
+   "isLoadGenerator": false,
+   "soleOwner": "0xB926A5eeefbdE3dCb4AC648a76031C69d815D6FD"
+  },
+  {
+   "id": "2cffd6fdce8c",
+   "name": "link",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "link"
+   },
+   "project": {
+    "method": "label",
+    "label": "kharab",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "kharab"
+     ]
+    },
+    {
+     "name": "batch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "AABT2502",
+      "TG24K067A",
+      "AI071L24"
+     ]
+    },
+    {
+     "name": "lag_basis",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lower-bound",
+      "undated",
+      "declared"
+     ]
+    },
+    {
+     "name": "lag_d",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "22",
+      "82",
+      "14"
+     ]
+    },
+    {
+     "name": "lag_w",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "0"
+     ]
+    },
+    {
+     "name": "na",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x95e84b860bffbab9f194cb80f47925c79e87861b322ec9…",
+      "0xfcb8be63e6f346ef762aa743b46d4070314641d9b5e7d5…",
+      "0x307d155032b5837038f1a3727861f98f3d1287afa53f80…"
+     ]
+    },
+    {
+     "name": "sa",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xed61c6106715feb2ac10f9bb2f15323bcde258d775242a…",
+      "0xff1fedbb453b0d42080affb5eba50ee15e92ee86a26ff6…",
+      "0x7ecfa05e225f8c31200d437d52a1d9e8a38ef47511bcbc…"
+     ]
+    },
+    {
+     "name": "src",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ka",
+      "mh"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "link"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "witnessed",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "false"
+     ]
+    }
+   ],
+   "liveCount": 115,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 9920401,
+   "lastWriteBlock": 515536,
+   "firstWriteBlock": 515520,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 425,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "fc3d1203b706",
+   "name": "observation",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "observation"
+   },
+   "project": {
+    "method": "label",
+    "label": "tagwitness-v1",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tagwitness-v1"
+     ]
+    },
+    {
+     "name": "observed_at",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1792119627",
+      "1792119682"
+     ]
+    },
+    {
+     "name": "repo",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "actions/checkout",
+      "actions/setup-node",
+      "actions/cache"
+     ]
+    },
+    {
+     "name": "sha",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+      "d23441a48e516b6c34aea4fa41551a30e30af803"
+     ]
+    },
+    {
+     "name": "tag",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "v7.0.1",
+      "v7.0.0",
+      "v7"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "observation"
+     ]
+    }
+   ],
+   "liveCount": 105,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 635224,
+   "firstWriteBlock": 634933,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 183,
+   "isLoadGenerator": false,
+   "soleOwner": "0xbC6C7b89D747230251F43cA57b7EBA9fF0EB1D8F"
+  },
+  {
+   "id": "c1ef8e79ce03",
+   "name": "audit",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "audit"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0x0a4aa86b07db12093053a79714c7fc37df0e27cf",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "lease",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "0xcb742a44e47a4a4210f82b64b41ad684202e1fa5682404…",
+      "0x8f85506c175afdf5307df20949a6fe027f763db2bc0972…",
+      "0xababababababababababababababababababababababab…"
+     ]
+    },
+    {
+     "name": "result",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ALLOWED",
+      "BLOCKED"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "audit"
+     ]
+    },
+    {
+     "name": "block",
+     "type": "u64",
+     "presence": 0.946236559139785,
+     "examples": [
+      "696472",
+      "698559",
+      "698614"
+     ]
+    },
+    {
+     "name": "reason",
+     "type": "str",
+     "presence": 0.946236559139785,
+     "examples": [
+      "NO_LIVE_LEASE",
+      "LEASE_ACTIVE",
+      "COMMAND_STARTED"
+     ]
+    }
+   ],
+   "liveCount": 93,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 751830,
+   "firstWriteBlock": 692636,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 187,
+   "isLoadGenerator": false,
+   "soleOwner": "0x0A4aA86B07dB12093053a79714c7FC37DF0E27CF"
+  },
+  {
+   "id": "46973d9d620d",
+   "name": "edge",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "edge"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0x4feade3ff513a7954e9f7420aaa7bdedc0ba4bdc",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "from_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "context:handoff",
+      "context:numbers",
+      "context:safety"
+     ]
+    },
+    {
+     "name": "graph_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xce41aa4aabaffdb378c43775b2d20a84fff95618d481e6…",
+      "0x3d9325c01b3cb80e8f3de3c02fc720e196f190de4d7419…",
+      "0xda0e7bb82395bf38a78a7b121a775111140a199b7615ed…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "edge"
+     ]
+    },
+    {
+     "name": "namespace",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ai-passport-graph-v1",
+      "arkiv-graph-v1"
+     ]
+    },
+    {
+     "name": "relation",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "compiled-from",
+      "cites",
+      "uses"
+     ]
+    },
+    {
+     "name": "schema_version",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "to_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "source:release",
+      "source:india-reference",
+      "source:numbers"
+     ]
+    }
+   ],
+   "liveCount": 93,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 608212,
+   "firstWriteBlock": 525821,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 558,
+   "isLoadGenerator": false,
+   "soleOwner": "0x4FEade3FF513A7954e9f7420aaa7BDEdc0BA4BDC"
+  },
+  {
+   "id": "9b8982d777ce",
+   "name": "receipt",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "entity_type",
+    "value": "receipt"
+   },
+   "project": {
+    "method": "label",
+    "label": "arkivate",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "entity_type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "receipt"
+     ]
+    },
+    {
+     "name": "epoch",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "create:0x5f2ac5174c447b27bd788c317797f50f0b2ad74…",
+      "create:0x0eff717b003f072a901e240bf69d61156fa94d0…",
+      "create:0x78918af60fbf7c90ce04b5127a6249c18886eb6…"
+     ]
+    },
+    {
+     "name": "evidence_block",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "648135",
+      "648002",
+      "647997"
+     ]
+    },
+    {
+     "name": "fired_block",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "648190",
+      "648193",
+      "648195"
+     ]
+    },
+    {
+     "name": "mode",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "public",
+      "sealed"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "arkivate"
+     ]
+    },
+    {
+     "name": "trigger",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x41f438973d40749f7c24419d62350cc0b1bbae5afe4aee…",
+      "0x5865c301793273a0bae8689ec566e449836b44c2beb607…",
+      "0x99cc82d60b54608ab07e5a6e6c284529f4d70537e6d983…"
+     ]
+    },
+    {
+     "name": "subject",
+     "type": "key",
+     "presence": 0.3626373626373626,
+     "examples": [
+      "0xbd8b1748b75b37f8f93616b9940997852100a534bcbd63…",
+      "0x5a06771e3082fc8dd0a2f2674701be419155f010661014…",
+      "0x132af2afda2a4e54f47660fc100a99ac94c1bf9010d2b1…"
+     ]
+    },
+    {
+     "name": "old_expires_at",
+     "type": "u64",
+     "presence": 0.2967032967032967,
+     "examples": [
+      "654818",
+      "654855",
+      "654938"
+     ]
+    },
+    {
+     "name": "outcome",
+     "type": "str",
+     "presence": 0.2967032967032967,
+     "examples": [
+      "extended",
+      "not_extendable",
+      "cap_reached"
+     ]
+    },
+    {
+     "name": "new_expires_at",
+     "type": "u64",
+     "presence": 0.13186813186813187,
+     "examples": [
+      "654938",
+      "655058",
+      "657704"
+     ]
+    }
+   ],
+   "liveCount": 91,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 839784,
+   "firstWriteBlock": 648192,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 202,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "0079ace5f83c",
+   "name": "fact",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "fact"
+   },
+   "project": {
+    "method": "label",
+    "label": "stet",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "stet"
+     ]
+    },
+    {
+     "name": "category",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "market_demand",
+      "customers",
+      "adoption"
+     ]
+    },
+    {
+     "name": "claim_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "C1",
+      "C2",
+      "C3"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "fact"
+     ]
+    },
+    {
+     "name": "quote_checked",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true",
+      "false"
+     ]
+    },
+    {
+     "name": "run",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0xb8608a80b79ba6e3e12642b3b000947daec973e6950c46…",
+      "0x8e26d49169b734b5cfcf3c90e3828af55f09181e09aaea…",
+      "0x6afc059ab1976a47005b82aa65d795aa1225de269dcab6…"
+     ]
+    },
+    {
+     "name": "run_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "6030f283-9088-4566-8522-5bd96e7422ff",
+      "50073488-648d-4c2a-a34c-76434599c5af",
+      "40bf2f88-7994-4d58-8ac9-67b83c4f5e44"
+     ]
+    },
+    {
+     "name": "stance",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supports",
+      "challenges",
+      "neutral"
+     ]
+    }
+   ],
+   "liveCount": 85,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 15768000,
+   "lastWriteBlock": 740097,
+   "firstWriteBlock": 733156,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 726,
+   "isLoadGenerator": false,
+   "soleOwner": "0x441aB97848BB539187D93EF3eF7125D1FbABbf27"
+  },
+  {
+   "id": "24ff9529cf92",
+   "name": "episode",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "episode"
+   },
+   "project": {
+    "method": "label",
+    "label": "doorledger",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "doorledger"
+     ]
+    },
+    {
+     "name": "dur_s",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "32400",
+      "45149",
+      "44921"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "episode"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ethereum",
+      "cardano",
+      "sui"
+     ]
+    },
+    {
+     "name": "route",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ETH",
+      "ADA",
+      "SUI"
+     ]
+    },
+    {
+     "name": "side",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "withdraw",
+      "deposit"
+     ]
+    },
+    {
+     "name": "t0",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1791418752",
+      "1791576115",
+      "1791577643"
+     ]
+    },
+    {
+     "name": "t1",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1791451152",
+      "1791621264",
+      "1791622564"
+     ]
+    },
+    {
+     "name": "venue",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "binance",
+      "gate",
+      "kucoin"
+     ]
+    }
+   ],
+   "liveCount": 84,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 1031747,
+   "firstWriteBlock": 349310,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 784,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "cc267b780cd5",
+   "name": "copy",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "copy"
+   },
+   "project": {
+    "method": "label",
+    "label": "supercall-test-*",
+    "labelAttr": "project",
+    "isPrefix": true,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "call",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x23e2c69aff918cc9cc9db1bdab2624080af1f337bc3670…",
+      "0x9288eee0dd2022bc1a42b3697cdaba3b300a0c2b3944aa…",
+      "0x51487c36e09befe89120a35b5cc05afa7dba157a417469…"
+     ]
+    },
+    {
+     "name": "follower",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "0x976ea74026e726554db657fa54763abd0c3a0aa9"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "copy"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "supercall-test-1792863037106",
+      "supercall-test-1792863089577",
+      "supercall-test-1792863251251"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 80,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1339179,
+   "lastWriteBlock": 1070109,
+   "firstWriteBlock": 1006607,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 344,
+   "isLoadGenerator": false,
+   "soleOwner": "0x1afaD35e8FF949bbbF45727A6578c27690dB5870"
+  },
+  {
+   "id": "2c0d7cec7ea7",
+   "name": "other",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "other"
+   },
+   "project": {
+    "method": "label",
+    "label": "onrecord",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "onrecord"
+     ]
+    },
+    {
+     "name": "channel",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "bulltrade_observation",
+      "banknifty_nifty_option_calls",
+      "niftybankniftycallsofficial"
+     ]
+    },
+    {
+     "name": "content_hash",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "eec95f65213021f7567ee187e0e9bc20647d37d572f72616…",
+      "75eaae9399f6333a11984f82e39e1dbbe82fbd1d98ab7e93…",
+      "01569d0465586a909ee6a98589c9896f629cb41a33724cc8…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "other"
+     ]
+    },
+    {
+     "name": "msg_id",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "5791",
+      "5794",
+      "5797"
+     ]
+    },
+    {
+     "name": "seen_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792309663",
+      "1792309686",
+      "1792309695"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "msg"
+     ]
+    }
+   ],
+   "liveCount": 77,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 2592000,
+   "lastWriteBlock": 987700,
+   "firstWriteBlock": 729951,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 201,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "a0f00e13f070",
+   "name": "contract",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "contract"
+   },
+   "project": {
+    "method": "label",
+    "label": "lcrd-open-registry",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lcrd-open-registry"
+     ]
+    },
+    {
+     "name": "category",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lending_pool_factory",
+      "lending_backstop",
+      "lending_pool"
+     ]
+    },
+    {
+     "name": "contract",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "CDSYOAVXFY7SM5S64IZPPPYB4GVGGLMQVFREPSQQEZVIWXX5…",
+      "CAQQR5SWBXKIGZKPBZDH3KM5GQ5GUTPKB7JAFCINLZBC5WXP…",
+      "CDMAVJPFXPADND3YRL4BSM3AKZWCTFMX27GLLXCML3PD62HE…"
+     ]
+    },
+    {
+     "name": "group",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lending",
+      "amm",
+      "yield"
+     ]
+    },
+    {
+     "name": "listed_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1791918226800"
+     ]
+    },
+    {
+     "name": "origin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "curated"
+     ]
+    },
+    {
+     "name": "protocol",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "blend",
+      "aquarius",
+      "stellar_defi_hub"
+     ]
+    },
+    {
+     "name": "schema",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "contract"
+     ]
+    },
+    {
+     "name": "asset",
+     "type": "str",
+     "presence": 0.12,
+     "examples": [
+      "XLM",
+      "USDC",
+      "PYUSD"
+     ]
+    }
+   ],
+   "liveCount": 75,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1929993,
+   "lastWriteBlock": 1168246,
+   "firstWriteBlock": 534240,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 277,
+   "isLoadGenerator": false,
+   "soleOwner": "0xFD52Dc5DBa1Aa937E90EE87AcD99a7e433AAa9B7"
+  },
+  {
+   "id": "0bb04fd9570d",
+   "name": "node",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "node"
+   },
+   "project": {
+    "method": "creator",
+    "label": "0x4feade3ff513a7954e9f7420aaa7bdedc0ba4bdc",
+    "labelAttr": null,
+    "isPrefix": false,
+    "confidence": 0.55,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "graph_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xce41aa4aabaffdb378c43775b2d20a84fff95618d481e6…",
+      "0x3d9325c01b3cb80e8f3de3c02fc720e196f190de4d7419…",
+      "0xda0e7bb82395bf38a78a7b121a775111140a199b7615ed…"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "node"
+     ]
+    },
+    {
+     "name": "namespace",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ai-passport-graph-v1",
+      "arkiv-graph-v1"
+     ]
+    },
+    {
+     "name": "node_id",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "model:llama",
+      "source:release",
+      "source:numbers"
+     ]
+    },
+    {
+     "name": "node_type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "model",
+      "source",
+      "tool"
+     ]
+    },
+    {
+     "name": "schema_version",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 73,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 608212,
+   "firstWriteBlock": 525809,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 810,
+   "isLoadGenerator": false,
+   "soleOwner": "0x4FEade3FF513A7954e9f7420aaa7BDEdc0BA4BDC"
+  },
+  {
+   "id": "92ce24315cab",
+   "name": "cut_log",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "cut_log"
+   },
+   "project": {
+    "method": "label",
+    "label": "bijlilog-v1",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "confirmers",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "5",
+      "2",
+      "4"
+     ]
+    },
+    {
+     "name": "duration_min",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "280",
+      "120",
+      "330"
+     ]
+    },
+    {
+     "name": "ended_at_ms",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1790075400000",
+      "1790436600000",
+      "1790730000000"
+     ]
+    },
+    {
+     "name": "origin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "live",
+      "backfill"
+     ]
+    },
+    {
+     "name": "pin",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "226001",
+      "411001",
+      "560001"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "bijlilog-v1"
+     ]
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "demo",
+      "user"
+     ]
+    },
+    {
+     "name": "started_at_ms",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1790058600000",
+      "1790429400000",
+      "1790710200000"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "cut_log"
+     ]
+    },
+    {
+     "name": "device",
+     "type": "addr",
+     "presence": 0.7714285714285715,
+     "examples": [
+      "0x97e946d4c924f84ba9f68fe3f2fe4ff03967cdcb",
+      "0xc0f83f797b9c9f154ab3d426f772f0b36af8f1f9",
+      "0x79de3192d903eb434d1b49cda3f03f939637d96d"
+     ]
+    },
+    {
+     "name": "outage",
+     "type": "key",
+     "presence": 0.21428571428571427,
+     "examples": [
+      "0x95db8a6ff3f4276d451a078395e8c8dd72f44e31c88710…",
+      "0xf4b88eae5689af9799b813f23352baf0ea3a6b5ad51657…",
+      "0x3f53ee78f401f21b193992b5a74f55278b00530ecc4f79…"
+     ]
+    }
+   ],
+   "liveCount": 70,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 15768000,
+   "lastWriteBlock": 692995,
+   "firstWriteBlock": 679692,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 431,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "57ad1c29891b",
+   "name": "exam",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "exam"
+   },
+   "project": {
+    "method": "label",
+    "label": "muhurat",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 4
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "muhurat"
+     ]
+    },
+    {
+     "name": "chain",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f66…"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mock-20261018-1006",
+      "mock-20261018-1030",
+      "mock-20261018-1120"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "exam"
+     ]
+    },
+    {
+     "name": "opens_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792317987",
+      "1792319424",
+      "1792322451"
+     ]
+    },
+    {
+     "name": "per_section",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "5"
+     ]
+    },
+    {
+     "name": "round",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "33171541",
+      "33172020",
+      "33173029"
+     ]
+    }
+   ],
+   "liveCount": 70,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7876742,
+   "lastWriteBlock": 740125,
+   "firstWriteBlock": 733959,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 114,
+   "isLoadGenerator": false,
+   "soleOwner": "0x97c2a64fEE201647BB667C1857Aee37aC06006d7"
+  },
+  {
+   "id": "46a50dd9956a",
+   "name": "centre_seal",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "centre_seal"
+   },
+   "project": {
+    "method": "label",
+    "label": "examseal",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "examseal"
+     ]
+    },
+    {
+     "name": "centre",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "DL-0412",
+      "RJ-1103",
+      "KA-0907"
+     ]
+    },
+    {
+     "name": "exam",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "neet-mock-1",
+      "neet-ug-2027-mock",
+      "trial-exam"
+     ]
+    },
+    {
+     "name": "shift",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "centre_seal"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    }
+   ],
+   "liveCount": 69,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 5184000,
+   "lastWriteBlock": 755103,
+   "firstWriteBlock": 692509,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 136,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "3ea91be10bf4",
+   "name": "entry",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "entry"
+   },
+   "project": {
+    "method": "label",
+    "label": "safejournal",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "safejournal"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "entry"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "journal",
+     "type": "str",
+     "presence": 0.53125,
+     "examples": [
+      "0x45259eadd9aba97e0bc51f74ca2b7d2b90d91fa7",
+      "0xb5b4370577969795f5ed1eb12cd866e0b4b16efa",
+      "0x32e0d3811c1fd49511447add8530a0dd96aed86c"
+     ]
+    }
+   ],
+   "liveCount": 64,
+   "writers": 5,
+   "ownership": "mixed",
+   "medianLifetimeBlocks": 31536000,
+   "lastWriteBlock": 746419,
+   "firstWriteBlock": 715313,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream",
+    "text/plain"
+   ],
+   "medianPayloadBytes": 1114,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "d4019fae2ed6",
+   "name": "price_report",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "price_report"
+   },
+   "project": {
+    "method": "label",
+    "label": "mandi_board_v1",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "crop",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "onion",
+      "tomato",
+      "soybean"
+     ]
+    },
+    {
+     "name": "mandi",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "lasalgaon",
+      "pimpalgaon",
+      "nashik"
+     ]
+    },
+    {
+     "name": "price",
+     "type": "dec",
+     "presence": 1,
+     "examples": [
+      "1915",
+      "1885",
+      "1917"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mandi_board_v1"
+     ]
+    },
+    {
+     "name": "reported_at_ms",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792770575733",
+      "1792770575734",
+      "1792770575735"
+     ]
+    },
+    {
+     "name": "reporter",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "demo_farmer_15",
+      "demo_farmer_31",
+      "demo_farmer_34"
+     ]
+    },
+    {
+     "name": "state",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "maharashtra",
+      "madhya_pradesh",
+      "gujarat"
+     ]
+    },
+    {
+     "name": "synthetic",
+     "type": "bool",
+     "presence": 1,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "price_report"
+     ]
+    }
+   ],
+   "liveCount": 63,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 960386,
+   "firstWriteBlock": 960378,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 84,
+   "isLoadGenerator": false,
+   "soleOwner": "0xd5055B36Ad00d54DacfFb2340DA0962f16207b30"
+  },
+  {
+   "id": "4f10210e8011",
+   "name": "review",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "review"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "company",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "godavari-labs",
+      "kaveri-systems",
+      "sahyadri-software"
+     ]
+    },
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1754338223664",
+      "1754424623664",
+      "1754597423664"
+     ]
+    },
+    {
+     "name": "culture",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "4",
+      "5"
+     ]
+    },
+    {
+     "name": "growth",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "2",
+      "4"
+     ]
+    },
+    {
+     "name": "management",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "4",
+      "5",
+      "2"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "review"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "wlb",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "2",
+      "4"
+     ]
+    }
+   ],
+   "liveCount": 60,
+   "writers": 19,
+   "ownership": "user",
+   "medianLifetimeBlocks": 12247200,
+   "lastWriteBlock": 752292,
+   "firstWriteBlock": 752292,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json",
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 63,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "38aae0efb4eb",
+   "name": "ack",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "ack"
+   },
+   "project": {
+    "method": "label",
+    "label": "proof-of-life",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 3
+   },
+   "schema": [
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "proof-of-life"
+     ]
+    },
+    {
+     "name": "slot",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "3",
+      "2",
+      "1"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "ack"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "vault_id",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xc52b247786d0d8b8f9b5f044167ffa56999f2886bb8137…",
+      "0x612ecb90f7fd74b4c11feeeeaeec9840841be40f5cab2a…",
+      "0xeba840feae6cab0ce6a3f9bf5771c276ab74e69eb0084e…"
+     ]
+    }
+   ],
+   "liveCount": 57,
+   "writers": 57,
+   "ownership": "user",
+   "medianLifetimeBlocks": 604800,
+   "lastWriteBlock": 1115379,
+   "firstWriteBlock": 692345,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 0,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "5350d55daafa",
+   "name": "envelope",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "envelope"
+   },
+   "project": {
+    "method": "label",
+    "label": "proof-of-life",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 3
+   },
+   "schema": [
+    {
+     "name": "custodian",
+     "type": "addr",
+     "presence": 1,
+     "examples": [
+      "0xc0832477a9b696d91c90cc916a04a518c2fb1dfe",
+      "0xd1a543e9ba90eabece8647e057e9136b5037785e",
+      "0x991b6b454cee86fbf7fbaf64bc1428aaa4e35f5c"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "proof-of-life"
+     ]
+    },
+    {
+     "name": "slot",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "3"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "envelope"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "vault_id",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xc52b247786d0d8b8f9b5f044167ffa56999f2886bb8137…",
+      "0xeba840feae6cab0ce6a3f9bf5771c276ab74e69eb0084e…",
+      "0xb711c6eda461e8175a9eb6c34fae56dcd3ad8de26df4f7…"
+     ]
+    }
+   ],
+   "liveCount": 55,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 1296000,
+   "lastWriteBlock": 816686,
+   "firstWriteBlock": 692341,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 94,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "210a59139660",
+   "name": "form17c",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "kind",
+    "value": "form17c"
+   },
+   "project": {
+    "method": "label",
+    "label": "form17c.v1",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 3
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "form17c.v1"
+     ]
+    },
+    {
+     "name": "booth",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1",
+      "2",
+      "3"
+     ]
+    },
+    {
+     "name": "election",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "GE-DEMO-2026"
+     ]
+    },
+    {
+     "name": "electors",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1000",
+      "1083",
+      "1124"
+     ]
+    },
+    {
+     "name": "kind",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "form17c"
+     ]
+    },
+    {
+     "name": "party",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "Test Party",
+      "Jan Morcha",
+      "Lok Vikas Party"
+     ]
+    },
+    {
+     "name": "pc",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "PC-VERIFY",
+      "PC-99"
+     ]
+    },
+    {
+     "name": "photo",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0xe67ea29384deca9928aa65088faae7fc2e5a99fd651212…",
+      "0x70e3447c68f11944267827e1c64853882948118149178f…",
+      "0x75997df827b69b95e24aab442ae6857ebd9dfae0d1fa1d…"
+     ]
+    },
+    {
+     "name": "votes",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "637",
+      "699",
+      "779"
+     ]
+    }
+   ],
+   "liveCount": 54,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 2592000,
+   "lastWriteBlock": 615317,
+   "firstWriteBlock": 615240,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 396,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "6ebc7bc18553",
+   "name": "discussion",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "discussion"
+   },
+   "project": {
+    "method": "label",
+    "label": "tankha",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "company",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "sahyadri-software",
+      "deccan-cloudworks",
+      "coromandel-digital"
+     ]
+    },
+    {
+     "name": "created_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1787494223664",
+      "1787544623664",
+      "1787746223664"
+     ]
+    },
+    {
+     "name": "flair",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "layoffs",
+      "compensation",
+      "workplace"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "tankha"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "discussion"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "city",
+     "type": "str",
+     "presence": 0.09615384615384616,
+     "examples": [
+      "pune",
+      "bengaluru",
+      "coimbatore"
+     ]
+    }
+   ],
+   "liveCount": 52,
+   "writers": 21,
+   "ownership": "user",
+   "medianLifetimeBlocks": 22598100,
+   "lastWriteBlock": 753613,
+   "firstWriteBlock": 752186,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 155,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "a68c899362d1",
+   "name": "case",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "case"
+   },
+   "project": {
+    "method": "label",
+    "label": "haqclock",
+    "labelAttr": "app",
+    "isPrefix": false,
+    "confidence": 0.6,
+    "conflictWallets": 2
+   },
+   "schema": [
+    {
+     "name": "app",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "haqclock"
+     ]
+    },
+    {
+     "name": "appeal_due",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792268691",
+      "1792273526",
+      "1792274067"
+     ]
+    },
+    {
+     "name": "authority",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "demo-revenue-dept",
+      "central-sheep",
+      "nodal-officer"
+     ]
+    },
+    {
+     "name": "case_hash",
+     "type": "bytes32",
+     "presence": 1,
+     "examples": [
+      "0x8e53c26f2275077e74b22d5b311408a4e9d960a16018f9…",
+      "0x0597a0bf7eadf15e9296de3adf7b17929100b52390696c…",
+      "0x4c823a437d25ee00516f81bc5b046c69a2b8c92e8c9dfa…"
+     ]
+    },
+    {
+     "name": "district",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "madurai",
+      "chennai",
+      "mumbai"
+     ]
+    },
+    {
+     "name": "net",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "drill"
+     ]
+    },
+    {
+     "name": "opened",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792266771",
+      "1792269926",
+      "1792270467"
+     ]
+    },
+    {
+     "name": "pack",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "life_liberty",
+      "standard"
+     ]
+    },
+    {
+     "name": "reply_due",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792266891",
+      "1792271726",
+      "1792272267"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "case"
+     ]
+    },
+    {
+     "name": "v",
+     "type": "i32",
+     "presence": 1,
+     "examples": [
+      "1"
+     ]
+    },
+    {
+     "name": "cic_outcome",
+     "type": "str",
+     "presence": 0.8235294117647058,
+     "examples": [
+      "APPEAL_DISMISSED",
+      "INFORMATION_DIRECTED",
+      "REMANDED"
+     ]
+    },
+    {
+     "name": "historical",
+     "type": "bool",
+     "presence": 0.8235294117647058,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "citation",
+     "type": "str",
+     "presence": 0.4117647058823529,
+     "examples": [
+      "CIC/CSWRI/A/2021/136051",
+      "CIC/DHEDU/A/2021/143660",
+      "CIC/MOHRD/A/2021/147258"
+     ]
+    },
+    {
+     "name": "corrected",
+     "type": "bool",
+     "presence": 0.4117647058823529,
+     "examples": [
+      "true"
+     ]
+    },
+    {
+     "name": "source_url",
+     "type": "str",
+     "presence": 0.4117647058823529,
+     "examples": [
+      "cic_pdf_batch1"
+     ]
+    },
+    {
+     "name": "appeal_clock_key",
+     "type": "key",
+     "presence": 0.17647058823529413,
+     "examples": [
+      "0xb2e1927cb789501347b2969a21b4e95a27bca8491eec37…",
+      "0x43b2af78cf74ae03bb6c2870974d205030f4acd258fbf5…",
+      "0x756923a81372032698f04282aa0113d7b767744c9077cb…"
+     ]
+    },
+    {
+     "name": "reply_clock_key",
+     "type": "key",
+     "presence": 0.17647058823529413,
+     "examples": [
+      "0xb3d15524a26dc7159ebb832a70cad16497e1c53f750adf…",
+      "0x1929a4ebaee85dd99c2ce5e51342634fcf2c77778bdb20…",
+      "0xc1284976e5d1855753d349af02389b6a025864e77457c6…"
+     ]
+    }
+   ],
+   "liveCount": 51,
+   "writers": 1,
+   "ownership": "app",
+   "medianLifetimeBlocks": 7776000,
+   "lastWriteBlock": 737300,
+   "firstWriteBlock": 708505,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 227,
+   "isLoadGenerator": false,
+   "soleOwner": "0x000000000000000000000000000000000000dEaD"
+  },
+  {
+   "id": "e83663e8737d",
+   "name": "attestation",
+   "nameSource": "discriminator",
+   "discriminator": {
+    "name": "type",
+    "value": "attestation"
+   },
+   "project": {
+    "method": "label",
+    "label": "mene-v1",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "advisory",
+     "type": "key",
+     "presence": 1,
+     "examples": [
+      "0x15c28217c86582c6d0b1c1c223a1e80841534d47e01dba…",
+      "0xf7aef65ade66a896134f9eef78d270aa775e2ac3658c3f…",
+      "0x34f40056e4de211d35531b38fce4a6c0dc269cf7e25ff3…"
+     ]
+    },
+    {
+     "name": "attested_at",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "1792178475",
+      "1792178481",
+      "1792178488"
+     ]
+    },
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "mene-v1"
+     ]
+    },
+    {
+     "name": "type",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "attestation"
+     ]
+    },
+    {
+     "name": "verdict",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "confirm",
+      "withdraw"
+     ]
+    }
+   ],
+   "liveCount": 50,
+   "writers": 4,
+   "ownership": "user",
+   "medianLifetimeBlocks": 15768000,
+   "lastWriteBlock": 666188,
+   "firstWriteBlock": 664356,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "writes24h": 0,
+   "contentTypes": [
+    "application/json"
+   ],
+   "medianPayloadBytes": 2,
+   "isLoadGenerator": false,
+   "soleOwner": null
+  },
+  {
+   "id": "ec40ea7fa1f1",
+   "name": "random_number_0_* · random_string_0_*",
+   "nameSource": "schema",
+   "discriminator": null,
+   "project": {
+    "method": "label",
+    "label": "arkiv-chain-indexer-baseload",
+    "labelAttr": "project",
+    "isPrefix": false,
+    "confidence": 0.92,
+    "conflictWallets": null
+   },
+   "schema": [
+    {
+     "name": "project",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "arkiv-chain-indexer-baseload"
+     ]
+    },
+    {
+     "name": "random_number_0_*",
+     "type": "u64",
+     "presence": 1,
+     "examples": [
+      "4898008705156",
+      "43561581257034",
+      "78451423047056"
+     ]
+    },
+    {
+     "name": "random_string_0_*",
+     "type": "str",
+     "presence": 1,
+     "examples": [
+      "eb9f5a353a5228133727d99653e012e8",
+      "df6654abb69cae3b7329663dcecf96d0",
+      "b58da0fde3f681eb92a2f3485e054474"
+     ]
+    }
+   ],
+   "liveCount": 62,
+   "writers": 2,
+   "ownership": "app",
+   "medianLifetimeBlocks": 900,
+   "lastWriteBlock": 1187656,
+   "firstWriteBlock": 1179007,
+   "hourly24h": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1091,
+    124,
+    163,
+    140,
+    168
+   ],
+   "writes24h": 1686,
+   "contentTypes": [
+    "application/octet-stream"
+   ],
+   "medianPayloadBytes": 256,
+   "isLoadGenerator": true,
+   "soleOwner": null
+  }
+ ]
+}

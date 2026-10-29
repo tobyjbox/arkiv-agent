@@ -1,0 +1,29 @@
+# secrets: only .env.example is tracked
+.env
+.env.*
+!.env.example
+
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# local index and raw chain snapshots (may hold third-party data)
+*.db
+*.db-journal
+data/
+
+.DS_Store
+
+# generated at install (prisma generate)
+packages/db/src/generated/
+*.lock
+
+# Playwright output
+test-results/
+playwright-report/
+
+# local Claude Code config
+.claude/

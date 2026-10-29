@@ -1,0 +1,14 @@
+{
+  "name": "@arkiv-agent/core",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "build": "tsc -p .",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@arkiv-network/sdk": "~0.8.1",
+    "viem": "^2.57.13"
+  }
+}

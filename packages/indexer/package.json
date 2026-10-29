@@ -1,0 +1,29 @@
+{
+  "name": "@arkiv-agent/indexer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p .",
+    "typecheck": "tsc -p .",
+    "spike:read": "tsx --env-file-if-exists=../../.env src/spike/read-all.ts",
+    "spike:history": "tsx --env-file-if-exists=../../.env src/spike/history.ts",
+    "spike:fees": "tsx --env-file-if-exists=../../.env src/spike/fees.ts",
+    "spike:logs": "tsx --env-file-if-exists=../../.env src/spike/logs.ts",
+    "spike:decode": "tsx --env-file-if-exists=../../.env src/spike/decode.ts",
+    "start": "tsx --env-file-if-exists=../../.env src/cli.ts",
+    "fixtures:record": "tsx --env-file-if-exists=../../.env src/fixtures/record.ts",
+    "verify": "tsx --env-file-if-exists=../../.env src/verify.ts",
+    "fees": "tsx --env-file-if-exists=../../.env src/fees.ts"
+  },
+  "dependencies": {
+    "@arkiv-network/sdk": "~0.8.1",
+    "@arkiv-agent/core": "workspace:*",
+    "@arkiv-agent/db": "workspace:*",
+    "better-sqlite3": "^12.11.1",
+    "viem": "^2.57.13"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "@types/better-sqlite3": "^9.6.0"
+  }
+}

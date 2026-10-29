@@ -1,0 +1,23 @@
+{
+  "name": "@arkiv-agent/ask",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "record-fixture": "tsx --env-file-if-exists=../../.env scripts/record-fixture.ts",
+    "record-values": "tsx --env-file-if-exists=../../.env scripts/record-values.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@arkiv-network/sdk": "~0.8.1",
+    "@arkiv-agent/catalogue": "workspace:*",
+    "@arkiv-agent/core": "workspace:*",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

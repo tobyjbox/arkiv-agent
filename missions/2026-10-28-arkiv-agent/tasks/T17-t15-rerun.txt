@@ -1,0 +1,15 @@
+Q1 | kharab/alert | app = str('kharab') AND type = str('alert') AND exp_ok = false | ign=[] | ok n=50
+Q2 | haqclock/ic_order | app = str('haqclock') AND type = str('ic_order') AND penalty_inr >= u64(1000) AND penalty_inr <= u64(5000) | ign=[] | ok n=2
+Q3 | tideland/parcel | app = str('tideland') AND kind = str('parcel') AND x > i32(10) AND y < i32(3) | ign=[] | ok n=25
+Q4 | tankha/vote | project = str('tankha') AND type = str('vote') AND (dir = str('up') OR dir = str('down')) | ign=[] | ok n=50
+Q5 | claim-check/delisted | app = str('claim-check') AND kind = str('delisted') AND city = str('KRISHNA') | ign=[] | ok n=1
+Q6 | kharab/alert | app = str('kharab') AND type = str('alert') | ign=['kharb'] | ok n=50
+Q7 | sayso/dla | app = str('sayso') AND kind = str('dla') AND NOT lender_type = str('NBFC') | ign=[] | ok n=50
+Q8 | jalsaakshya/v1/obs | app = str('jalsaakshya/v1') AND kind = str('obs') AND exceeds = true AND mgl < dec(0.5) | ign=['limit'] | ok n=32
+Q9 | haqclock/ic_order_corrected | app = str('haqclock') AND type = str('ic_order_corrected') AND historical = false AND penalty_inr > u64(10000) | ign=[] | ok n=0
+Q10 | dawa-alert/alert | app = str('dawa-alert') AND kind = str('alert') AND expiry_known = true | ign=[] | ok n=50
+Q11 | prometheus/receipt | project = str('prometheus') AND kind = str('receipt') | ign=['latest'] | ok n=5
+Q12 | supercall-test-*/status | project STARTSWITH str('supercall-test-') AND kind = str('status') AND status = str('open') AND boost_bps >= i32(100) | ign=[] | ok n=0
+Q13 | tankha/comment | project = str('tankha') AND type = str('comment') AND NOT EXISTS(parent_key) | ign=[] | ERR rpc: Query rejected (type, -32002): Requested resource not available.. Quer
+Q14 | kharab/alert | app = str('kharab') AND type = str('alert') | ign=['delete'] | ok n=50
+Q15 | None/None | No dataset in the catalogue matches. Ask reads one dataset at a time (name a project or a kind of record), or finds records by owner or creator address. | ign=None | -
