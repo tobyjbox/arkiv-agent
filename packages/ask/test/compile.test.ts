@@ -207,15 +207,22 @@ describe("generic words and short values", () => {
 
 describe("presence: with / without a field", () => {
   const withLookup = { ...ctx, lookup: fixtureLookup };
-  it("reads 'with no X' / 'without a X' as NOT exists, 'that have a X' as exists, and compiles them", () => {
+  it("reports presence as not applied (Tiramisu rejects EXISTS) and refuses EXISTS plans", () => {
     const none = interpret("tideland structures with no guild", withLookup);
-    expect(none.ok && none.value.where).toEqual({ op: "not", term: { op: "exists", attr: "guild" } });
-    const has = interpret("tideland parcels that have a guild", withLookup);
-    expect(has.ok && has.value.where).toEqual({ op: "exists", attr: "guild" });
+    expect(none.ok && none.value.where).toBeNull();
+    expect(none.ok && none.value.ignored).toContain("guild");
+    expect(none.ok && none.value.explain.join(" ")).toContain("rejects EXISTS");
     const d = datasets.find((x) => x.id === (none.ok ? none.value.datasetId : ""))!;
-    const c = none.ok ? compile(none.value, d) : null;
-    expect(c?.ok && c.value.query).toContain("NOT EXISTS(guild)");
-    expect(c?.ok && c.value.typescript).toContain('not(exists("guild"))');
+    expect(compile({ where: { op: "not", term: { op: "exists", attr: "guild" } }, limit: 50 }, d).ok).toBe(false);
+  });
+  it("reads 'not between' as outside the range, number words, and 'exactly'", () => {
+    const outside = interpret("kharab links with lag_d not between 10 and 20", withLookup);
+    expect(outside.ok && outside.value.where).toEqual({ op: "or", terms: [
+      { op: "lt", attr: "lag_d", type: "i32", value: "10" }, { op: "gt", attr: "lag_d", type: "i32", value: "20" }] });
+    const words = interpret("tideland parcels with x at most ten", withLookup);
+    expect(words.ok && words.value.where).toEqual({ op: "lte", attr: "x", type: "i32", value: "10" });
+    const exactly = interpret("tankha votes with v of exactly -1", withLookup);
+    expect(exactly.ok && exactly.value.where).toEqual({ op: "eq", attr: "v", type: "i32", value: "-1" });
   });
   it("still binds a value when one follows ('with city noida' is not a presence check)", () => {
     const r = interpret("tankha salaries with city noida", withLookup);
