@@ -120,3 +120,4 @@
 - 2026-10-29T16:41:00Z DISPATCH T31 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 2026-10-29T16:07:54Z RECONCILE T31 board row repaired (T30 cells had been pasted into it); T31 ready, dispatched to Coder, no branch yet
 2026-10-29T16:09:37Z RECONCILE archive remote: main fast-forwarded to 35b7293 and review/security-full pushed by another agent; private, no personal data beyond one session ID; owner: leave it
+2026-10-29T16:17:44Z CHASE T31 -> arkiv-agent_coder_claude-code_opus-5.5-extra: dispatch not acted on (coder idle since 14:50Z); re-sent
