@@ -38,3 +38,4 @@ Branch fix/insights-label-overlap, candidate afb3d4faf5e2610057ae41afaffef14436a
 - The "before" e2e run used `E2E_REUSE_SERVER=1 PORT=3101` (read-only page loads on the owner's app; nothing restarted).
 
 Next owner: Orchestrator (review and merge).
+- 2026-10-29T21:07:38Z notify intent: T02 review candidate=afb3d4f to Orchestrator <session> via ccd send_message; attempt 1.
