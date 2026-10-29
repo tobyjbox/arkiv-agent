@@ -115,3 +115,4 @@
 - 2026-10-29T15:30:00Z DB moved arkiv-agent.db -> arkiv-agent.db on indexer restart (block 1217094); app restarted. T29 ready (drop compat + spot price seed).
 - 2026-10-29T15:31:00Z DISPATCH T29 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 - 2026-10-29T16:00:00Z HANDOFF T29@61d1aab adjudicated: accepted (549 tests + build verified; no arkiv-agent left in code/docs; spot price seeded from latest candle); integrated; row -> merged. Part B created: T30 (B1, ready), T31-T34 draft.
+- 2026-10-29T16:01:00Z DISPATCH T30 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
