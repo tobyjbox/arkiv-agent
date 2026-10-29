@@ -27,3 +27,6 @@ playwright-report/
 
 # local Claude Code config
 .claude/
+
+# publish prep (local executor brief; not for the public repo)
+docs/publish-scrub.md

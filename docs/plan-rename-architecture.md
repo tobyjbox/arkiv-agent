@@ -30,7 +30,7 @@ About 330 references in about 100 tracked files (the lockfile is regenerated). U
 | Local setup (not in git) | `.claude/launch.json` config name `arkiv-agent` | `arkiv-agent` |
 
 **Not changed:**
-- **Git history:** past commits keep the old names. Changing them would mean a second history rewrite and force-push. Say if you want that.
+- **Git history:** owner decided (2026-10-29) to rewrite it too: the old names are replaced in every commit, file paths included, in the same final rewrite as C3.
 - **Historical log lines:** MISSION_LOG entries that quote old commit messages stay as written; paths in them are updated.
 
 **Done when:** `git grep -i arkiv-agent` (excluding the lockfile) returns nothing; a fresh clone works from the README; tests, build and production e2e pass; the owner's local index keeps working after the database rename.
@@ -84,6 +84,6 @@ Do this as one task, with no other change mixed in, so the diff can be reviewed 
 ---
 
 ## Owner decisions needed
-1. Keep the old names in git history (planned), or rewrite history again?
-2. Is B4 (storing results in the indexer) wanted now, or later?
+1. ~~Keep old names in history?~~ Decided: rewrite history.
+2. ~~B4 now or later?~~ Decided: now.
 3. Security H1: publish from a new repo (recommended), or ask GitHub Support to purge the old commits?
