@@ -4,4 +4,4 @@
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
 |---|---|---|---|---|---|---|---|---|
 | T01 | README screenshots of all main screens + commentary | coder | fast | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-29T21:01:42Z |
-| T02 | Insights chart: 'Before Tiramisu' label overlaps peak value label | coder | fast | claimed | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-29T21:02:37Z |
+| T02 | Insights chart: 'Before Tiramisu' label overlaps peak value label | coder | fast | in-progress | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-29T21:02:37Z |
