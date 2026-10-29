@@ -118,3 +118,4 @@
 - 2026-10-29T16:01:00Z DISPATCH T30 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 - 2026-10-29T16:40:00Z HANDOFF T30@7236234 adjudicated: accepted (549 tests + build verified; no SQL outside packages/db confirmed by grep; byte-identical page snapshot per coder; decode e2e stub fix); integrated; row -> merged. T31 draft -> ready, coder messaged.
 - 2026-10-29T16:41:00Z DISPATCH T31 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
+2026-10-29T16:07:54Z RECONCILE T31 board row repaired (T30 cells had been pasted into it); T31 ready, dispatched to Coder, no branch yet
