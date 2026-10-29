@@ -1,4 +1,4 @@
-**Mission progress:** 28 tasks — 28 merged · updated 2026-10-29T15:20:00Z
+**Mission progress:** 29 tasks — 28 merged, 1 ready · updated 2026-10-29T15:30:00Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -31,3 +31,4 @@
 | T26 | Build decode progress bar (design/07) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T14:00:00Z |
 | T27 | GLM/USDT price chart on /financials | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T24 | 2026-10-29T14:40:00Z |
 | T28 | Part A: remove arkiv-agent everywhere -> arkiv-agent (mechanical) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T27 | 2026-10-29T15:20:00Z |
+| T29 | Drop pre-rename compatibility; seed spot price from chart history | coder | fast | ready | 0/1 | | T28 | 2026-10-29T15:30:00Z |

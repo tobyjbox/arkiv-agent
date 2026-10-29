@@ -112,3 +112,4 @@
 - 2026-10-29T14:40:00Z HANDOFF T27@69b9d26 adjudicated: accepted (547 tests + build verified on merged main; 90d backfill Binance->CoinGecko, separate app-owned data/glm-prices.db accepted to avoid an index migration; guard covers /api/glm-history); integrated; row -> merged. T28 Part A rename ready -> coder.
 - 2026-10-29T14:41:00Z DISPATCH T28 -> arkiv-agent_coder_claude-code_opus-5.5-extra queued <id>
 - 2026-10-29T15:20:00Z HANDOFF T28@cf9c661 adjudicated: accepted (550 tests + build verified on merged main; DB moves on next start when unheld); integrated; row -> merged. Orchestrator renamed mission folder -> missions/2026-10-28-arkiv-agent and replaced arkiv-agent text in mission files/docs. Remaining arkiv-agent strings: one-release compat code only (to be dropped).
+- 2026-10-29T15:30:00Z DB moved arkiv-agent.db -> arkiv-agent.db on indexer restart (block 1217094); app restarted. T29 ready (drop compat + spot price seed).
