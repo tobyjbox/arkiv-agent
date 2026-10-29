@@ -47,3 +47,18 @@ describe("createRateLimit", () => {
     expect(take()).toBe(true);
   });
 });
+
+describe("middleware: heavy pages (T19 L1)", async () => {
+  const { middleware } = await import("../middleware");
+  const { NextRequest } = await import("next/server");
+  const req = (path: string, h: Record<string, string>) => new NextRequest(`http://localhost:3101${path}`, { headers: { host: "localhost:3101", ...h } });
+  it("refuses cross-site embeds and fetches of /pulse and /cost, allows following a link", () => {
+    expect(middleware(req("/pulse", { "sec-fetch-site": "cross-site", "sec-fetch-mode": "no-cors", "sec-fetch-dest": "image" })).status).toBe(403);
+    expect(middleware(req("/cost", { "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "iframe" })).status).toBe(403);
+    expect(middleware(req("/cost", { "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document" })).status).toBe(200);
+    expect(middleware(req("/pulse", { "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors" })).status).toBe(200);
+  });
+  it("forbids framing any page", () => {
+    expect(middleware(req("/catalogue", {})).headers.get("content-security-policy")).toBe("frame-ancestors 'none'");
+  });
+});

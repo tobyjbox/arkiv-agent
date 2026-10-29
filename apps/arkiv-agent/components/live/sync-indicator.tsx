@@ -16,18 +16,23 @@ export function SyncIndicator() {
   const [mountedAt] = useState(() => new Date().toISOString());
   const sinceOk = useSecondsSince(live.lastOkAt === null ? mountedAt : new Date(live.lastOkAt).toISOString());
   const state = syncState(age, sinceOk, live.isBehind);
+  // The server can't know the age when the page is read, so it doesn't claim one ("Synced 0 s ago").
+  const [isMounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const announced = useAnnouncement(state);
-  const dot = { live: "bg-live", behind: "bg-warn", delayed: "bg-warn", stale: "bg-warn", offline: "bg-danger" }[state];
+  const dot = !isMounted ? "bg-text-tertiary" : { live: "bg-live", behind: "bg-warn", delayed: "bg-warn", stale: "bg-warn", offline: "bg-danger" }[state];
   const tooltip = `Last index sync ${live.syncedAt ?? "never"} · block ${formatCount(Number(live.indexedBlock))} · checks every 5 s · source: ArkivAgent index${
     state === "stale" ? " · the indexer isn't running: start `pnpm index --watch` to keep it live" : ""}`;
 
   return (
     <div className="flex items-center gap-2 caption text-text-tertiary" title={tooltip}>
       <span className="relative flex size-2" aria-hidden>
-        {state === "live" && <span className="live-ring absolute inset-0 rounded-full bg-live" />}
+        {isMounted && state === "live" && <span className="live-ring absolute inset-0 rounded-full bg-live" />}
         <span className={`relative size-2 rounded-full ${dot}`} />
       </span>
-      {state === "offline" ? (
+      {!isMounted ? (
+        <span className="hidden sm:inline">Checking sync · block {formatCount(Number(live.indexedBlock))}</span>
+      ) : state === "offline" ? (
         <span>
           Sync paused ·{" "}
           <button type="button" onClick={live.retry} className="text-accent underline-offset-2 hover:underline">Retry</button>
@@ -40,7 +45,7 @@ export function SyncIndicator() {
           <RollingNumber value={Number(live.indexedBlock)} className="text-text-secondary" />
         </span>
       )}
-      <span className="sm:hidden">{age === null ? "–" : `${age}s`}</span>
+      <span className="sm:hidden">{!isMounted || age === null ? "–" : `${age}s`}</span>
       <span className="sr-only" aria-live="polite">{announced}</span>
     </div>
   );

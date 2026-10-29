@@ -71,7 +71,7 @@ export function Calculator({ model, fittedAt, initial }: { model: FeeModel; fitt
           <p className="text-text-secondary">range {glm(e.low)} to {glm(e.high)} GLM · {glm(e.perWrite)} GLM per write</p>
           {fiat && <p className="caption text-text-secondary">{fiat(e.glm)} at the price you entered</p>}
         </div>
-        {e.outside && <p className="flex items-center gap-2 rounded-sm px-3 py-2 caption tint-warn"><AlertTriangle size={14} aria-hidden />Outside observed data (payloads seen: {model.observed.payloadBytes[0].toLocaleString("en")} to {model.observed.payloadBytes[1].toLocaleString("en")} B). The range may be too narrow.</p>}
+        {e.outside && <p className="flex items-center gap-2 rounded-sm px-3 py-2 caption tint-warn"><AlertTriangle size={14} aria-hidden />Outside observed data (payloads seen: {model.observed.payloadBytes[0].toLocaleString("en")} to {model.observed.payloadBytes[1].toLocaleString("en")} B). The range is widened ×{e.widenedBy.toFixed(1)} each way as an extrapolation.</p>}
         <div>
           <p className="caption text-text-tertiary">What drives it</p>
           <div className="mt-1 flex h-3 overflow-hidden rounded-sm" aria-hidden>

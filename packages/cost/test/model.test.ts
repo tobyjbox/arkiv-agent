@@ -44,3 +44,14 @@ describe("fee model", () => {
     expect(fitFeeModel(rows(10))).toBeNull();
   });
 });
+
+describe("estimate outside the observed payloads (T12 S3)", () => {
+  it("widens the range with the distance beyond the data", () => {
+    const m = fitFeeModel(rows(600))!;
+    const inside = estimate(m, 1_000, 200);
+    const far = estimate(m, 1_000, m.observed.payloadBytes[1] * 10);
+    expect(inside.widenedBy).toBe(1);
+    expect(far.widenedBy).toBeCloseTo(1.5, 5);
+    expect(far.high / far.glm).toBeCloseTo((inside.high / inside.glm) * 1.5, 5);
+  });
+});

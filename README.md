@@ -116,6 +116,27 @@ Arkiv's query language has limits that Ask states rather than hides:
 Accuracy is measured by the question sets in `packages/ask/test` (`pnpm test` prints the scores). Blind
 checks by a separate reviewer are in the mission records (`missions/2026-10-28-arkiv-agent/tasks/T06…`, `T15…`).
 
+## Known gaps
+
+The ecosystem pulse and the cost view were built as stretch work. Compared with their designs:
+
+- **Cost (`design/06-cost.md`):**
+  - Observed spend has no period selector (it's fixed at 30 days).
+  - The load-generator control is a link, not the always-visible toggle.
+  - There's no stacked area chart of spend by project, and there are three tiles, not six.
+  - The fee model shows gas against calldata only (not fee against lifetime and payload), and lifetime has no
+    slider.
+  - Spend is estimated from the fee model and each write's payload size, not summed from receipts.
+- **Pulse (`design/05-pulse.md`):**
+  - With load generators included there's one banner, not a chip by each affected number.
+  - Cohort marks use "–" where the design has "·".
+  - Under 768 px, tables scroll inside a container instead of becoming cards.
+  - Cohorts come from data (first-write week), because no hackathon project list exists.
+  - There's no GLM-from-receipts total and no weekly AI summary.
+- **App shell:** at 375 px the top bar's links push the sync indicator off-screen.
+- **Tests:** browser tests are reliable on the production build (`pnpm build`, then `pnpm test:e2e`, the default).
+  Against `pnpm dev` they're timing-sensitive.
+
 ## Safety
 
 - **Read-only:** a public client with no wallet. The run API accepts a validated plan, never a query string.
