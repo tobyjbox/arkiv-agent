@@ -177,7 +177,14 @@ GLM has no value of its own, so this only puts a real-world scale on the fees. T
 data from your index or your questions, but the providers see your IP address. A price is reused for
 10 minutes, so there's at most one lookup every 10 minutes while you use the Financials page (one a minute
 while both sources are down). Pages never wait for it: until a price arrives, and whenever neither source
-answers, amounts are shown in GLM only. `GLM_PRICE=off` turns the lookups off.
+answers, amounts are shown in GLM only.
+
+The GLM/USD chart on the same page loads its history from the same two providers: Binance's GLMUSDT klines
+(daily, or 4-hourly for 7 days), falling back to CoinGecko's market chart. The first view fetches the whole
+range (90 days of daily closes cover the 30 and 90 day views); after that only the latest candle is
+refreshed, at most every 10 minutes. Candles are kept in `glm-prices.db` next to the index, so the chart
+still has its history after a restart or while the providers are down. `GLM_PRICE=off` turns off both
+the price and the history lookups.
 
 ## Project layout
 
