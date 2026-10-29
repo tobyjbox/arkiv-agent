@@ -127,3 +127,7 @@
 - 2026-10-29T16:26:50Z DISPATCH T32, T33 -> arkiv-agent_coder_claude-code_opus-5.5-extra (T32 first)
 - 2026-10-29T16:55:32Z HANDOFF detected T32 review candidate=41f1794 (coder message)
 - 2026-10-29T16:55:32Z HANDOFF adjudicated T32 accept: change confined to packages/ask; plans byte-identical on 7,472 questions (worker); 620 tests, build OK on merged main; merged. T34 waits on T33.
+- 2026-10-29T17:08:07Z HANDOFF detected T33 review candidate=9b86d20 (coder message)
+- 2026-10-29T17:08:07Z HANDOFF adjudicated T33 accept: 624 tests, build OK on merged main; owner's indexer restarted (migration applied, 13 aggregates stored); /insights 38 ms, /financials 62 ms; merged
+- 2026-10-29T17:08:07Z RELEASE T34 -> ready (T32, T33 merged)
+- 2026-10-29T17:08:07Z DISPATCH T34 -> arkiv-agent_coder_claude-code_opus-5.5-extra
