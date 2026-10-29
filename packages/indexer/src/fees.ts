@@ -4,7 +4,7 @@
 // some update-only transactions. Safe to re-run: known transactions are skipped, inserts are idempotent.
 // Runs beside `pnpm index --watch` at a low rate (ARKIV_FEE_RPS, default 3) to leave it the budget.
 import { createArkivClient } from "@arkiv-agent/core";
-import { openSqlite } from "@arkiv-agent/db";
+import { busyOwners, countTxFees, createFeeCandidates, type FeeCandidate, openSqlite, readCursor, txFeeWriter, updateFeeCandidates } from "@arkiv-agent/db";
 import type { Hex } from "viem";
 import { rateLimited } from "./enrich.ts";
 
@@ -15,28 +15,17 @@ const RPS = Number(process.env.ARKIV_FEE_RPS) || 3;
 const WINDOW_BLOCKS = 7 * 43_200;
 const LOAD_SHARE = 0.1;
 const UPDATE_SHARE = 0.1;
-const I64_MAX = 2n ** 63n - 1n;
 
 const db = openSqlite();
 db.pragma("busy_timeout = 10000");
 const client = createArkivClient();
-const indexed = Number(db.prepare(`SELECT indexedBlock FROM "SyncState" WHERE id = 1`).pluck().get() ?? 0);
+const indexed = readCursor(db)?.indexedBlock ?? 0;
 const since = indexed - WINDOW_BLOCKS;
-const busy = db.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > 5000`).pluck().all(since) as string[];
+const busy = busyOwners(since, 5_000, db);
 
-type Candidate = { tx: Hex; block: number; sender: string; creates: number; updates: number; payload: number; lifetime: number | null };
-const createTxs = (load: boolean, n: number) => db.prepare(`
-  SELECT createdTx AS tx, MIN(createdAtBlock) AS block, MIN(creator) AS sender, COUNT(*) AS creates, 0 AS updates,
-    SUM(COALESCE(payloadBytes, 0)) AS payload,
-    AVG(CASE WHEN expiresAt < ${I64_MAX} THEN expiresAt - createdAtBlock END) AS lifetime
-  FROM "Entity" WHERE createdAtBlock >= ? AND owner ${load ? "" : "NOT"} IN (SELECT value FROM json_each(?))
-    AND createdTx NOT IN (SELECT tx FROM "TxFee")
-  GROUP BY createdTx ORDER BY random() LIMIT ?`).all(since, JSON.stringify(busy), n) as Candidate[];
-const updateTxs = (n: number) => db.prepare(`
-  SELECT p.tx AS tx, MIN(p.block) AS block, MIN(e.owner) AS sender, 0 AS creates, COUNT(*) AS updates, 0 AS payload, NULL AS lifetime
-  FROM "Patch" p JOIN "Entity" e ON e.key = p.entityKey
-  WHERE p.block >= ? AND p.tx NOT IN (SELECT tx FROM "TxFee") AND p.tx NOT IN (SELECT createdTx FROM "Entity" WHERE createdAtBlock >= ?)
-  GROUP BY p.tx ORDER BY random() LIMIT ?`).all(since, since, n) as Candidate[];
+type Candidate = FeeCandidate & { tx: Hex };
+const createTxs = (load: boolean, n: number) => createFeeCandidates(since, busy, load, n, db) as Candidate[];
+const updateTxs = (n: number) => updateFeeCandidates(since, n, db) as Candidate[];
 
 const picked = [
   ...createTxs(false, Math.round(LIMIT * (1 - LOAD_SHARE - UPDATE_SHARE))),
@@ -47,15 +36,14 @@ console.log(`fees: sampling ${picked.length} transactions from blocks ${since}..
 
 const fetchTx = rateLimited((hash: Hex) => client.getTransaction({ hash }), RPS);
 const fetchReceipt = rateLimited((hash: Hex) => client.getTransactionReceipt({ hash }), RPS);
-const insert = db.prepare(`INSERT OR IGNORE INTO "TxFee" (tx, block, sender, creates, updates, calldataBytes, payloadBytes, lifetimeBlocks, gasUsed, gasPriceWei, feeWei, fetchedAtMs)
-  VALUES (@tx, @block, @sender, @creates, @updates, @calldataBytes, @payloadBytes, @lifetimeBlocks, @gasUsed, @gasPriceWei, @feeWei, @fetchedAtMs)`);
+const store = txFeeWriter(db);
 
 let done = 0;
 let failed = 0;
 for (const c of picked) {
   try {
     const [tx, receipt] = await Promise.all([fetchTx(c.tx), fetchReceipt(c.tx)]);
-    insert.run({
+    store({
       tx: c.tx, block: c.block, sender: c.sender.toLowerCase(), creates: c.creates, updates: c.updates,
       calldataBytes: (tx.input.length - 2) / 2, payloadBytes: c.payload,
       lifetimeBlocks: c.lifetime === null ? null : Math.round(c.lifetime),
@@ -69,5 +57,5 @@ for (const c of picked) {
   }
   if ((done + failed) % 100 === 0) console.log(`  ${done + failed} / ${picked.length} (${failed} failed)`);
 }
-const total = db.prepare(`SELECT COUNT(*) FROM "TxFee"`).pluck().get();
+const total = countTxFees(db);
 console.log(`fees: stored ${done}, failed ${failed}; TxFee now holds ${total} transactions`);

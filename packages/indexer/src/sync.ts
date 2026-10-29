@@ -1,6 +1,9 @@
 import type { ArkivClient } from "@arkiv-agent/core";
+import { FEED_WINDOW_BLOCKS, type IndexStore as Store, type SyncRow } from "@arkiv-agent/db";
 import { MAX_SPAN, readEvents } from "./chain.ts";
-import { feedFloor, type Store, type SyncRow } from "./store.ts";
+
+/** Feed rows older than the window are never written, so a backfill does not flood the feed. */
+export const feedFloor = (head: bigint) => (head > FEED_WINDOW_BLOCKS ? head - FEED_WINDOW_BLOCKS : 0n);
 
 /** Index up to head minus this, so a shallow reorg near the tip is not indexed (no reorg handling). */
 export const CONFIRMATIONS = 2n;

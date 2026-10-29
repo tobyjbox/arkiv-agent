@@ -1,4 +1,5 @@
-import { catalogueDb, loadCatalogue, loadGeneratorOwners } from "@arkiv-agent/catalogue";
+import { loadCatalogue, loadGeneratorOwners } from "@arkiv-agent/catalogue";
+import { dailyCreates, dailyUpdates, readCursor } from "@arkiv-agent/db";
 import { type ActivityRow, aggregatePulse, type EventCohort, type Period, type PulseData } from "./aggregate.ts";
 import eventCohorts from "./event-cohorts.json" with { type: "json" };
 
@@ -13,14 +14,12 @@ let cache: Rows | null = null;
 /** Writes per UTC day and wallet: creates by creator, updates (patches) by the record's owner. */
 function readRows(): Rows {
   if (cache && Date.now() - cache.at < ROWS_TTL_MS) return cache;
-  const d = catalogueDb();
-  const s = d.prepare(`SELECT indexedBlock, syncedAtMs FROM "SyncState" WHERE id = 1`).get() as { indexedBlock: number; syncedAtMs: number } | undefined;
+  const s = readCursor();
   const indexedBlock = s?.indexedBlock ?? 0;
   // 2 s blocks: block 0's time from the last sync (block N was indexed at syncedAtMs).
   const blockZeroMs = (s?.syncedAtMs ?? Date.now()) - indexedBlock * BLOCK_MS;
-  const day = (col: string) => `CAST((? + ${col} * ${BLOCK_MS}) / ${DAY_MS} AS INTEGER)`;
-  const creates = d.prepare(`SELECT ${day("createdAtBlock")} AS day, lower(creator) AS wallet, COUNT(*) AS writes FROM "Entity" GROUP BY day, wallet`).all(blockZeroMs) as ActivityRow[];
-  const updates = d.prepare(`SELECT ${day("p.block")} AS day, lower(e.owner) AS wallet, COUNT(*) AS writes FROM "Patch" p JOIN "Entity" e ON e.key = p.entityKey GROUP BY day, wallet`).all(blockZeroMs) as ActivityRow[];
+  const creates: ActivityRow[] = dailyCreates(blockZeroMs);
+  const updates: ActivityRow[] = dailyUpdates(blockZeroMs);
   const merged = new Map<string, ActivityRow>();
   for (const r of [...creates, ...updates]) {
     const k = `${r.day}:${r.wallet}`;

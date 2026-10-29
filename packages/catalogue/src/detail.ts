@@ -1,5 +1,6 @@
 import { BLOCKS_PER_HOUR, hourlySeries, type Member } from "./build.ts";
-import { catalogueDb, loadCatalogue } from "./load.ts";
+import { payloadPreviews } from "@arkiv-agent/db";
+import { loadCatalogue } from "./load.ts";
 import type { Dataset } from "./types.ts";
 
 export type RecordView = {
@@ -30,11 +31,11 @@ export function getDataset(id: string): DatasetDetail | null {
 export function recentRecords(id: string, limit = 20): RecordView[] {
   const members = loadCatalogue().membersById.get(id) ?? [];
   const newest = [...members].sort((a, b) => Number(b.status === "live") - Number(a.status === "live") || b.createdAtBlock - a.createdAtBlock).slice(0, limit);
-  const preview = catalogueDb().prepare(`SELECT payloadPreview FROM "Entity" WHERE key = ?`).pluck();
+  const preview = payloadPreviews();
   return newest.map((m) => ({
     key: m.key, owner: m.owner, status: m.status, createdAtBlock: m.createdAtBlock, expiresAt: m.expiresAt,
     attributes: [...m.attrs].map(([name, a]) => ({ name, value: a.value })),
-    payloadPreview: ((preview.get(m.key) as string | null) ?? null)?.slice(0, 120) ?? null,
+    payloadPreview: preview(m.key)?.slice(0, 120) ?? null,
   }));
 }
 

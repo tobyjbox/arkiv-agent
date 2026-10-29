@@ -1,4 +1,4 @@
-import type { Sqlite } from "@arkiv-agent/db";
+import { busyOwners, createDecodeStore, type PatchRef, type PendingDecode, type Sqlite } from "@arkiv-agent/db";
 import type { Hex } from "viem";
 import { applyWire, emptyState, type EntityState, payloadPreview, schemaSig } from "./attributes.ts";
 import { type DecodedOp, decodeOps } from "./calldata.ts";
@@ -14,11 +14,7 @@ export const MAX_REPLAY_PATCHES = 25;
 const REDECODE_AFTER_BLOCKS = 150;
 const BUSY_TTL_MS = 5 * 60_000;
 
-/** Marks an entity whose calldata did not decode as expected, so it is not retried forever. */
-const UNDECODABLE = -1n;
-
-type Pending = { key: Hex; createdTx: Hex; createdOp: number; createdAtBlock: bigint };
-type PatchRef = { tx: Hex; op: number; block: bigint };
+type Pending = PendingDecode & { key: Hex; createdTx: Hex };
 
 /** Over this many creates since `sinceBlock`, an owner is high-volume (Arkiv's load generators). */
 export const BUSY_OWNER_CREATES = 5_000;
@@ -30,45 +26,22 @@ export const BUSY_OWNER_CREATES = 5_000;
  * a week of load-generator writes would take ~12 h at the public rate limit.
  */
 export function createEnricher(db: Sqlite, source: InputSource, { busyCreates = BUSY_OWNER_CREATES, current }: { busyCreates?: number; current?: CurrentSource } = {}) {
-  const busyOwners = db.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck();
-  const pending = db.prepare(`SELECT key, createdTx, createdOp, createdAtBlock FROM "Entity" e
-    WHERE ((status = 'live' AND (key LIKE '%0' OR owner NOT IN (SELECT value FROM json_each(@busy))))
-        OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
-      AND (decodedBlock IS NULL OR (decodedBlock <> -1 AND EXISTS (SELECT 1 FROM "Patch" p WHERE p.entityKey = e.key AND p.block > e.decodedBlock + ${REDECODE_AFTER_BLOCKS})))
-    ORDER BY status = 'live' DESC, createdAtBlock DESC LIMIT @limit`).safeIntegers();
-  const countPending = db.prepare(`SELECT COUNT(*) AS n FROM "Entity" e
-    WHERE ((status = 'live' AND (key LIKE '%0' OR owner NOT IN (SELECT value FROM json_each(@busy))))
-        OR (createdAtBlock >= @sinceBlock AND owner NOT IN (SELECT value FROM json_each(@busy))))
-      AND (decodedBlock IS NULL OR (decodedBlock <> -1 AND EXISTS (SELECT 1 FROM "Patch" p WHERE p.entityKey = e.key AND p.block > e.decodedBlock + ${REDECODE_AFTER_BLOCKS})))`);
-  const patches = db.prepare(`SELECT tx, op, block FROM "Patch" WHERE entityKey = ? ORDER BY block, logIndex`).safeIntegers();
-  const clear = db.prepare(`DELETE FROM "Attribute" WHERE entityKey = ?`);
-  const insert = db.prepare(`INSERT INTO "Attribute" (entityKey, name, type, value) VALUES (?, ?, ?, ?)`);
-  const finish = db.prepare(`UPDATE "Entity" SET contentType = @contentType, payloadBytes = @payloadBytes,
-    payloadPreview = @payloadPreview, schemaSig = @schemaSig, decodedBlock = @decodedBlock WHERE key = @key`);
-  const fail = db.prepare(`UPDATE "Entity" SET decodedBlock = ${UNDECODABLE} WHERE key = ?`);
-  const announce = db.prepare(`INSERT OR IGNORE INTO "Change" (block, kind, entityKey, owner) SELECT @decodedBlock, 'decoded', key, owner FROM "Entity" WHERE key = @key`);
-
-  const write = db.transaction((key: Hex, state: EntityState, decodedBlock: bigint, feedFloor: bigint) => {
-    clear.run(key);
-    for (const [name, a] of state.attrs) insert.run(key, name, a.type, a.value);
-    finish.run({
-      key, decodedBlock, contentType: state.contentType, schemaSig: schemaSig(state.attrs),
-      payloadBytes: state.payload?.length ?? null, payloadPreview: state.payload ? payloadPreview(state.payload) : null,
-    });
-    // Attributes land after their block was indexed; tell the UI so a fresh row can fill in.
-    if (decodedBlock > feedFloor) announce.run({ key, decodedBlock });
-  });
+  const store = createDecodeStore(db, REDECODE_AFTER_BLOCKS);
+  const write = (key: Hex, state: EntityState, decodedBlock: bigint, feedFloor: bigint) => store.write(key, {
+    attrs: state.attrs, contentType: state.contentType, schemaSig: schemaSig(state.attrs),
+    payloadBytes: state.payload?.length ?? null, payloadPreview: state.payload ? payloadPreview(state.payload) : null,
+  }, decodedBlock, feedFloor);
 
   let busyCache: { at: number; json: string } | null = null;
   const busy = (sinceBlock: bigint) => {
-    if (!busyCache || Date.now() - busyCache.at > BUSY_TTL_MS) busyCache = { at: Date.now(), json: JSON.stringify(busyOwners.all(sinceBlock, busyCreates)) };
+    if (!busyCache || Date.now() - busyCache.at > BUSY_TTL_MS) busyCache = { at: Date.now(), json: JSON.stringify(busyOwners(sinceBlock, busyCreates, db)) };
     return busyCache.json;
   };
 
   /** Decodes up to `limit` entities; returns how many were written and how many failed. */
   async function run(sinceBlock: bigint, limit: number, feedFloor: bigint) {
-    const batch = pending.all({ sinceBlock, limit, busy: busy(sinceBlock) }) as Pending[];
-    const refs = new Map(batch.map((e) => [e.key, patches.all(e.key) as PatchRef[]]));
+    const batch = store.pending(sinceBlock, limit, busy(sinceBlock)) as Pending[];
+    const refs = new Map(batch.map((e) => [e.key, store.patchRefs(e.key) as (PatchRef & { tx: Hex })[]]));
     const isHeavy = (key: Hex) => refs.get(key)!.length > MAX_REPLAY_PATCHES;
     const txs = new Set<Hex>(batch.flatMap((e) => [e.createdTx, ...(isHeavy(e.key) ? [] : refs.get(e.key)!.map((p) => p.tx))]));
     const ops = new Map<Hex, DecodedOp[]>();
@@ -77,7 +50,7 @@ export function createEnricher(db: Sqlite, source: InputSource, { busyCreates = 
     let written = 0, failed = 0;
     for (const e of batch) {
       const create = ops.get(e.createdTx)?.[e.createdOp];
-      if (create?.kind !== "create") { fail.run(e.key); failed++; continue; }
+      if (create?.kind !== "create") { store.markUndecodable(e.key); failed++; continue; }
       const ps = refs.get(e.key)!;
       const decodedBlock = ps.at(-1)?.block ?? e.createdAtBlock;
       // Heavily patched: read the current state once (falls back to the create's attributes).
@@ -98,7 +71,7 @@ export function createEnricher(db: Sqlite, source: InputSource, { busyCreates = 
     return { written, failed, txs: txs.size };
   }
 
-  return { run, pendingCount: (sinceBlock: bigint) => Number((countPending.get({ sinceBlock, busy: busy(sinceBlock) }) as { n: number }).n) };
+  return { run, pendingCount: (sinceBlock: bigint) => store.countPending(sinceBlock, busy(sinceBlock)) };
 }
 
 /** Spaces calls to stay under a requests-per-second budget (the public RPC allows 600/min). */

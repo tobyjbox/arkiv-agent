@@ -1,8 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, rmSync, writeSync } from "node:fs";
 import { join } from "node:path";
-import Database from "better-sqlite3";
-import { databasePath, repoRoot } from "@arkiv-agent/db";
+import { appliedMigrations, databasePath, repoRoot } from "@arkiv-agent/db";
 
 const isAlive = (pid: number) => {
   try {
@@ -38,15 +37,8 @@ function pendingMigrations(): string[] {
   const dir = join(repoRoot(), "packages/db/prisma/migrations");
   const all = readdirSync(dir).filter((d) => existsSync(join(dir, d, "migration.sql")));
   if (!existsSync(databasePath())) return all;
-  const db = new Database(databasePath(), { readonly: true });
-  try {
-    const applied = new Set(db.prepare(`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL`).pluck().all() as string[]);
-    return all.filter((m) => !applied.has(m));
-  } catch {
-    return all;
-  } finally {
-    db.close();
-  }
+  const applied = appliedMigrations(databasePath());
+  return applied ? all.filter((m) => !applied.has(m)) : all;
 }
 
 /**

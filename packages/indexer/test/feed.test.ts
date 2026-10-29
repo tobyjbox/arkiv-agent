@@ -1,7 +1,6 @@
-import { createPrisma, readFeed } from "@arkiv-agent/db";
+import { createIndexStore, createPrisma, readFeed, type SyncRow } from "@arkiv-agent/db";
 import type { Hex } from "viem";
 import { describe, expect, it } from "vitest";
-import { createStore, type SyncRow } from "../src/store.ts";
 import { tempDb } from "./helpers.ts";
 
 const OWNER = "0x1111111111111111111111111111111111111111" as Hex;
@@ -11,7 +10,7 @@ const state: SyncRow = { chainId: 1, genesisHash: "0x00", indexedBlock: 0n, chai
 describe("readFeed", () => {
   it("returns changes after a cursor, resets without one, and reports lag", async () => {
     const { db, path } = tempDb();
-    const store = createStore(db);
+    const store = createIndexStore(db);
     store.applySpan([{ kind: "created", block: 10n, logIndex: 0, tx: key(9), op: 0, key: key(1), owner: OWNER, expiresAt: 500n, flags: 0 }], 100n, 0n, state);
     const prisma = createPrisma(`file:${path}`);
 

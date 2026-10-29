@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { financialsPrice } from "./financials-price";
-import { fetchCandles, historyCache, latestHistoryPrice, readKlines, readMarketChart, sqliteStore } from "./glm-history";
+import { openCandleStore } from "@arkiv-agent/db";
+import { fetchCandles, historyCache, latestHistoryPrice, readKlines, readMarketChart } from "./glm-history";
 
 const DAY = 86_400_000;
 const reply = (body: unknown, ok = true) => Promise.resolve({ ok, json: () => Promise.resolve(body) });
@@ -40,7 +41,7 @@ describe("historyCache", () => {
     let t = 100 * DAY + 3_600_000;
     const urls: string[] = [];
     const fetcher = (url: string) => { urls.push(url); return url.includes("binance") ? reply(klines(t, Number(/limit=(\d+)/.exec(url)![1]))) : reply({}); };
-    const store = sqliteStore(":memory:");
+    const store = openCandleStore(":memory:");
     const history = historyCache(store, fetcher, () => t, () => false);
 
     const month = await history(30);
@@ -60,7 +61,7 @@ describe("historyCache", () => {
 
   it("serves stored candles when both sources fail, retries after a minute, and does nothing when off", async () => {
     let t = 100 * DAY;
-    const store = sqliteStore(":memory:");
+    const store = openCandleStore(":memory:");
     store.write("1d", klines(t, 30).map((k) => ({ t: k[0] as number, close: Number(k[4]) })), { source: "Binance GLM/USDT", at: t });
     let calls = 0;
     const history = historyCache(store, () => { calls++; return reply({}, false); }, () => t, () => false);
@@ -79,7 +80,7 @@ describe("historyCache", () => {
 describe("the Financials price seed (T29)", () => {
   const H = 3_600_000;
   it("remembers which source answered and when, and reads back the newest close", () => {
-    const store = sqliteStore(":memory:");
+    const store = openCandleStore(":memory:");
     expect(store.latest()).toBeNull();
     store.write("1d", [{ t: 0, close: 0.1 }, { t: DAY, close: 0.11 }], { source: "Binance GLM/USDT", at: DAY + H });
     store.write("4h", [{ t: DAY + 4 * H, close: 0.112 }], { source: "CoinGecko", at: DAY + 5 * H });
