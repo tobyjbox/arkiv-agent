@@ -77,6 +77,11 @@ beside the indexer; safe to re-run):
 pnpm fees
 ```
 
+The Insights and Financials pages show results the indexer works out and stores: after `pnpm index`,
+every 30 seconds with `--watch`, and after `pnpm fees` (which refits the fee model). The pages only
+read them, so they load in milliseconds whatever the size of the index. Until the indexer has stored
+them once, the pages say so.
+
 `pnpm index` without `--watch` syncs once and exits. The app still works, and the sync indicator says
 "index not updating" until the indexer runs again.
 
@@ -103,6 +108,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 |---|---|
 | `pnpm index` / `pnpm index --watch` | Sync the index once / keep following the chain. |
 | `pnpm fees [--limit N]` | Sample fees from the receipts of N recent writes (default 1,500) for the Financials page. Skips transactions it already has. |
+| `pnpm aggregates` | Work out and store the Insights and Financials results now, without syncing. The indexer does this itself; this is for when it isn't running. |
 | `pnpm index:verify --attrs 20` | Compare the index with the chain: live count, plus names, types and values of 20 random records. |
 | `pnpm dev` | App with hot reload on http://localhost:3101. |
 | `pnpm build`, `pnpm start` | Production build and server. |
@@ -193,7 +199,7 @@ the price and the history lookups.
 | `apps/arkiv-agent` | Next.js app: catalogue, dataset pages, Ask Arkiv, pulse, cost, APIs, Playwright tests. |
 | `packages/core` | Arkiv client (retries, optional access key, abortable reads). |
 | `packages/db` | Prisma schema and migrations for the SQLite index. |
-| `packages/indexer` | Event sync, attribute decoding, change feed, `index:verify`, `pnpm fees`, Phase 0 spike scripts. |
+| `packages/indexer` | Event sync, attribute decoding, change feed, stored Insights and Financials results, `index:verify`, `pnpm fees`, Phase 0 spike scripts. |
 | `packages/catalogue` | Dataset inference, schemas, ownership, SDK snippets, AI summaries, index value lookup. |
 | `packages/ask` | Question to query: rules, Claude path, compiler, live runner, question sets. |
 | `packages/projects` | Which project each wallet writes for, and which wallets are load generators. |

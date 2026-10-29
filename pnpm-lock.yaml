@@ -171,9 +171,15 @@ importers:
       '@arkiv-agent/core':
         specifier: workspace:*
         version: link:../core
+      '@arkiv-agent/cost':
+        specifier: workspace:*
+        version: link:../cost
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../db
+      '@arkiv-agent/pulse':
+        specifier: workspace:*
+        version: link:../pulse
       '@arkiv-network/sdk':
         specifier: ~0.8.1
         version: 0.8.1(typescript@5.9.3)(viem@2.57.13(typescript@5.9.3)(zod@4.6.7))

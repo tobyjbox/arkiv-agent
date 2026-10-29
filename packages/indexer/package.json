@@ -13,12 +13,15 @@
     "start": "tsx --env-file-if-exists=../../.env src/cli.ts",
     "fixtures:record": "tsx --env-file-if-exists=../../.env src/fixtures/record.ts",
     "verify": "tsx --env-file-if-exists=../../.env src/verify.ts",
-    "fees": "tsx --env-file-if-exists=../../.env src/fees.ts"
+    "fees": "tsx --env-file-if-exists=../../.env src/fees.ts",
+    "aggregates": "tsx --env-file-if-exists=../../.env src/aggregates-cli.ts"
   },
   "dependencies": {
     "@arkiv-network/sdk": "~0.8.1",
     "@arkiv-agent/core": "workspace:*",
+    "@arkiv-agent/cost": "workspace:*",
     "@arkiv-agent/db": "workspace:*",
+    "@arkiv-agent/pulse": "workspace:*",
     "viem": "^2.57.13"
   },
   "devDependencies": {
