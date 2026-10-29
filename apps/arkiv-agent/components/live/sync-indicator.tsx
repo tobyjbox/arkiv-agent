@@ -3,19 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { ago, formatCount } from "../../lib/format";
 import { RollingNumber } from "../ui/rolling-number";
-import { type SyncState as State, syncState } from "../../lib/sync-state";
-import { useLive, useSecondsSince } from "./live-provider";
+import type { SyncState as State } from "../../lib/sync-state";
+import { useLive, useSecondsSince, useSyncState } from "./live-provider";
 
 
 /** Pattern 1: `● Synced 3 s ago · block 1,204,331`. Age is the index's own heartbeat, not ours. */
 export function SyncIndicator() {
   const live = useLive();
   const age = useSecondsSince(live.syncedAt);
-  // Two different things: ArkivAgent's own API not answering (offline), and the API answering while the
-  // index stops moving (stale: `pnpm index` ran once, no --watch). Only the first is "can't reach".
-  const [mountedAt] = useState(() => new Date().toISOString());
-  const sinceOk = useSecondsSince(live.lastOkAt === null ? mountedAt : new Date(live.lastOkAt).toISOString());
-  const state = syncState(age, sinceOk, live.isBehind);
+  const state = useSyncState();
   // The server can't know the age when the page is read, so it doesn't claim one ("Synced 0 s ago").
   const [isMounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

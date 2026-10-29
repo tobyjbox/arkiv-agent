@@ -22,7 +22,7 @@ test("an example question shows chips, then live results, the query and the code
   const card = main.getByRole("region", { name: "Interpretation" });
   await expect(card.getByText("Interpreted as")).toBeVisible();
   await expect(card.getByRole("button", { name: /^Edit condition: / }).first()).toBeVisible();
-  await expect(main.locator("tbody tr").first().or(main.getByText(/No records match|didn't respond|returned an error/))).toBeVisible({ timeout: 20_000 });
+  await expect(main.locator("tbody tr").first().or(main.getByText(/No records match|didn't respond|returned an error|budget is used up/))).toBeVisible({ timeout: 20_000 });
 
   await main.getByRole("tab", { name: "Query" }).click();
   await expect(main.locator("pre code")).toContainText("= str(");

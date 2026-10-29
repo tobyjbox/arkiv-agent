@@ -82,3 +82,33 @@
   .roll * { transition: none !important; }
 }
 @media (prefers-reduced-transparency: reduce) { .hero-glow { background: none; } }
+
+/* Decode progress bar (design/07). Transform and opacity only; the collapse animates its grid row. */
+@keyframes decode-spin { to { transform: rotate(360deg); } }
+@keyframes decode-sheen { from { transform: translateX(-100%); } to { transform: translateX(40px); } }
+@keyframes decode-breathe { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+@keyframes decode-indeterminate { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+@keyframes decode-flash { from { opacity: 1; } to { opacity: 0; } }
+.decode-spin { animation: decode-spin 1600ms linear infinite; }
+.decode-breathe { animation: decode-breathe 2000ms ease-in-out infinite; }
+.decode-indeterminate { animation: decode-indeterminate 1800ms ease-in-out infinite; }
+.decode-flash { animation: decode-flash 600ms ease-out forwards; }
+.decode-move { transition: transform 600ms var(--ease-emphasis); }
+.decode-sheen {
+  background: linear-gradient(90deg, transparent calc(100% - 40px), rgb(255 255 255 / 0.1) calc(100% - 20px), transparent);
+  animation: decode-sheen 2400ms var(--ease-decel) infinite;
+}
+.decode-fill-active, .decode-fill-done { background: linear-gradient(90deg, var(--color-accent), var(--color-ai)); }
+.decode-fill-stalled { background: var(--color-warn); }
+.decode-fill-paused { background: var(--color-text-disabled); }
+.decode-collapse { grid-template-rows: 1fr; transition: grid-template-rows 240ms var(--ease-decel), opacity 240ms var(--ease-decel); }
+.decode-collapse.is-collapsed { grid-template-rows: 0fr; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .decode-spin, .decode-breathe, .decode-flash { animation: none; }
+  .decode-flash { opacity: 0; }
+  .decode-sheen { display: none; }
+  .decode-indeterminate { animation: none; transform: none; }
+  .decode-move { transition: none; }
+  .decode-collapse { transition: opacity 160ms linear; }
+  .decode-collapse.is-collapsed { grid-template-rows: 1fr; }
+}

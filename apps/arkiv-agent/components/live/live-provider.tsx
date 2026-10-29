@@ -2,6 +2,7 @@
 
 import type { FeedResponse } from "@arkiv-agent/db";
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { type SyncState, syncState } from "../../lib/sync-state";
 
 /** Client side of the change feed (design/02-feels-live.md): poll every 5 s while visible. */
 const POLL_MS = 5_000;
@@ -83,6 +84,19 @@ export function LiveProvider({ initial, children }: { initial: Snapshot; childre
       {children}
     </LiveContext.Provider>
   );
+}
+
+/**
+ * The top bar's sync state (Pattern 1), for anything that has to agree with it. Two different things:
+ * ArkivAgent's own API not answering (offline), and the API answering while the index stops moving
+ * (stale: `pnpm index` ran once, no --watch). Only the first is "can't reach".
+ */
+export function useSyncState(): SyncState {
+  const live = useLive();
+  const age = useSecondsSince(live.syncedAt);
+  const [mountedAt] = useState(() => new Date().toISOString());
+  const sinceOk = useSecondsSince(live.lastOkAt === null ? mountedAt : new Date(live.lastOkAt).toISOString());
+  return syncState(age, sinceOk, live.isBehind);
 }
 
 /**
