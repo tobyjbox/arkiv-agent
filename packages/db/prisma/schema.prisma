@@ -104,3 +104,26 @@ model DatasetDescription {
   inputs        String
   createdAtMs   BigInt
 }
+
+/// Fees from transaction receipts for a sample of Arkiv writes (T11 cost view). `pnpm fees` adds to it;
+/// re-runs skip transactions already here. Amounts are wei of the chain's native token (GLM).
+model TxFee {
+  tx             String @id
+  block          BigInt
+  sender         String
+  /// Entities created and updated by the transaction (from the index).
+  creates        Int
+  updates        Int
+  calldataBytes  Int
+  /// Payload bytes of the entities it created.
+  payloadBytes   Int
+  /// Mean planned lifetime of the created entities, in blocks; null for update-only transactions.
+  lifetimeBlocks BigInt?
+  gasUsed        BigInt
+  gasPriceWei    String
+  feeWei         String
+  fetchedAtMs    BigInt
+
+  @@index([block])
+  @@index([sender])
+}

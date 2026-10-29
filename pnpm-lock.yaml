@@ -29,6 +29,9 @@ importers:
       '@arkiv-agent/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@arkiv-agent/cost':
+        specifier: workspace:*
+        version: link:../../packages/cost
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -134,6 +137,15 @@ importers:
       viem:
         specifier: ^2.57.13
         version: 2.57.13(typescript@5.9.3)(zod@4.6.7)
+
+  packages/cost:
+    dependencies:
+      '@arkiv-agent/catalogue':
+        specifier: workspace:*
+        version: link:../catalogue
+      '@arkiv-agent/pulse':
+        specifier: workspace:*
+        version: link:../pulse
 
   packages/db:
     dependencies:

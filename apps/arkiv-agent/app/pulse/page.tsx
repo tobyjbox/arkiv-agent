@@ -4,7 +4,9 @@ import { PulseControls } from "../../components/pulse/controls";
 import { RefreshOnChange } from "../../components/pulse/refresh";
 import { Sparkline } from "../../components/ui/sparkline";
 import { dayLabel, getPulse, type Period, PERIODS, WINDOWS } from "@arkiv-agent/pulse";
+import { estimatedSpend } from "@arkiv-agent/cost";
 import { formatCount } from "../../lib/format";
+import { glm } from "../../lib/glm";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ecosystem pulse · ArkivAgent" };
@@ -21,6 +23,7 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
   const period = (PERIODS as readonly number[]).includes(Number(params.period)) ? (Number(params.period) as Period) : 30;
   const includeLoad = params.load === "1";
   const p = getPulse({ period, includeLoad });
+  const spend = estimatedSpend(period, includeLoad);
   const days = p.days.map((d) => ({ ...d, day: dayLabel(d.day) }));
   const opensIn = (c: (typeof p.cohorts)[number]) =>
     Object.fromEntries((Object.keys(WINDOWS) as (keyof typeof WINDOWS)[]).map((k) => [k, c.retention[k].reached ? null : Math.max(1, Math.min(...c.projects.map((x) => x.day0 + WINDOWS[k][1] + 1 - p.today)))])) as CohortView["opensIn"];
@@ -45,7 +48,7 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
 
       <p className="caption text-text-tertiary">No weekly summary yet.{process.env.ANTHROPIC_API_KEY ? "" : " (A weekly AI summary needs ANTHROPIC_API_KEY.)"}</p>
 
-      <section aria-label="Totals" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section aria-label="Totals" className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {tiles.map((t) => (
           <div key={t.label} className="rounded-md bg-surface p-5" title={t.tooltip}>
             <div className="label text-text-tertiary">{t.label}</div>
@@ -54,6 +57,11 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
             <Sparkline points={t.series} height={28} className="mt-2 text-accent" />
           </div>
         ))}
+        <a href="/cost" className="rounded-md bg-surface p-5 hover:bg-raised" title="Estimated from the fee model and each write's payload size; see Cost for the model and its error.">
+          <div className="label text-text-tertiary">GLM spent (est.)</div>
+          <div className="stat mt-1">{spend ? glm(spend.glm) : "—"}</div>
+          <div className="caption mt-1 text-text-secondary">{spend ? `range ${glm(spend.low)} to ${glm(spend.high)}` : "needs sampled fees (pnpm fees)"}</div>
+        </a>
       </section>
       {includeLoad && <p className="rounded-md px-4 py-2 caption tint-warn">Load generators included: {p.loadWallets} wallets that write thousands of records an hour dominate these totals.</p>}
 

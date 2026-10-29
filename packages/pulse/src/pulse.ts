@@ -32,7 +32,7 @@ function readRows(): Rows {
 }
 
 /** Each wallet's project: the label on most of its decoded records. */
-function projectsByWallet(): Map<string, string> {
+export function projectsByWallet(): Map<string, string> {
   const { datasets, membersById } = loadCatalogue();
   const counts = new Map<string, Map<string, number>>();
   for (const ds of datasets) {
