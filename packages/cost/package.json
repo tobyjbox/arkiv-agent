@@ -1,0 +1,15 @@
+{
+  "name": "@arkiv-agent/cost",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@arkiv-agent/catalogue": "workspace:*",
+    "@arkiv-agent/pulse": "workspace:*"
+  }
+}
