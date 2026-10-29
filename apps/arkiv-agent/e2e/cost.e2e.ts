@@ -9,8 +9,8 @@ test("cost: calculator shows an estimate with its range, keeps inputs in the URL
   await expect(main.getByText(/^range .+ GLM · .+ GLM per write$/)).toBeVisible();
   await main.getByLabel("Writes per day", { exact: true }).fill("5000");
   await expect(page).toHaveURL(/writes=5000/);
-  await expect(main.getByText(/Show an illustrative fiat amount/)).toBeVisible();
-  await expect(main.getByRole("checkbox", { name: /illustrative fiat/ })).not.toBeChecked();
+  // USD needs a live price source; without one the page must say it shows GLM only.
+  await expect(main.getByText(/USD amounts use the mainnet GLM price|amounts are shown in GLM only/)).toBeVisible();
   await expect(main.getByRole("img", { name: /Gas used against calldata/ })).toBeVisible();
   await expect(main.getByText(/held-out creates/)).toBeVisible();
   expect(errors).toEqual([]);
