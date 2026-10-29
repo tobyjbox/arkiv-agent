@@ -75,3 +75,5 @@
 - 2026-10-29T02:47:33Z HANDOFF T17@43db1dd dispatched: T18 (new, ready, coder messaged; priority over T11)
 - 2026-10-29T02:47:44Z NUDGE T18 -> arkiv-agent_coder_claude-code_opus-5.5-extra session message queued <id>
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-fixes-3@c13296c:missions/2026-10-28-arkiv-agent/tasks/T18-ask-fixes-3.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-29T02:55:18Z HANDOFF T18@c13296c adjudicated: accepted (506 tests verified; EXISTS confirmed unsupported live, now Not used); integrated 5dcc1e8; row -> merged f645e9f. Must-ship slice complete (T01-T08, T13-T18).
+- 2026-10-29T02:55:18Z HANDOFF T18@c13296c dispatched: none eligible (T11 already ready, in progress)
