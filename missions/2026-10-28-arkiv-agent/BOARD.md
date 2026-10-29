@@ -34,6 +34,6 @@
 | T29 | Drop pre-rename compatibility; seed spot price from chart history | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T28 | 2026-10-29T16:00:00Z |
 | T30 | B1: db package owns all database access | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T29 | 2026-10-29T16:40:00Z |
 | T31 | B2: shared projects module | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T30 | 2026-10-29T16:26:41Z |
-| T32 | B3: Ask interpret() as a pipeline | coder | frontier | review | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T16:54:55Z |
+| T32 | B3: Ask interpret() as a pipeline | coder | frontier | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T31 | 2026-10-29T16:55:32Z |
 | T33 | B4: indexer stores Insights/Financials aggregates | coder | frontier | ready | 0/1 | | T31 | 2026-10-29T16:26:41Z |
 | T34 | B5+B6: thin pages, PriceSource in cost, remove spike code | coder | fast | draft | 0/1 | | T32, T33 | 2026-10-29T16:00:00Z |

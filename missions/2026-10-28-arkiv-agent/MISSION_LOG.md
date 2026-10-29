@@ -125,3 +125,5 @@
 - 2026-10-29T16:26:41Z HANDOFF adjudicated T31 accept: pulse/cost depend only on db+projects, no cross import; busy-owner rule kept in catalogue build (accepted, avoids a cycle); 553 tests, build OK on merged main; merged
 - 2026-10-29T16:26:41Z RELEASE T32, T33 -> ready (T31 merged)
 - 2026-10-29T16:26:50Z DISPATCH T32, T33 -> arkiv-agent_coder_claude-code_opus-5.5-extra (T32 first)
+- 2026-10-29T16:55:32Z HANDOFF detected T32 review candidate=41f1794 (coder message)
+- 2026-10-29T16:55:32Z HANDOFF adjudicated T32 accept: change confined to packages/ask; plans byte-identical on 7,472 questions (worker); 620 tests, build OK on merged main; merged. T34 waits on T33.
