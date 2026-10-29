@@ -27,6 +27,7 @@
   RPC's anonymous `arkiv_query` budget ran out (HTTP 429 ANON_COST_LIMITED; QA's T17 was running at the same time) and
   Ask showed a misleading 15 s timeout; Ask reads now stop at the first 429 and say so (runner only, not the parser).
   After the budget recovered, all demo questions returned rows (0.2-1.3 s). Vitest 501, Playwright 9.
+- 2026-10-29T02:32:49Z Flipped to review, candidate 24d7146. Notification intent: key `2026-10-28-arkiv-agent:T08@24d7146:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
 
 ## Handoff
 
