@@ -63,3 +63,4 @@
 - 2026-10-29T02:33:30Z HANDOFF T08@24d7146 detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ship@24d7146:missions/2026-10-28-arkiv-agent/tasks/T08-ship.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T02:33:30Z HANDOFF T08@24d7146 adjudicated: accepted (501 tests verified, no deploy steps; 429 runner change accepted as in-scope demo fix); integrated b9dcdbb; row -> merged 39ae894
 - 2026-10-29T02:33:30Z HANDOFF T08@24d7146 dispatched: none (T10 stretch held pending T17 result and owner's stretch call)
+- 2026-10-29T02:33:47Z T08 dispatch revised: T10 released (stretch; deps met, coder idle)
