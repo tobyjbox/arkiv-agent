@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createRateLimit, isAllowedHost, refuseCrossSite } from "./guard";
+import { createRateLimit, isAllowedHost, isCrossSiteEmbed, refuseCrossSite } from "./guard";
 
 const post = (headers: Record<string, string>) => new Request("http://localhost:3101/api/ask", { method: "POST", headers, body: '{"question":"x"}' });
 const json = { "content-type": "application/json", host: "localhost:3101" };
@@ -38,6 +38,28 @@ describe("isAllowedHost", () => {
   });
 });
 
+describe("isCrossSiteEmbed", () => {
+  const h = (headers: Record<string, string>) => new Headers({ host: "localhost:3101", ...headers });
+  const html = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+  it("follows Fetch Metadata when the browser sends it", () => {
+    expect(isCrossSiteEmbed(h({ "sec-fetch-site": "cross-site", "sec-fetch-mode": "no-cors", "sec-fetch-dest": "image", referer: "https://evil.example/" }))).toBe(true);
+    expect(isCrossSiteEmbed(h({ "sec-fetch-site": "same-site", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty" }))).toBe(true);
+    expect(isCrossSiteEmbed(h({ "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document", accept: html }))).toBe(false);
+    expect(isCrossSiteEmbed(h({ "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", referer: "http://localhost:3101/pulse" }))).toBe(false);
+  });
+  it("without Fetch Metadata, refuses non-HTML loads from another origin or referrer (T22 L2)", () => {
+    expect(isCrossSiteEmbed(h({ referer: "https://evil.example/page", accept: "image/webp,*/*" }))).toBe(true);
+    expect(isCrossSiteEmbed(h({ origin: "https://evil.example", accept: "*/*" }))).toBe(true);
+    expect(isCrossSiteEmbed(h({ origin: "null", accept: "*/*" }))).toBe(true);
+    expect(isCrossSiteEmbed(h({ referer: "http://127.0.0.1:3101/", accept: "*/*" }))).toBe(true);
+  });
+  it("without Fetch Metadata, lets links, same-origin requests and direct visits through", () => {
+    expect(isCrossSiteEmbed(h({ referer: "https://news.example/post", accept: html }))).toBe(false);
+    expect(isCrossSiteEmbed(h({ referer: "http://localhost:3101/catalogue", accept: "*/*" }))).toBe(false);
+    expect(isCrossSiteEmbed(h({ accept: "*/*" }))).toBe(false);
+  });
+});
+
 describe("createRateLimit", () => {
   it("allows N calls per rolling minute", () => {
     let t = 0;
@@ -57,6 +79,8 @@ describe("middleware: heavy pages (T19 L1)", async () => {
     expect(middleware(req("/cost", { "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "iframe" })).status).toBe(403);
     expect(middleware(req("/cost", { "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document" })).status).toBe(200);
     expect(middleware(req("/pulse", { "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors" })).status).toBe(200);
+    expect(middleware(req("/pulse", { referer: "https://evil.example/", accept: "image/*" })).status).toBe(403);
+    expect(middleware(req("/cost", { referer: "https://news.example/", accept: "text/html" })).status).toBe(200);
   });
   it("forbids framing any page", () => {
     expect(middleware(req("/catalogue", {})).headers.get("content-security-policy")).toBe("frame-ancestors 'none'");

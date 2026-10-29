@@ -23,6 +23,12 @@ shows the level above that: **projects and datasets**.
   - **No guessing.** Words it couldn't use are listed as "Not used". Questions it can't ground ("every
     record on Arkiv") are refused with the reason.
   - **No unchecked queries.** Every query is validated and built with the SDK's own builders before it runs.
+- **Ecosystem pulse.** Active wallets, active projects, writes and new projects over time, retention by
+  cohort (week of first write), and the most active projects, with load generators left out unless you
+  include them.
+- **Cost view.** What writing to Arkiv costs: a fee model fitted to sampled transaction receipts, a
+  calculator for writes × payload × lifetime with its error range, and estimated GLM spend per project.
+  Amounts are in GLM, with a dollar figure from the mainnet GLM price (see [Outbound calls](#outbound-calls)).
 - **Feels live.** A local indexer follows the chain head and the UI updates within seconds, without a
   refresh. A sync indicator always says how fresh the data is ("Synced 3 s ago · block 1,188,342"), and
   says so when the index stops moving.
@@ -35,7 +41,8 @@ shows the level above that: **projects and datasets**.
 |---|---|
 | Data catalogue | Built |
 | Ask Arkiv | Built |
-| Ecosystem pulse, cost view | Planned (specs in `design/05-pulse.md`, `design/06-cost.md`) |
+| Ecosystem pulse | Built (stretch; differences from `design/05-pulse.md` under [Known gaps](#known-gaps)) |
+| Cost view | Built (stretch; needs `pnpm fees`; differences from `design/06-cost.md` under [Known gaps](#known-gaps)) |
 
 ## Run it locally
 
@@ -62,6 +69,14 @@ The first run replays Arkiv from block 1 (about 4 minutes), then decodes every l
 (about 2 hours on the public RPC). The catalogue fills in as decoding progresses, and says how many
 records are still waiting. Stop the indexer whenever you like: it resumes where it left off.
 
+The cost view and the pulse page's GLM tile need fees, which the index doesn't hold. Once the replay
+from block 1 has finished, sample them from transaction receipts (1,500 by default, about 10 minutes
+beside the indexer; safe to re-run):
+
+```bash
+pnpm fees
+```
+
 `pnpm index` without `--watch` syncs once and exits. The app still works, and the sync indicator says
 "index not updating" until the indexer runs again.
 
@@ -76,6 +91,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 | `ANTHROPIC_API_KEY` | Switches on Claude. Ask Arkiv reads questions with Claude (still checked against the catalogue) instead of the built-in rules, and each dataset page gets a short AI summary, cached per schema. `pnpm describe --limit 20` writes summaries ahead of time. Without the key, every feature works; dataset pages say "No AI summary yet". |
 | `ARKIV_API_KEY` | Arkiv Hub access key (hub.arkiv.network/api-keys). Raises the public RPC limits, so the first decode is much faster. |
 | `ARKIV_RPS` | Indexer decode rate in requests per second (default 8, or 25 with `ARKIV_API_KEY`). |
+| `ARKIV_FEE_RPS` | `pnpm fees` rate in requests per second (default 3, to leave the indexer its budget). |
 | `DATABASE_URL` | Where the SQLite index lives (default `file:./data/arkiv-agent.db`). |
 | `PORT` | App port (default 3101). |
 | `ARKIV_AGENT_HOST`, `ARKIV_AGENT_ALLOWED_HOSTS` | Shell variables, not `.env`. ArkivAgent listens on 127.0.0.1 and answers to localhost names only. To open it to your network: `ARKIV_AGENT_HOST=0.0.0.0 ARKIV_AGENT_ALLOWED_HOSTS=my-laptop.local pnpm start`. |
@@ -85,6 +101,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 | Command | What it does |
 |---|---|
 | `pnpm index` / `pnpm index --watch` | Sync the index once / keep following the chain. |
+| `pnpm fees [--limit N]` | Sample fees from the receipts of N recent writes (default 1,500) for the cost view. Skips transactions it already has. |
 | `pnpm index:verify --attrs 20` | Compare the index with the chain: live count, plus names, types and values of 20 random records. |
 | `pnpm dev` | App with hot reload on http://localhost:3101. |
 | `pnpm build`, `pnpm start` | Production build and server. |
@@ -133,7 +150,6 @@ The ecosystem pulse and the cost view were built as stretch work. Compared with 
   - Under 768 px, tables scroll inside a container instead of becoming cards.
   - Cohorts come from data (first-write week), because no hackathon project list exists.
   - There's no GLM-from-receipts total and no weekly AI summary.
-- **App shell:** at 375 px the top bar's links push the sync indicator off-screen.
 - **Tests:** browser tests are reliable on the production build (`pnpm build`, then `pnpm test:e2e`, the default).
   Against `pnpm dev` they're timing-sensitive.
 
@@ -148,16 +164,28 @@ The ecosystem pulse and the cost view were built as stretch work. Compared with 
 - **Public data.** ArkivAgent shows records exactly as Arkiv stores them, attributes plus a 120-character
   payload preview. It adds nothing that isn't public on the chain.
 
+### Outbound calls
+
+Besides the Arkiv RPC (and Claude, only with `ANTHROPIC_API_KEY`), the server makes one other kind of
+call: for the cost view's dollar figures it fetches the mainnet GLM/USD price from CoinGecko
+(`api.coingecko.com`), falling back to Binance's GLM/USDT ticker (`api.binance.com`). Tiramisu's testnet
+GLM has no value of its own, so this only puts a real-world scale on the fees. The requests carry no
+data from your index or your questions, but the providers see your IP address. A price is reused for
+10 minutes, so there's at most one lookup every 10 minutes while you use the cost view (one a minute
+while both sources are down). If neither source answers, amounts are shown in GLM only.
+
 ## Project layout
 
 | Path | What it holds |
 |---|---|
-| `apps/arkiv-agent` | Next.js app: catalogue, dataset pages, Ask Arkiv, APIs, Playwright tests. |
+| `apps/arkiv-agent` | Next.js app: catalogue, dataset pages, Ask Arkiv, pulse, cost, APIs, Playwright tests. |
 | `packages/core` | Arkiv client (retries, optional access key, abortable reads). |
 | `packages/db` | Prisma schema and migrations for the SQLite index. |
-| `packages/indexer` | Event sync, attribute decoding, change feed, `index:verify`, Phase 0 spike scripts. |
+| `packages/indexer` | Event sync, attribute decoding, change feed, `index:verify`, `pnpm fees`, Phase 0 spike scripts. |
 | `packages/catalogue` | Dataset inference, schemas, ownership, SDK snippets, AI summaries, index value lookup. |
 | `packages/ask` | Question to query: rules, Claude path, compiler, live runner, question sets. |
+| `packages/pulse` | Daily activity, retention cohorts and most active projects, from the index. |
+| `packages/cost` | Fee model (fit, hold-out range, calculator) and estimated spend. |
 | `arkiv/schema.md`, `arkiv/friction.md` | What ArkivAgent reads from Arkiv, and what was hard. |
 | `docs/PLAN.md`, `design/` | Technical design and UX specs. |
 | `docs/demo.md` | A 3-minute demo script. |

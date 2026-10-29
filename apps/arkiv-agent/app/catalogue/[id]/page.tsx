@@ -1,9 +1,10 @@
 import { datasetSnippet, getDataset, recentRecords } from "@arkiv-agent/catalogue";
 import { AlertTriangle, ExternalLink, Sparkles } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActivityChart } from "../../../components/dataset/activity-chart";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import { AiSummary, AiSummarySkeleton } from "../../../components/dataset/ai-summary";
 import { DatasetLive } from "../../../components/dataset/dataset-live";
 import { SchemaTable } from "../../../components/dataset/schema-table";
@@ -13,9 +14,17 @@ import { BLOCK_SECONDS, formatCount, middle, percent } from "../../../lib/format
 
 export const dynamic = "force-dynamic";
 
+/** One lookup per request, shared by the title and the page. */
+const datasetFor = cache(getDataset);
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const detail = datasetFor((await params).id);
+  return { title: `${detail ? detail.dataset.name : "Dataset not found"} · ArkivAgent` };
+}
+
 export default async function DatasetPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const detail = getDataset(id);
+  const detail = datasetFor(id);
   if (!detail) notFound();
   const { dataset: d, chainHead, activity } = detail;
   const live = { dataset: d, chainHead, records: recentRecords(id) };

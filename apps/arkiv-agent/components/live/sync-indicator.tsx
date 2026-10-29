@@ -25,13 +25,13 @@ export function SyncIndicator() {
     state === "stale" ? " · the indexer isn't running: start `pnpm index --watch` to keep it live" : ""}`;
 
   return (
-    <div className="flex items-center gap-2 caption text-text-tertiary" title={tooltip}>
+    <div className="flex items-center gap-2 whitespace-nowrap caption text-text-tertiary" title={tooltip}>
       <span className="relative flex size-2" aria-hidden>
         {isMounted && state === "live" && <span className="live-ring absolute inset-0 rounded-full bg-live" />}
         <span className={`relative size-2 rounded-full ${dot}`} />
       </span>
       {!isMounted ? (
-        <span className="hidden sm:inline">Checking sync · block {formatCount(Number(live.indexedBlock))}</span>
+        <span>Checking sync<span className="hidden lg:inline"> · block {formatCount(Number(live.indexedBlock))}</span></span>
       ) : state === "offline" ? (
         <span>
           Sync paused ·{" "}
@@ -40,12 +40,17 @@ export function SyncIndicator() {
       ) : state === "behind" ? (
         <span className="text-warn">Index {formatCount(Number(live.lagBlocks))} blocks behind</span>
       ) : (
-        <span className="hidden sm:inline">
-          Synced {ago(age ?? 0)}{state === "delayed" ? " · retrying" : state === "stale" ? " · index not updating" : ""} · block{" "}
-          <RollingNumber value={Number(live.indexedBlock)} className="text-text-secondary" />
-        </span>
+        <>
+          <span className="hidden lg:inline">
+            Synced {ago(age ?? 0)}{state === "delayed" ? " · retrying" : state === "stale" ? " · index not updating" : ""} · block{" "}
+            <RollingNumber value={Number(live.indexedBlock)} className="text-text-secondary" />
+          </span>
+          {/* Narrower screens keep the state and drop the block number. */}
+          <span className="lg:hidden">
+            {age === null ? "Not synced yet" : `${state === "delayed" ? "Retrying · " : state === "stale" ? "Not updating · " : "Synced "}${ago(age)}`}
+          </span>
+        </>
       )}
-      <span className="sm:hidden">{!isMounted || age === null ? "–" : `${age}s`}</span>
       <span className="sr-only" aria-live="polite">{announced}</span>
     </div>
   );
