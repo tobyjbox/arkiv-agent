@@ -27,4 +27,5 @@ export const explorerUrl = (query: string) => `https://data.arkiv.network/?q=${e
  * Public, read-only client (no wallet, so Ask can only read), one per read so its timeout can
  * abort it. One retry: a person is waiting, and the indexer shares the RPC budget.
  */
-export const arkiv = (signal: AbortSignal): ArkivClient => createArkivClient(undefined, undefined, { signal, retryCount: 1 });
+export const arkiv = (signal: AbortSignal, onResponse: (response: Response) => void): ArkivClient =>
+  createArkivClient(undefined, undefined, { signal, retryCount: 1, onResponse });

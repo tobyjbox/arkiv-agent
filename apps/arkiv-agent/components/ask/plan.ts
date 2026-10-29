@@ -15,7 +15,7 @@ export type Interpreted = {
   explorerUrl: string;
 };
 
-export type Failure = { kind: "not-understood" | "invalid" | "refused" | "timeout" | "rpc"; message: string };
+export type Failure = { kind: "not-understood" | "invalid" | "refused" | "timeout" | "rate-limited" | "rpc"; message: string };
 
 export const OP_SYMBOL: Record<Leaf["op"], string> = { eq: "=", ne: "≠", gt: ">", gte: "≥", lt: "<", lte: "≤", startsWith: "starts with", exists: "has" };
 export const OP_WORDS: Record<Leaf["op"], string> = { eq: "equals", ne: "is not", gt: "greater than", gte: "at least", lt: "less than", lte: "at most", startsWith: "starts with", exists: "is set" };

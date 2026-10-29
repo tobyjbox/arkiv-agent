@@ -18,13 +18,13 @@ export const PAGE_SIZE = 200;
 export function createArkivClient(
   rpcUrl = process.env.ARKIV_RPC_URL ?? DEFAULT_RPC_URL,
   apiKey = process.env.ARKIV_API_KEY,
-  { signal, retryCount = 5 }: { signal?: AbortSignal; retryCount?: number } = {},
+  { signal, retryCount = 5, onResponse }: { signal?: AbortSignal; retryCount?: number; onResponse?: (response: Response) => void } = {},
 ) {
   const fetchOptions = { ...(apiKey && { headers: { "X-API-KEY": apiKey } }), ...(signal && { signal }) };
   return createPublicClient({
     chain: tiramisu,
     // A full 20,000-log page is ~11 MB, over viem's 10 MB default response cap.
-    transport: http(rpcUrl, { retryCount, retryDelay: 400, timeout: 30_000, maxResponseBodySize: 32 * 1024 * 1024, fetchOptions }),
+    transport: http(rpcUrl, { retryCount, retryDelay: 400, timeout: 30_000, maxResponseBodySize: 32 * 1024 * 1024, fetchOptions, ...(onResponse && { onFetchResponse: onResponse }) }),
   });
 }
 

@@ -4,12 +4,32 @@ Versions: `@arkiv-network/sdk` **0.8.1**, `viem` **2.57.13**, Node **22.22.0**, 
 **Tiramisu** (chain `7738577`), 28 October 2026, blocks ~1,178,500–1,179,300. All reads used the
 public RPC with no access key. Nothing was written to the chain (no wallet).
 
-Every number below comes from a script in `packages/indexer/src/spike/` (`pnpm spike:read`,
+Items 1–9 come from the Phase 0 spike (T01); items 10–13 were found while building the indexer, the
+catalogue and Ask Arkiv (T03–T05, T14–T16), with the same versions and access. Spike numbers come from a
+script in `packages/indexer/src/spike/` (`pnpm spike:read`,
 `spike:history`, `spike:logs`, `spike:decode`, `spike:fees`). Each writes its raw result to
 `data/spike/*.json`, which is gitignored because it holds third-party chain data.
 
 Items marked **Issue** cost us time or would mislead a builder; **Worked** items behaved as documented;
 **Observation** items are findings either way.
+
+## Summary
+
+| # | Kind | Finding | What would help |
+|---|---|---|---|
+| 1 | Issue | `page.next()` fails past one page unless the read is pinned with `atBlock` | Carry the first page's block into later pages as `atBlock` |
+| 2 | Issue | The anonymous `arkiv_query` budget is undocumented, and one full walk uses it up | Document cost units and the anonymous budget |
+| 3 | Issue | No "match all"; the workaround (`$expiresAt > 0`) is slow | A documented match-all query |
+| 4 | Mixed | `eth_getLogs` caps at 20,000 results, and viem's 10 MB response cap trips first | Document both caps |
+| 5 | Worked | Full history from genesis is readable | |
+| 6 | Worked | Entity calldata is plain ABI and decodes cleanly (one gap) | |
+| 7 | Observation | Create cost doesn't depend on lifetime today; rent is planned | |
+| 8 | Observation | SDK 0.9 changes the entity model | |
+| 9 | Worked | Removed operators fail with a clear error | |
+| 10 | Observation | Load generators dominate writes and pollute schemas | |
+| 11 | Observation | Some entities are patched thousands of times, so replaying patches is costly | "Attributes at block N", or snapshots |
+| 12 | Issue | `$expiresAt` ranges are slow; `$createdAt` can't be filtered | Index `$createdAt`; plan equality first |
+| 13 | Issue | Queries can't sort or count | `ORDER BY` on indexed attributes, and a count |
 
 ---
 
@@ -66,6 +86,11 @@ queries and spot checks, because it has its own small anonymous budget.
   the access-keys docs do not mention the budget or how a query's cost is computed.
 - **What would fix it:** document per-method cost units and the anonymous budget; return the query
   budget's remaining units on every response.
+
+**Seen again while building Ask Arkiv (T08):** once the budget runs out, every `arkiv_query` returns HTTP 429
+`ANON_COST_LIMITED`, while `eth_*` calls still answer in ~50 ms. With the SDK and viem defaults, a 429'd read
+didn't fail; it kept retrying until our 15 s timeout. ArkivAgent now stops at the first 429 and tells the user
+that the budget is used up and that `ARKIV_API_KEY` lifts it.
 
 ## 3. Issue: no "match all", and the obvious workaround is slow
 
@@ -138,7 +163,7 @@ from calldata exceeds the public rate limit, so ArkivAgent reads their current s
 instead. **What would help:** a cheap "attributes at block N" read that does not draw on the small
 anonymous query budget, or a snapshot event every N patches.
 
-## 12. Friction: `$expiresAt` ranges are slow, and creation time can't be filtered
+## 12. Issue: `$expiresAt` ranges are slow, and creation time can't be filtered
 
 Ask Arkiv turns "expiring in the next 24 hours" into `$expiresAt <= u64(head + 43200)`. On Tiramisu
 (2026-10-28, anonymous), `app = str('tideland') AND kind = str('sign')` returns in about 1 s; adding
@@ -147,3 +172,12 @@ that one-sided bound takes 6.5 to 7.5 s, whichever order the terms are in. A two
 indexed at all, so "created today" only works on datasets that write their own timestamp
 attribute, and ArkivAgent says so when one is missing. **What would help:** an indexed `$createdAt`
 (or creation block), and a query planner that applies the cheap equality filters before a range.
+
+## 13. Issue: queries can't sort or count
+
+Plain-English questions often say "latest 5 …" or "how many …". The query language has neither an
+ordering nor a count: results come back in the node's own order, a page (up to 200) at a time, with a
+cursor. Ask Arkiv therefore applies "first/top N" as a page size, reports "latest/newest" as not applied
+(rather than pretending), and says it can't count. A full count means walking every page, which runs into
+item 2's budget on any large dataset. **What would help:** `ORDER BY` on indexed attributes (at least
+`$expiresAt` and numeric user attributes) and a `COUNT` (or a total on the first page).

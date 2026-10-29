@@ -19,7 +19,8 @@
     "index": "pnpm --filter @arkiv-agent/indexer start",
     "index:verify": "pnpm --filter @arkiv-agent/indexer verify",
     "describe": "pnpm --filter @arkiv-agent/catalogue describe",
-    "test:e2e": "pnpm --filter arkiv-agent test:e2e"
+    "test:e2e": "pnpm --filter arkiv-agent test:e2e",
+    "start": "pnpm --filter arkiv-agent start"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
