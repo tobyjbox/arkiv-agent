@@ -63,3 +63,4 @@ Not covered: full `pnpm index` from block 1, the Claude path (no key), a real pr
 Next owner: Orchestrator (Q1 and Q2 are optional polish).
 
 - 2026-10-29T19:52:46Z notify intent: T35 review candidate=6aaf187 to Orchestrator local_<session> via ccd send_message; attempt 1.
+- 2026-10-29T19:52:54Z notify result: delivered (message_id <id>).
