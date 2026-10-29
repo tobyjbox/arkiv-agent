@@ -42,6 +42,12 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
         <div className="space-y-1">
           <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Ecosystem pulse</h1>
           <p className="text-text-secondary">Who is building on Arkiv, and who keeps building.</p>
+          <p className="caption text-text-tertiary">
+            Raw activity:{" "}
+            <a href="https://data.arkiv.network/activity?chain=tiramisu" target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-text-primary hover:underline">Arkiv data explorer</a>
+            {" · "}
+            <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-text-primary hover:underline">Tiramisu block explorer</a>
+          </p>
         </div>
         <PulseControls period={period} includeLoad={includeLoad} loadWallets={p.loadWallets} />
       </header>
