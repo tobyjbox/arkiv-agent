@@ -7,3 +7,4 @@
 - 2026-10-29T21:01:42Z HANDOFF T01@932d2f1 adjudicated: accepted; integrated 5f0d3fa; row -> merged. Entity keys/addresses in images are public testnet data, OK. Coder-flagged Insights label overlap filed as draft T02 (owner decides).
 - 2026-10-29T21:01:42Z HANDOFF T01@932d2f1 dispatched: none eligible
 - 2026-10-29T21:02:14Z RELEASE T02 draft -> ready (owner OK in chat); coder; preflight as T01 (grant=standing, notify=granted, wakeup=event).
+- 2026-10-29T21:02:19Z NUDGE T02 -> arkiv-agent_coder_claude-code_opus-5.5-extra queued (watcher live)
