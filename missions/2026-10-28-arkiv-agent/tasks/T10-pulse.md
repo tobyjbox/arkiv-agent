@@ -26,6 +26,7 @@
   ~2 s, then cached (30 s).
 - 2026-10-29T02:41:58Z Increment 2, candidate f443c0e: /pulse per design/05, nav link, Playwright smoke (10 pass).
   Checked at 1280 and 375 px (no sideways scroll). Vitest 505.
+- 2026-10-29T02:42:21Z Flipped to review, candidate f443c0e. Notification intent: key `2026-10-28-arkiv-agent:T10@f443c0e:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
 
 ## Handoff
 
