@@ -1,4 +1,4 @@
-**Mission progress:** 25 tasks — 22 merged, 3 ready · updated 2026-10-29T10:00:00Z
+**Mission progress:** 27 tasks — 23 merged, 2 ready, 2 draft · updated 2026-10-29T10:00:00Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -28,3 +28,5 @@
 | T23 | C1: quick fixes (README, postcss, Sec-Fetch, detail title, narrow sync) | coder | fast | ready | 0/2 | | T21, T22 | 2026-10-29T11:30:00Z |
 | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | ready | 0/3 | | T21 | 2026-10-29T11:30:00Z |
 | T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | claimed | 0/2 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | — | 2026-10-29T11:04:44Z |
+| T26 | Build decode progress bar (design/07) | coder | fast | draft | 0/1 | | T25, T24 | 2026-10-29T12:10:00Z |
+| T27 | GLM/USDT price chart on /cost | coder | fast | draft | 0/1 | | T24 | 2026-10-29T12:10:00Z |

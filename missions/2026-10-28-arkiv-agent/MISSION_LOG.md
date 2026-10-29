@@ -103,3 +103,4 @@
 - 2026-10-29T11:31:00Z DISPATCH T23, T24 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id> (T23 first; no push)
 - 2026-10-29T11:40:00Z OWNER request: decoding banner -> futuristic progress bar; T25 (ux_designer) ready
 - 2026-10-29T11:41:00Z DISPATCH T25 -> arkiv-agent_ux_designer_claude-code_opus-5.5-med delivered <id>
+- 2026-10-29T12:10:00Z HANDOFF T25@1bc9769 adjudicated: accepted (all states incl. keeping pace/nearly done/stalled, data already exists, reduced motion, ARIA); integrated; row -> merged. T26 build (draft, after T24). OWNER request: GLM/USDT price chart on /cost -> T27 (draft, after T24; Binance klines + CoinGecko fallback checked live).
