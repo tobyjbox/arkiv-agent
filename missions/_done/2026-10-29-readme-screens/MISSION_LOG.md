@@ -8,3 +8,7 @@
 - 2026-10-29T21:01:42Z HANDOFF T01@932d2f1 dispatched: none eligible
 - 2026-10-29T21:02:14Z RELEASE T02 draft -> ready (owner OK in chat); coder; preflight as T01 (grant=standing, notify=granted, wakeup=event).
 - 2026-10-29T21:02:19Z NUDGE T02 -> arkiv-agent_coder_claude-code_opus-5.5-extra queued (watcher live)
+- 2026-10-29T21:07:47Z HANDOFF T02@afb3d4f detected: row review by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff fix/insights-label-overlap@afb3d4f:tasks/T02-insights-label-overlap.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-med
+- 2026-10-29T21:08:31Z HANDOFF T02@afb3d4f adjudicated: accepted; rebased onto scrubbed main 977cc03 (author reset to noreply, session IDs -> <session>), integrated bcdcf5e; 632 tests, typecheck OK; row -> merged
+- 2026-10-29T21:08:31Z HANDOFF T02@afb3d4f dispatched: none eligible
+- 2026-10-29T21:08:31Z CLOSE mission 2/2 merged, done criteria met; archived with inbox A02.
