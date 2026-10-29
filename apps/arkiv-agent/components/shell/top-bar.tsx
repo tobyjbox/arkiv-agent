@@ -7,7 +7,7 @@ import { SyncIndicator } from "../live/sync-indicator";
 import { CommandPalette } from "./command-palette";
 
 /** Built pages only: unbuilt ones stay hidden, not disabled (design/03-catalogue.md, app shell). */
-const NAV = [{ href: "/catalogue", label: "Catalogue" }, { href: "/ask", label: "Ask Arkiv" }, { href: "/pulse", label: "Pulse" }, { href: "/cost", label: "Cost" }];
+const NAV = [{ href: "/catalogue", label: "Catalogue" }, { href: "/insights", label: "Insights" }, { href: "/financials", label: "Financials" }, { href: "/ask", label: "Ask Arkiv" }];
 
 export function TopBar() {
   const path = usePathname();

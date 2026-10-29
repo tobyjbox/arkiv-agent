@@ -19,7 +19,7 @@ test("catalogue list renders live data, filters through the URL, and syncs", asy
   const rows = main.locator("tbody tr");
   await expect(rows.first()).toBeVisible();
   // Any age: the index may be a static copy with no watcher running ("Synced 3 min ago").
-  await expect(page.getByText(/Synced .+ ago/)).toBeVisible();
+  await expect(page.getByText(/Synced .+ ago/).filter({ visible: true })).toBeVisible();
   await expect(main.getByText("Hide load generators")).toBeVisible();
 
   const firstName = (await rows.first().locator("td").first().locator(".font-mono").first().textContent())!.trim();

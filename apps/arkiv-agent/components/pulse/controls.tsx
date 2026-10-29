@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 /** Period and load-generator filter, both in the URL. The filter stays in plain sight (design/05). */
 export function PulseControls({ period, includeLoad, loadWallets }: { period: number; includeLoad: boolean; loadWallets: number }) {
   const router = useRouter();
-  const href = (p: number, load: boolean) => `/pulse?period=${p}${load ? "&load=1" : ""}`;
+  const href = (p: number, load: boolean) => `/insights?period=${p}${load ? "&load=1" : ""}`;
   return (
     <div className="flex flex-wrap items-center gap-4">
       <div role="group" aria-label="Period" className="flex rounded-md border border-border-default p-0.5">

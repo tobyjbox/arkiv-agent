@@ -34,6 +34,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <AboutInfo placement="above" />
           {" · "}
           <a href="https://github.com/tobyjbox/arkiv-agent" className="underline-offset-2 hover:underline">Source</a>
+          <span className="mt-2 block">
+            © 2026 Digital 7 Ltd ·{" "}
+            <a href="https://github.com/tobyjbox/arkiv-agent/blob/main/LICENSE" className="underline-offset-2 hover:underline">MIT License</a>
+          </span>
         </footer>
       </body>
     </html>

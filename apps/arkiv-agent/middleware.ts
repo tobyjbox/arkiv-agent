@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { isAllowedHost, isCrossSiteEmbed } from "./lib/guard";
 
 /** Pages that aggregate the whole index on request (seconds of work). */
-const HEAVY = /^\/(pulse|cost)(\/|$)/;
+const HEAVY = /^\/(insights|pulse|financials|cost)(\/|$)/;
 
 /**
  * Every request, pages included: refuse host names that aren't local (DNS rebinding). The heavy pages

@@ -39,7 +39,7 @@ export function Calculator({ model, fittedAt, initial, price }: { model: FeeMode
   const [lifetime, setLifetime] = useState(initial.lifetime);
   const [unit, setUnit] = useState<Unit>(initial.unit);
   useEffect(() => {
-    const t = setTimeout(() => window.history.replaceState(null, "", `/cost?writes=${writes}&payload=${payload}&lifetime=${lifetime}&unit=${unit}`), 60);
+    const t = setTimeout(() => window.history.replaceState(null, "", `/financials?writes=${writes}&payload=${payload}&lifetime=${lifetime}&unit=${unit}`), 60);
     return () => clearTimeout(t);
   }, [writes, payload, lifetime, unit]);
   const e = estimate(model, writes, payload, 30);

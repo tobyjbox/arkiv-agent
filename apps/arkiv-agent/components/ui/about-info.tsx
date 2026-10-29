@@ -33,8 +33,8 @@ export function AboutInfo({ placement = "below" }: { placement?: "above" | "belo
           <span className="mt-2 block space-y-1">
             <span className="block"><b className="font-medium text-text-primary">Catalogue</b>: groups records into datasets by project and schema, with field types, examples and a ready SDK query.</span>
             <span className="block"><b className="font-medium text-text-primary">Ask Arkiv</b>: plain-English questions turned into a real Arkiv query you can see and copy.</span>
-            <span className="block"><b className="font-medium text-text-primary">Pulse</b>: which projects are active and which keep writing (retention).</span>
-            <span className="block"><b className="font-medium text-text-primary">Cost</b>: what writing to Arkiv costs, from observed fees, in GLM and USD, with ranges.</span>
+            <span className="block"><b className="font-medium text-text-primary">Insights</b>: which projects are active and which keep writing (retention).</span>
+            <span className="block"><b className="font-medium text-text-primary">Financials</b>: what writing to Arkiv costs, from observed fees, in GLM and USD, with ranges.</span>
           </span>
         </span>
       )}

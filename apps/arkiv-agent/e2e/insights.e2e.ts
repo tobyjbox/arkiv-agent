@@ -4,9 +4,9 @@ import { open, SERVER_RENDER } from "./open";
 test("pulse shows totals, retention and activity, with load generators excluded by default", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await open(page, "/pulse");
+  await open(page, "/insights");
   const main = page.locator("#main");
-  await expect(main.getByRole("heading", { level: 1, name: "Ecosystem pulse" })).toBeVisible();
+  await expect(main.getByRole("heading", { level: 1, name: "Insights" })).toBeVisible();
   for (const label of ["Active wallets", "Active projects", "Writes", "New projects"]) await expect(main.locator(".label", { hasText: label })).toBeVisible();
   await expect(main.getByRole("img", { name: "Retention by window" })).toBeVisible();
   await expect(main.getByRole("img", { name: /per day/ })).toBeVisible();

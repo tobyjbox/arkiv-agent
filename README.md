@@ -23,10 +23,10 @@ shows the level above that: **projects and datasets**.
   - **No guessing.** Words it couldn't use are listed as "Not used". Questions it can't ground ("every
     record on Arkiv") are refused with the reason.
   - **No unchecked queries.** Every query is validated and built with the SDK's own builders before it runs.
-- **Ecosystem pulse.** Active wallets, active projects, writes and new projects over time, retention by
+- **Insights.** Active wallets, active projects, writes and new projects over time, retention by
   cohort (week of first write), and the most active projects, with load generators left out unless you
   include them.
-- **Cost view.** What writing to Arkiv costs: a fee model fitted to sampled transaction receipts, a
+- **Financials.** What writing to Arkiv costs: a fee model fitted to sampled transaction receipts, a
   calculator for writes × payload × lifetime with its error range, and estimated GLM spend per project.
   Amounts are in GLM, with a dollar figure from the mainnet GLM price (see [Outbound calls](#outbound-calls)).
 - **Feels live.** A local indexer follows the chain head and the UI updates within seconds, without a
@@ -41,8 +41,8 @@ shows the level above that: **projects and datasets**.
 |---|---|
 | Data catalogue | Built |
 | Ask Arkiv | Built |
-| Ecosystem pulse | Built (stretch; differences from `design/05-pulse.md` under [Known gaps](#known-gaps)) |
-| Cost view | Built (stretch; needs `pnpm fees`; differences from `design/06-cost.md` under [Known gaps](#known-gaps)) |
+| Insights | Built (stretch; differences from `design/05-pulse.md` under [Known gaps](#known-gaps)) |
+| Financials | Built (stretch; needs `pnpm fees`; differences from `design/06-cost.md` under [Known gaps](#known-gaps)) |
 
 ## Run it locally
 
@@ -69,7 +69,7 @@ The first run replays Arkiv from block 1 (about 4 minutes), then decodes every l
 (about 2 hours on the public RPC). The catalogue fills in as decoding progresses, and says how many
 records are still waiting. Stop the indexer whenever you like: it resumes where it left off.
 
-The cost view and the pulse page's GLM tile need fees, which the index doesn't hold. Once the replay
+The Financials page and the Insights page's GLM tile need fees, which the index doesn't hold. Once the replay
 from block 1 has finished, sample them from transaction receipts (1,500 by default, about 10 minutes
 beside the indexer; safe to re-run):
 
@@ -91,7 +91,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 | `ANTHROPIC_API_KEY` | Switches on Claude. Ask Arkiv reads questions with Claude (still checked against the catalogue) instead of the built-in rules, and each dataset page gets a short AI summary, cached per schema. `pnpm describe --limit 20` writes summaries ahead of time. Without the key, every feature works; dataset pages say "No AI summary yet". |
 | `ARKIV_API_KEY` | Arkiv Hub access key (hub.arkiv.network/api-keys). Raises the public RPC limits, so the first decode is much faster. |
 | `ARKIV_RPS` | Indexer decode rate in requests per second (default 8, or 25 with `ARKIV_API_KEY`). |
-| `GLM_PRICE` | `off` stops the GLM/USD price lookups (see [Outbound calls](#outbound-calls)); the cost view then shows GLM only. |
+| `GLM_PRICE` | `off` stops the GLM/USD price lookups (see [Outbound calls](#outbound-calls)); the Financials page then shows GLM only. |
 | `ARKIV_FEE_RPS` | `pnpm fees` rate in requests per second (default 3, to leave the indexer its budget). |
 | `DATABASE_URL` | Where the SQLite index lives (default `file:./data/arkiv-agent.db`). |
 | `PORT` | App port (default 3101). |
@@ -102,7 +102,7 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 | Command | What it does |
 |---|---|
 | `pnpm index` / `pnpm index --watch` | Sync the index once / keep following the chain. |
-| `pnpm fees [--limit N]` | Sample fees from the receipts of N recent writes (default 1,500) for the cost view. Skips transactions it already has. |
+| `pnpm fees [--limit N]` | Sample fees from the receipts of N recent writes (default 1,500) for the Financials page. Skips transactions it already has. |
 | `pnpm index:verify --attrs 20` | Compare the index with the chain: live count, plus names, types and values of 20 random records. |
 | `pnpm dev` | App with hot reload on http://localhost:3101. |
 | `pnpm build`, `pnpm start` | Production build and server. |
@@ -139,7 +139,7 @@ checks by a separate reviewer are in the mission records (`missions/2026-10-28-a
 
 ## Known gaps
 
-The ecosystem pulse and the cost view were built as stretch work. Compared with their designs:
+Insights and Financials were built as stretch work. Compared with their designs:
 
 - **Cost (`design/06-cost.md`):**
   - Observed spend has no period selector (it's fixed at 30 days).
@@ -171,11 +171,11 @@ The ecosystem pulse and the cost view were built as stretch work. Compared with 
 ### Outbound calls
 
 Besides the Arkiv RPC (and Claude, only with `ANTHROPIC_API_KEY`), the server makes one other kind of
-call: for the cost view's dollar figures it fetches the mainnet GLM/USD price from CoinGecko
+call: for the Financials page's dollar figures it fetches the mainnet GLM/USD price from CoinGecko
 (`api.coingecko.com`), falling back to Binance's GLM/USDT ticker (`api.binance.com`). Tiramisu's testnet
 GLM has no value of its own, so this only puts a real-world scale on the fees. The requests carry no
 data from your index or your questions, but the providers see your IP address. A price is reused for
-10 minutes, so there's at most one lookup every 10 minutes while you use the cost view (one a minute
+10 minutes, so there's at most one lookup every 10 minutes while you use the Financials page (one a minute
 while both sources are down). Pages never wait for it: until a price arrives, and whenever neither source
 answers, amounts are shown in GLM only. `GLM_PRICE=off` turns the lookups off.
 
@@ -196,3 +196,7 @@ answers, amounts are shown in GLM only. `GLM_PRICE=off` turns the lookups off.
 | `docs/demo.md` | A 3-minute demo script. |
 
 ArkivAgent reads Arkiv's public testnet. Not affiliated with Golem.
+
+## License
+
+[MIT](LICENSE) © 2026 Digital 7 Ltd.
