@@ -133,3 +133,4 @@
 - 2026-10-29T17:08:07Z DISPATCH T34 -> arkiv-agent_coder_claude-code_opus-5.5-extra
 - 2026-10-29T17:16:15Z HANDOFF detected T34 review candidate=498ae65 (coder message)
 - 2026-10-29T17:16:15Z HANDOFF adjudicated T34 accept: spike code and scripts gone; 628 tests, build OK on merged main; app restarted, pages 200; merged. Part B complete.
+- 2026-10-29T17:16:28Z RELEASE T35 (QA re-check) -> ready; DISPATCH -> arkiv-agent_QA_claude-code_opus-5.5-low
