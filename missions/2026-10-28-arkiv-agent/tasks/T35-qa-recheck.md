@@ -62,3 +62,4 @@ Note, not a finding: opening the chmod 444 snapshot creates empty -shm/-wal file
 Not covered: full `pnpm index` from block 1, the Claude path (no key), a real price outage (stubbed instead).
 Next owner: Orchestrator (Q1 and Q2 are optional polish).
 
+- 2026-10-29T19:52:46Z notify intent: T35 review candidate=6aaf187 to Orchestrator local_<session> via ccd send_message; attempt 1.
