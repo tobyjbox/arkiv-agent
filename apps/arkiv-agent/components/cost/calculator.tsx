@@ -4,6 +4,7 @@ import { estimate, type FeeModel } from "@arkiv-agent/cost/model";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { glm } from "../../lib/glm";
+import { type GlmPrice, usd } from "../../lib/glm-price";
 import { CopyButton } from "../ui/copy-button";
 
 const LIMITS = { writes: [1, 1_000_000], payload: [1, 100_000] } as const;
@@ -32,21 +33,19 @@ function LogInput({ id, label, value, onChange, min, max, unit }: { id: string; 
   );
 }
 
-export function Calculator({ model, fittedAt, initial }: { model: FeeModel; fittedAt: string; initial: { writes: number; payload: number; lifetime: number; unit: Unit } }) {
+export function Calculator({ model, fittedAt, initial, price }: { model: FeeModel; fittedAt: string; initial: { writes: number; payload: number; lifetime: number; unit: Unit }; price: GlmPrice | null }) {
   const [writes, setWrites] = useState(initial.writes);
   const [payload, setPayload] = useState(initial.payload);
   const [lifetime, setLifetime] = useState(initial.lifetime);
   const [unit, setUnit] = useState<Unit>(initial.unit);
-  const [isFiat, setFiat] = useState(false);
-  const [price, setPrice] = useState("");
   useEffect(() => {
     const t = setTimeout(() => window.history.replaceState(null, "", `/cost?writes=${writes}&payload=${payload}&lifetime=${lifetime}&unit=${unit}`), 60);
     return () => clearTimeout(t);
   }, [writes, payload, lifetime, unit]);
   const e = estimate(model, writes, payload, 30);
   const pct = (x: number) => `${Math.round(x * 100)}%`;
-  const fiat = Number(price) > 0 ? (x: number) => `${(x * Number(price)).toLocaleString("en", { maximumSignificantDigits: 4 })} (illustrative)` : null;
-  const summary = `Arkiv cost estimate (Tiramisu testnet): ${writes.toLocaleString("en")} writes/day of ${payload.toLocaleString("en")} B, lifetime ${lifetime} ${unit}: ${glm(e.glm)} GLM per 30 days (range ${glm(e.low)} to ${glm(e.high)}). Model fitted ${fittedAt.slice(0, 10)} from ${model.samples} receipts.`;
+  const $ = (x: number) => (price ? usd(x * price.usd) : null);
+  const summary = `Arkiv cost estimate (Tiramisu testnet): ${writes.toLocaleString("en")} writes/day of ${payload.toLocaleString("en")} B, lifetime ${lifetime} ${unit}: ${glm(e.glm)} GLM per 30 days (range ${glm(e.low)} to ${glm(e.high)})${price ? `, about ${$(e.glm)} at $${price.usd.toPrecision(4)}/GLM (${price.source})` : ""}. Model fitted ${fittedAt.slice(0, 10)} from ${model.samples} receipts.`;
   return (
     <section aria-labelledby="calc" className="grid gap-6 rounded-md border border-border-subtle bg-surface p-5 lg:grid-cols-2">
       <div className="space-y-4">
@@ -69,7 +68,7 @@ export function Calculator({ model, fittedAt, initial }: { model: FeeModel; fitt
           <p className="caption text-text-tertiary">Estimated fees per 30 days</p>
           <p className="text-[36px] font-semibold leading-[44px]" style={{ fontVariantNumeric: "tabular-nums" }}>{glm(e.glm)} GLM</p>
           <p className="text-text-secondary">range {glm(e.low)} to {glm(e.high)} GLM · {glm(e.perWrite)} GLM per write</p>
-          {fiat && <p className="caption text-text-secondary">{fiat(e.glm)} at the price you entered</p>}
+          {price && <p className="text-text-secondary">≈ {$(e.glm)} (range {$(e.low)} to {$(e.high)}) · {$(e.perWrite)} per write</p>}
         </div>
         {e.outside && <p className="flex items-center gap-2 rounded-sm px-3 py-2 caption tint-warn"><AlertTriangle size={14} aria-hidden />Outside observed data (payloads seen: {model.observed.payloadBytes[0].toLocaleString("en")} to {model.observed.payloadBytes[1].toLocaleString("en")} B). The range is widened ×{e.widenedBy.toFixed(1)} each way as an extrapolation.</p>}
         <div>
@@ -80,11 +79,9 @@ export function Calculator({ model, fittedAt, initial }: { model: FeeModel; fitt
           <p className="mt-1 caption text-text-secondary">Base transaction {pct(e.breakdown.base)} · encoding and attributes {pct(e.breakdown.encoding)} · payload {pct(e.breakdown.payload)}</p>
         </div>
         <div className="flex flex-wrap items-center gap-3 caption">
-          <label className="flex items-center gap-2 text-text-secondary"><input type="checkbox" checked={isFiat} onChange={(ev) => setFiat(ev.target.checked)} className="accent-[var(--color-accent)]" />Show an illustrative fiat amount</label>
-          {isFiat && <label className="flex items-center gap-1 text-text-secondary">price per GLM <input value={price} onChange={(ev) => setPrice(ev.target.value)} placeholder="you choose" inputMode="decimal" className="h-7 w-24 rounded-sm border border-border-control bg-canvas px-2" /></label>}
           <span className="ml-auto flex items-center gap-1 text-text-secondary">Copy estimate <CopyButton value={summary} label="Copy estimate" /></span>
         </div>
-        <p className="caption text-text-tertiary">Testnet GLM has no price; ArkivAgent never fetches one. Model fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC from {model.samples} sampled receipts.</p>
+        <p className="caption text-text-tertiary">{price ? `USD at the mainnet GLM price, $${price.usd.toPrecision(4)} from ${price.source}, refreshed every 10 minutes.` : "No GLM price source answered; showing GLM only."} Model fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC from {model.samples} sampled receipts.</p>
       </div>
     </section>
   );
