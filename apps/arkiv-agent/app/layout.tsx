@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { LiveProvider } from "../components/live/live-provider";
+import { AboutInfo } from "../components/ui/about-info";
 import { TopBar } from "../components/shell/top-bar";
 import { prisma } from "../lib/db";
 import "./globals.css";
@@ -30,7 +31,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           ArkivAgent reads Arkiv&apos;s public testnet. Read-only. Not affiliated with Golem.{" "}
           <a href="https://data.arkiv.network/activity?chain=tiramisu" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Data explorer</a>
           {" · "}
-          <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Block explorer</a>
+          <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">Block explorer</a>{" "}
+          <AboutInfo placement="above" />
           {" · "}
           <a href="https://github.com/tobyjbox/arkiv-agent" className="underline-offset-2 hover:underline">Source</a>
         </footer>
