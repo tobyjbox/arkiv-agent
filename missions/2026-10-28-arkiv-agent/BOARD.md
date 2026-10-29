@@ -22,3 +22,4 @@
 | T17 | QA final blind Ask check (>= 80%) + R1-R6 confirm | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T16 | 2026-10-29T02:47:33Z |
 | T18 | Fix T17 findings: N1 EXISTS plans rejected by RPC (-32002) - never emit EXISTS the RPC can't serve, list as Not used; Q6 'not between' negation; Q5 description words binding an unrelated dataset; N4 detail e2e flake | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T17 | 2026-10-29T02:55:18Z |
 | T19 | Stretch: Security review of T10/T11 (pulse, cost, fees sampler) | security_whitehat | alt-frontier | review | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T11 | 2026-10-29T02:58:16Z |
+| T20 | Fix T12 S1-S3 + T19 L1 (SSR sync label, deterministic hold-out, out-of-range widening, cross-site aggregation guard) | coder | fast | in-progress | 0/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T12, T19 | 2026-10-29T03:09:16Z |
