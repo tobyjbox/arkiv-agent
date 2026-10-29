@@ -1,4 +1,4 @@
-**Mission progress:** 27 tasks — 25 merged, 2 ready · updated 2026-10-29T13:11:00Z
+**Mission progress:** 27 tasks — 26 merged, 1 ready · updated 2026-10-29T14:00:00Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -28,5 +28,5 @@
 | T23 | C1: quick fixes (README, postcss, Sec-Fetch, detail title, narrow sync) | coder | fast | merged | 2/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21, T22 | 2026-10-29T12:40:00Z |
 | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21 | 2026-10-29T13:10:00Z |
 | T25 | UX: decoding banner -> futuristic progress bar (spec) | ux_designer | fast | merged | 2/2 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | — | 2026-10-29T12:10:00Z |
-| T26 | Build decode progress bar (design/07) | coder | fast | in-progress | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T11:54:43Z |
-| T27 | GLM/USDT price chart on /cost | coder | fast | ready | 0/1 | | T24 | C2: code fixes (M1 schema-shape query, M2 no-index page, M3 non-blocking price, L3 e2e) | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T21 | 2026-10-29T13:10:00Z |
+| T26 | Build decode progress bar (design/07) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T14:00:00Z |
+| T27 | GLM/USDT price chart on /financials | coder | fast | ready | 0/1 | | T24 | 2026-10-29T14:00:00Z |

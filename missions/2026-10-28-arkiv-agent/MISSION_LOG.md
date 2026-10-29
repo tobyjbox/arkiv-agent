@@ -108,3 +108,4 @@
 - 2026-10-29T13:10:00Z HANDOFF T24@02c1bfb adjudicated: accepted (533 tests + build verified on merged main; M1 all 81 shape datasets queryable without EXISTS/!=, M2 no-index page, M3 price never blocks (0.70 s), L3 e2e stable x4); integrated; row -> merged. T26, T27 draft -> ready, coder messaged (T26 then T27).
 - 2026-10-29T13:11:00Z DISPATCH T26, T27 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 - 2026-10-29T13:30:00Z RECONCILE 8 refs, 1 changed (rollup timestamp), 0 decisions
+- 2026-10-29T14:00:00Z HANDOFF T26@b605069 adjudicated: accepted (542 tests + build verified on merged main; design/07 in full; feed adds undecodedLive; offline/stale split, 50-record re-show threshold accepted); integrated 810c4a9; row -> merged. Repaired malformed T27 row (orchestrator regex error). Note: anonymous Arkiv RPC budget hit 429 during coder e2e.
