@@ -1,6 +1,5 @@
-import { loadGeneratorOwners } from "@arkiv-agent/catalogue";
 import { createsByWallet, readCursor, readTxFees, type TxFeeRow, updatesByWallet } from "@arkiv-agent/db";
-import { projectsByWallet } from "@arkiv-agent/pulse";
+import { loadGeneratorOwners, projectsByWallet } from "@arkiv-agent/projects";
 import { type FeeModel, type FeeRow, fitFeeModel, GLM_PER_WEI } from "./model.ts";
 
 const TTL_MS = 60_000;
@@ -40,7 +39,7 @@ export function estimatedSpend(days: number, includeLoad: boolean): Spend | null
   const creates = createsByWallet(since);
   const updates = updatesByWallet(since);
   const perUpdate = median(rows.filter((r) => r.creates === 0 && r.updates > 0).map((r) => r.fee / r.updates)) ?? perCreateBase(model);
-  const load = new Set([...loadGeneratorOwners()].map((w) => w.toLowerCase()));
+  const load = loadGeneratorOwners();
   const projectOf = projectsByWallet();
 
   const byProject = new Map<string, ProjectSpend>();

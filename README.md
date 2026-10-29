@@ -196,6 +196,7 @@ the price and the history lookups.
 | `packages/indexer` | Event sync, attribute decoding, change feed, `index:verify`, `pnpm fees`, Phase 0 spike scripts. |
 | `packages/catalogue` | Dataset inference, schemas, ownership, SDK snippets, AI summaries, index value lookup. |
 | `packages/ask` | Question to query: rules, Claude path, compiler, live runner, question sets. |
+| `packages/projects` | Which project each wallet writes for, and which wallets are load generators. |
 | `packages/pulse` | Daily activity, retention cohorts and most active projects, from the index. |
 | `packages/cost` | Fee model (fit, hold-out range, calculator) and estimated spend. |
 | `arkiv/schema.md`, `arkiv/friction.md` | What ArkivAgent reads from Arkiv, and what was hard. |

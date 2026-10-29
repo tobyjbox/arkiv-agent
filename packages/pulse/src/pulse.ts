@@ -1,5 +1,5 @@
-import { loadCatalogue, loadGeneratorOwners } from "@arkiv-agent/catalogue";
 import { dailyCreates, dailyUpdates, readCursor } from "@arkiv-agent/db";
+import { datasetsByProject, loadGeneratorOwners, projectsByWallet } from "@arkiv-agent/projects";
 import { type ActivityRow, aggregatePulse, type EventCohort, type Period, type PulseData } from "./aggregate.ts";
 import eventCohorts from "./event-cohorts.json" with { type: "json" };
 
@@ -30,33 +30,16 @@ function readRows(): Rows {
   return cache;
 }
 
-/** Each wallet's project: the label on most of its decoded records. */
-export function projectsByWallet(): Map<string, string> {
-  const { datasets, membersById } = loadCatalogue();
-  const counts = new Map<string, Map<string, number>>();
-  for (const ds of datasets) {
-    if (ds.project.method !== "label") continue;
-    for (const m of membersById.get(ds.id) ?? []) {
-      const w = m.owner.toLowerCase();
-      const c = counts.get(w) ?? counts.set(w, new Map()).get(w)!;
-      c.set(ds.project.label, (c.get(ds.project.label) ?? 0) + 1);
-    }
-  }
-  return new Map([...counts].map(([w, c]) => [w, [...c].sort((a, b) => b[1] - a[1])[0]![0]]));
-}
-
 export type Pulse = PulseData & { syncedAt: string | null; loadWallets: number; datasetsByProject: Record<string, number> };
 
 export function getPulse({ period, includeLoad }: { period: Period; includeLoad: boolean }): Pulse {
   const r = readRows();
-  const loadWallets = new Set([...loadGeneratorOwners()].map((w) => w.toLowerCase()));
+  const loadWallets = loadGeneratorOwners();
   const data = aggregatePulse({
     rows: r.rows, projectOf: projectsByWallet(), loadWallets, includeLoad, period,
     today: Math.floor((r.blockZeroMs + r.indexedBlock * BLOCK_MS) / DAY_MS),
     firstDay: Math.floor(r.blockZeroMs / DAY_MS),
     events: eventCohorts as EventCohort[],
   });
-  const datasetsByProject: Record<string, number> = {};
-  for (const ds of loadCatalogue().datasets) if (!ds.isLoadGenerator) datasetsByProject[ds.project.label] = (datasetsByProject[ds.project.label] ?? 0) + 1;
-  return { ...data, syncedAt: r.syncedAt, loadWallets: loadWallets.size, datasetsByProject };
+  return { ...data, syncedAt: r.syncedAt, loadWallets: loadWallets.size, datasetsByProject: datasetsByProject() };
 }

@@ -10,8 +10,7 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
-    "@arkiv-agent/catalogue": "workspace:*",
     "@arkiv-agent/db": "workspace:*",
-    "@arkiv-agent/pulse": "workspace:*"
+    "@arkiv-agent/projects": "workspace:*"
   }
 }

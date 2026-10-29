@@ -140,15 +140,12 @@ importers:
 
   packages/cost:
     dependencies:
-      '@arkiv-agent/catalogue':
-        specifier: workspace:*
-        version: link:../catalogue
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../db
-      '@arkiv-agent/pulse':
+      '@arkiv-agent/projects':
         specifier: workspace:*
-        version: link:../pulse
+        version: link:../projects
 
   packages/db:
     dependencies:
@@ -188,14 +185,20 @@ importers:
         specifier: ^4.23.15
         version: 4.23.15
 
-  packages/pulse:
+  packages/projects:
     dependencies:
       '@arkiv-agent/catalogue':
         specifier: workspace:*
         version: link:../catalogue
+
+  packages/pulse:
+    dependencies:
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../db
+      '@arkiv-agent/projects':
+        specifier: workspace:*
+        version: link:../projects
 
 packages:
 
