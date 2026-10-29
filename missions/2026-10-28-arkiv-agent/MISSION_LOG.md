@@ -80,3 +80,6 @@
 - 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/cost@cd71f52:missions/2026-10-28-arkiv-agent/tasks/T11-cost.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 adjudicated: accepted (509 tests verified; 91% held-out fees inside stated range; model-estimated spend deviation accepted, disclosed on page); integrated 43eb88f; row -> merged fa431a0. T12 split: QA (T12) + Security (T19).
 - 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 dispatched: T12 (qa), T19 (security) draft -> ready, both messaged
+- 2026-10-29T02:56:45Z NUDGE T12 -> arkiv-agent_QA_claude-code_opus-5.5-low delivered
+- 2026-10-29T02:56:45Z DISPATCH T19 -> arkiv-agent_security-whitehat_claude-code_opus-5.5-low (preflight as T07); delivered
+- 2026-10-29T02:56:45Z NOTE orchestrator removed feat/cost worktree while coder watch indexer ran from it; DB intact; coder asked to restart watcher from indexer worktree
