@@ -47,3 +47,4 @@ Branch docs/readme-screens, candidate 932d2f1553f2ac96b5248fa92b5fd1b635c85a43 (
 
 Next owner: Orchestrator (review and merge).
 - 2026-10-29T21:01:05Z notify intent: T01 review candidate=932d2f1 to Orchestrator <session> via ccd send_message; attempt 1.
+- 2026-10-29T21:01:15Z notify intent corrected before sending: recipient is <session> (ak-orch.sh thread arkiv-agent; the Orchestrator moved sessions); same event, attempt 1, nothing sent yet.
