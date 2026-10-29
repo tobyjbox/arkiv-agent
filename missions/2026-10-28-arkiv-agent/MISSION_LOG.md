@@ -121,3 +121,6 @@
 2026-10-29T16:07:54Z RECONCILE T31 board row repaired (T30 cells had been pasted into it); T31 ready, dispatched to Coder, no branch yet
 2026-10-29T16:09:37Z RECONCILE archive remote: main fast-forwarded to 35b7293 and review/security-full pushed by another agent; private, no personal data beyond one session ID; owner: leave it
 2026-10-29T16:17:44Z CHASE T31 -> arkiv-agent_coder_claude-code_opus-5.5-extra: dispatch not acted on (coder idle since 14:50Z); re-sent
+- 2026-10-29T16:26:41Z HANDOFF detected T31 review candidate=2d91abc (coder message)
+- 2026-10-29T16:26:41Z HANDOFF adjudicated T31 accept: pulse/cost depend only on db+projects, no cross import; busy-owner rule kept in catalogue build (accepted, avoids a cycle); 553 tests, build OK on merged main; merged
+- 2026-10-29T16:26:41Z RELEASE T32, T33 -> ready (T31 merged)
