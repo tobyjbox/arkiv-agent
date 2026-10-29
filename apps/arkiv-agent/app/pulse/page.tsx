@@ -6,6 +6,7 @@ import { Sparkline } from "../../components/ui/sparkline";
 import { dayLabel, getPulse, type Period, PERIODS, WINDOWS } from "@arkiv-agent/pulse";
 import { estimatedSpend } from "@arkiv-agent/cost";
 import { formatCount } from "../../lib/format";
+import { AboutInfo } from "../../components/ui/about-info";
 import { glm } from "../../lib/glm";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +47,8 @@ export default async function PulsePage({ searchParams }: { searchParams: Promis
             Raw activity:{" "}
             <a href="https://data.arkiv.network/activity?chain=tiramisu" target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-text-primary hover:underline">Arkiv data explorer</a>
             {" · "}
-            <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-text-primary hover:underline">Tiramisu block explorer</a>
+            <a href="https://tiramisu.explorer.arkiv.network/" target="_blank" rel="noreferrer" className="underline-offset-2 hover:text-text-primary hover:underline">Tiramisu block explorer</a>{" "}
+            <AboutInfo />
           </p>
         </div>
         <PulseControls period={period} includeLoad={includeLoad} loadWallets={p.loadWallets} />
