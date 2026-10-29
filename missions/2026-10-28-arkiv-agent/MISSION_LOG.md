@@ -90,3 +90,6 @@
 - 2026-10-29T03:10:00Z HANDOFF T12@c73901c adjudicated: accepted (T10/T11 acceptance met; out-of-sample 92.6%; e2e 11/11 x3 prod; 0 High/Med, 6 Low); integrated 78641d1. Design calls: S1-S3 fix; S4/S5 accepted as documented known gaps; S6 doc only.
 - 2026-10-29T03:10:00Z HANDOFF T12@c73901c dispatched: T20 (new, ready; bundles T12 S1-S3 + T19 L1) -> coder
 - 2026-10-29T03:10:30Z DISPATCH T20 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
+- 2026-10-29T03:30:00Z HANDOFF T20@46df60d detected: row review 2/2 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/stretch-fixes@46df60d:missions/2026-10-28-arkiv-agent/tasks/T20-stretch-fixes.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-29T03:30:00Z HANDOFF T20@46df60d adjudicated: accepted (513 tests verified; S1-S3, L1 fixed; S2 coverage now reproducible 238/254; S4-S6 in README Known gaps); integrated fc572e8; row -> merged.
+- 2026-10-29T03:30:00Z HANDOFF T20@46df60d dispatched: none; all 20 tasks merged
