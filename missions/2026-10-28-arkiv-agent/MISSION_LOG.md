@@ -94,3 +94,5 @@
 - 2026-10-29T03:30:00Z HANDOFF T20@46df60d adjudicated: accepted (513 tests verified; S1-S3, L1 fixed; S2 coverage now reproducible 238/254; S4-S6 in README Known gaps); integrated fc572e8; row -> merged.
 - 2026-10-29T03:30:00Z HANDOFF T20@46df60d dispatched: none; all 20 tasks merged
 - 2026-10-29T10:00:00Z OWNER request: full security + QA review of the whole app. T21 (qa), T22 (security) created ready on main@94b12a5
+- 2026-10-29T10:01:00Z DISPATCH T21 -> arkiv-agent_QA_claude-code_opus-5.5-low delivered <id>
+- 2026-10-29T10:01:00Z DISPATCH T22 -> arkiv-agent_security-whitehat_claude-code_opus-5.5-low delivered <id>
