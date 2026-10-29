@@ -3,24 +3,18 @@ import { open } from "./open";
 
 /**
  * The decode bar (design/07) reads `undecodedLive` from the change feed every 5 s. These tests answer
- * the feed themselves, so each state is fixed: a synced index (or one synced `ageS` ago) with a given
- * waiting count. Unchanged feeds bump nothing else on the page.
+ * the feed themselves, without asking the server, so each state is fixed and nothing can leave a poll
+ * unanswered: a synced index (or one synced `ageS` ago) with a given waiting count. Unchanged feeds
+ * bump nothing else on the page.
  */
 async function feed(page: Page, state: { waiting: () => number; total?: number; ageS?: number }) {
-  await page.route("**/api/changes**", async (route) => {
-    try {
-      const real = await (await route.fetch()).json();
-      await route.fulfill({
-        json: {
-          ...real, changes: [], reset: false, isBehind: false, lagBlocks: "0",
-          syncedAt: new Date(Date.now() - (state.ageS ?? 0) * 1_000).toISOString(),
-          liveCount: state.total ?? 37_000, undecodedLive: state.waiting(),
-        },
-      });
-    } catch {
-      // the test ended while this poll was in flight
-    }
-  });
+  await page.route("**/api/changes**", (route) => route.fulfill({
+    json: {
+      cursor: "0", indexedBlock: "1000000", chainHead: "1000000", lagBlocks: "0", isBehind: false, changes: [], reset: false,
+      syncedAt: new Date(Date.now() - (state.ageS ?? 0) * 1_000).toISOString(),
+      liveCount: state.total ?? 37_000, undecodedLive: state.waiting(),
+    },
+  }).catch(() => {})); // the test ended while this poll was in flight
 }
 
 /** A change reaches the bar on the next feed poll: up to 5 s, plus the request. */
