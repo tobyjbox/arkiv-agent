@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, rmSync, writeSync } from "node:fs";
 import { join } from "node:path";
 import Database from "better-sqlite3";
-import { databasePath, databaseUrl, repoRoot } from "@arkiv-agent/db";
+import { databasePath, repoRoot } from "@arkiv-agent/db";
 
 const isAlive = (pid: number) => {
   try {
@@ -58,9 +58,8 @@ export function migrate(): void {
   if (!pending.length) return;
   console.log(`applying ${pending.length} migration(s): ${pending.join(", ")}`);
   try {
-    // The path this process settled on (databasePath may have moved an old index), so Prisma can't pick another.
     execFileSync(join(repoRoot(), "packages/db/node_modules/.bin/prisma"), ["migrate", "deploy"], {
-      cwd: join(repoRoot(), "packages/db"), stdio: ["ignore", "ignore", "inherit"], env: { ...process.env, DATABASE_URL: databaseUrl() },
+      cwd: join(repoRoot(), "packages/db"), stdio: ["ignore", "ignore", "inherit"],
     });
   } catch {
     throw new Error("Could not apply the database migration: the database is in use. Stop the app (pnpm dev / start) for a moment, run the indexer again, then restart the app.");
