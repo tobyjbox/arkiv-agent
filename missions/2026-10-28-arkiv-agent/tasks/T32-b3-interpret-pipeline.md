@@ -12,6 +12,8 @@
 ## Progress log
 - 2026-10-29T16:27Z claimed; worktree <worktrees>/arkiv-agent-b3, branch refactor/b3-interpret from local main a2f73f9. DB: `.backup` copy. Recorded the full plan (dataset, where, limit, explain, ignored) and `rankDatasets` order from the unchanged code. The corpus: every question in eval, held-out, unseen and unseen16; the compile tests' questions; example questions; the robust odd inputs; 6 variants of each set question (not/last 7 days/between/latest/or/how many); 7,000 generated questions. Each was run in 4 contexts: no lookup, lookup, scoped, and a follow-up of the previous question. 7,472 questions in all; deterministic.
 - 2026-10-29T16:51Z refactor (41f1794). Recorded plans byte-identical after. `pnpm test` 620/620, typecheck, build, prod e2e on 3111 21/21.
+- 2026-10-29T16:54Z old vs new on the real catalogue (DB copy, 753 datasets, `findValues` lookup): 0 differences in 460 questions.
+- 2026-10-29T16:55:02Z notify intent: T32 review candidate=41f1794 to Orchestrator local_<session> via ccd send_message; key 2026-10-28-arkiv-agent:T32@41f1794:review; attempt 1.
 
 ## Handoff
 Branch refactor/b3-interpret (local only, not pushed), candidate 41f1794, base local main a2f73f9. One commit.
