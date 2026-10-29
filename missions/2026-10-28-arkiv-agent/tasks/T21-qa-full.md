@@ -59,3 +59,4 @@ Branch review/qa-full (base d3b4fd7 = app 94b12a5). Report only; no app changes.
 Not covered: full `pnpm index` from block 1 (~2 h), Claude path (no key, A01), a real-world price outage (stubbed instead).
 Next owner: Orchestrator (H1 and L1 are quick doc/text fixes; M1 is for the coder, e.g. a label-free base query or listing such datasets as browse-only; M2 and M3 are small coder fixes).
 
+- 2026-10-29T09:57:20Z notify intent: T21 review candidate=ab66d98 to Orchestrator local_<session> via ccd send_message; attempt 1.
