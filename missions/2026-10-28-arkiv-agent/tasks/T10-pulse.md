@@ -3,7 +3,7 @@
 - **Persona:** coder
 - **Model tier:** frontier
 - **Depends on:** T08, T09
-- **Workspace:** feat/pulse (created at release)
+- **Workspace:** worktrees/arkiv-agent-pulse, branch feat/pulse
 - **Port:** 3101
 
 ## Inputs
@@ -16,7 +16,7 @@
 - [ ] UI
 
 ## Acceptance criteria
-- [ ] retention chart for Global Tour projects; per docs/PLAN.md
+- [ ] retention chart for Tiramisu-era cohorts (from 2026-10-01; PLAN amendment), per design/05-pulse.md; works with no keys (A01: AI weekly summary behind the key)
 
 ## Progress log
 
