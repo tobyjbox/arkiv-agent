@@ -116,3 +116,4 @@
 - 2026-10-29T15:31:00Z DISPATCH T29 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 - 2026-10-29T16:00:00Z HANDOFF T29@61d1aab adjudicated: accepted (549 tests + build verified; no arkiv-agent left in code/docs; spot price seeded from latest candle); integrated; row -> merged. Part B created: T30 (B1, ready), T31-T34 draft.
 - 2026-10-29T16:01:00Z DISPATCH T30 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
+- 2026-10-29T16:40:00Z HANDOFF T30@7236234 adjudicated: accepted (549 tests + build verified; no SQL outside packages/db confirmed by grep; byte-identical page snapshot per coder; decode e2e stub fix); integrated; row -> merged. T31 draft -> ready, coder messaged.
