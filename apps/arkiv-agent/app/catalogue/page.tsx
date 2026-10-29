@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import { CatalogueView } from "../../components/catalogue/catalogue-view";
 import { getCatalogueData } from "../../lib/catalogue";
+import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Data catalogue · ArkivAgent" };
 
 /** Server-rendered first paint (no skeleton); the client view keeps it live. */
 export default function CataloguePage() {
+  if (!isIndexReady()) return null;
   const data = getCatalogueData();
   return (
     <div className="mx-auto max-w-[1280px] space-y-8 px-4 pb-10 pt-10 sm:px-6">

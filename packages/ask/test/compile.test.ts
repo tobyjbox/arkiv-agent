@@ -59,6 +59,25 @@ describe("compile", () => {
     expect(compile({ where: { op: "not", term: owner }, limit: 50 }, null).ok).toBe(false);
   });
 
+  it("never sends != or EXISTS, which Tiramisu rejects (T21 M1)", () => {
+    const ne = compile({ where: { op: "ne", attr: "city", type: "str", value: "noida" }, limit: 50 }, salary);
+    if (!ne.ok) throw new Error(ne.error);
+    expect(ne.value.query).toBe("project = str('tankha') AND type = str('salary') AND city STARTSWITH str('') AND NOT city = str('noida')");
+    expect(ne.value.typescript).toContain('and(startsWith("city", ""), not(eq("city", str("noida"))))');
+    const owner = compile({ where: { op: "ne", attr: "$owner", type: "addr", value: "0x1c92087EC55B3B4114c7647ECADe3ab0b494C9b6" }, limit: 50 }, salary);
+    expect(owner.ok && owner.value.query).toBe("project = str('tankha') AND type = str('salary') AND NOT $owner = addr(0x1c92087EC55B3B4114c7647ECADe3ab0b494C9b6)");
+    for (const d of datasets) {
+      const c = compile({ where: null, limit: 50 }, d);
+      if (c.ok) expect(c.value.query, d.id).not.toMatch(/EXISTS|!=/);
+    }
+  });
+
+  it("refuses a browse-only dataset with its reason", () => {
+    const c = compile({ where: null, limit: 50 }, { ...salary, shape: null, unqueryable: "3 other live records differ." });
+    expect(c.ok).toBe(false);
+    expect(!c.ok && c.error).toContain("3 other live records differ.");
+  });
+
   it("rejects malformed plans at the schema", () => {
     expect(AskPlanSchema.safeParse({ datasetId: null, where: { op: "eq", attr: "a", type: "float", value: "1" }, limit: 50, explain: [] }).success).toBe(false);
     expect(AskPlanSchema.safeParse({ datasetId: null, where: null, limit: 500, explain: [] }).success).toBe(false);

@@ -1,9 +1,12 @@
 import { getDataset, recentRecords } from "@arkiv-agent/catalogue";
+import { indexNotReady } from "../../../../lib/db";
 
 export const dynamic = "force-dynamic";
 
 /** A dataset's live numbers and newest records, refetched by the detail page on feed changes. */
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const notReady = indexNotReady();
+  if (notReady) return notReady;
   const { id } = await params;
   const detail = getDataset(id);
   if (!detail) return Response.json({ error: "not found" }, { status: 404 });

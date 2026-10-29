@@ -81,7 +81,7 @@ export function Calculator({ model, fittedAt, initial, price }: { model: FeeMode
         <div className="flex flex-wrap items-center gap-3 caption">
           <span className="ml-auto flex items-center gap-1 text-text-secondary">Copy estimate <CopyButton value={summary} label="Copy estimate" /></span>
         </div>
-        <p className="caption text-text-tertiary">{price ? `USD at the mainnet GLM price, $${price.usd.toPrecision(4)} from ${price.source}, refreshed every 10 minutes.` : "No GLM price source answered; showing GLM only."} Model fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC from {model.samples} sampled receipts.</p>
+        <p className="caption text-text-tertiary">{price ? `USD at the mainnet GLM price, $${price.usd.toPrecision(4)} from ${price.source}, refreshed every 10 minutes.` : "No GLM price yet; showing GLM only."} Model fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC from {model.samples} sampled receipts.</p>
       </div>
     </section>
   );

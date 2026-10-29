@@ -1,6 +1,7 @@
 import { AskPlanSchema, exampleQuestions, hasAskKey, interpretQuestion } from "@arkiv-agent/ask";
 import { z } from "zod";
 import { askContext, brief, explorerUrl } from "../../../lib/ask";
+import { indexNotReady } from "../../../lib/db";
 import { createRateLimit, refuseCrossSite } from "../../../lib/guard";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ const takeClaudeCall = createRateLimit(20);
 
 /** Question → interpretation (no chain read yet), so the screen can show it before results arrive. */
 export async function POST(request: Request) {
-  const refused = refuseCrossSite(request);
+  const refused = refuseCrossSite(request) ?? indexNotReady();
   if (refused) return refused;
   if (hasAskKey() && !takeClaudeCall()) return Response.json({ error: "Too many questions this minute. Try again shortly." }, { status: 429 });
   const body = Body.safeParse(await request.json().catch(() => null));

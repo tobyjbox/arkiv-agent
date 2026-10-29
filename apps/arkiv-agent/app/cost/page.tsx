@@ -1,11 +1,19 @@
 import { estimatedSpend, feeModel } from "@arkiv-agent/cost";
 import Link from "next/link";
 import { Calculator } from "../../components/cost/calculator";
+import { RefreshForPrice } from "../../components/cost/refresh-for-price";
 import { glm } from "../../lib/glm";
 import { glmPrice, usd } from "../../lib/glm-price";
 import { formatCount } from "../../lib/format";
+import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
+
+const PRICE_NOTE = {
+  loading: "Fetching the mainnet GLM price for USD amounts; until it arrives, amounts are in GLM only.",
+  failed: "No GLM price source answered, so amounts are shown in GLM only.",
+  off: "USD amounts are off (GLM_PRICE=off), so amounts are shown in GLM only.",
+};
 export const metadata = { title: "Cost · ArkivAgent" };
 
 const int = (v: string | undefined, min: number, max: number, fallback: number) => {
@@ -14,11 +22,12 @@ const int = (v: string | undefined, min: number, max: number, fallback: number) 
 };
 
 export default async function CostPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  if (!isIndexReady()) return null;
   const q = await searchParams;
   const includeLoad = q.load === "1";
   const { rows, model, fittedAt } = feeModel();
   const spend = estimatedSpend(30, includeLoad);
-  const price = await glmPrice();
+  const { price, status: priceStatus } = glmPrice();
   const $ = (x: number) => (price ? usd(x * price.usd) : null);
   const unit = (["hours", "days", "months"] as const).find((u) => u === q.unit) ?? "days";
   const initial = { writes: int(q.writes, 1, 1_000_000, 1_000), payload: int(q.payload, 1, 100_000, 200), lifetime: int(q.lifetime, 1, 100_000, 7), unit };
@@ -33,7 +42,8 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
       <header className="space-y-1">
         <h1 className="text-[28px] font-semibold leading-[34px] tracking-[-0.015em]">Cost</h1>
         <p className="text-text-secondary">What writing to Arkiv costs, in GLM, from fees observed on Tiramisu. Every estimate shows its range.</p>
-        <p className="caption text-text-tertiary">{price ? `USD amounts use the mainnet GLM price, $${price.usd.toPrecision(4)} (${price.source}, ${price.at.slice(11, 16)} UTC); Tiramisu testnet GLM itself has no value.` : "No GLM price source answered, so amounts are shown in GLM only."}</p>
+        <p className="caption text-text-tertiary">{price ? `USD amounts use the mainnet GLM price, $${price.usd.toPrecision(4)} (${price.source}, ${price.at.slice(11, 16)} UTC); Tiramisu testnet GLM itself has no value.` : PRICE_NOTE[priceStatus as Exclude<typeof priceStatus, "ok">]}</p>
+        {priceStatus === "loading" && <RefreshForPrice />}
       </header>
 
       {model ? <Calculator model={model} fittedAt={fittedAt} initial={initial} price={price} />

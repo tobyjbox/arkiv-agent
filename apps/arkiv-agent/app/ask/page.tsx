@@ -1,6 +1,7 @@
 import { exampleQuestions, hasAskKey } from "@arkiv-agent/ask";
 import { AskView } from "../../components/ask/ask-view";
 import { askContext } from "../../lib/ask";
+import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ask Arkiv · ArkivAgent" };
@@ -8,6 +9,7 @@ export const metadata = { title: "Ask Arkiv · ArkivAgent" };
 const SCOPE_OPTIONS = 40;
 
 export default async function AskPage({ searchParams }: { searchParams: Promise<{ scope?: string; q?: string }> }) {
+  if (!isIndexReady()) return null;
   const { scope, q } = await searchParams;
   const ctx = askContext();
   const label = (d: (typeof ctx.datasets)[number]) => `${d.project.method === "label" ? d.project.label : `${d.project.label.slice(0, 8)}…`} / ${d.name}`;

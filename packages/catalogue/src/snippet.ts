@@ -1,15 +1,31 @@
-import { addr, str } from "@arkiv-network/sdk/attr";
-import { and, eq, exists, type Expression, render, startsWith } from "@arkiv-network/sdk/query";
-import type { Dataset } from "./types.ts";
+import { addr, i32, str, u64 } from "@arkiv-network/sdk/attr";
+import { and, eq, type Expression, gte, not, render, startsWith } from "@arkiv-network/sdk/query";
+import type { AttrRef, Dataset } from "./types.ts";
 
 /** One condition, as an SDK expression and as the SDK code that builds it. */
 export type Predicate = { expr: Expression; code: string };
 
 /**
- * The query that reads a dataset back from Arkiv, as SDK code and as the query string the node
- * parses (rendered by the SDK itself, so it is exact). Generated names (`*`) cannot be queried.
+ * "Has this attribute", without EXISTS (Tiramisu rejects it, -32002): a comparison every value of the
+ * type passes. Only str, u64 and i32 have one (PRESENCE_TYPES in build.ts); `!=` is rejected too.
  */
-export function datasetPredicates(d: Pick<Dataset, "project" | "discriminator" | "schema" | "soleOwner">): Predicate[] {
+export function presence(r: AttrRef): Predicate {
+  const name = JSON.stringify(r.name);
+  switch (r.type) {
+    case "str": return { expr: startsWith(r.name, ""), code: `startsWith(${name}, "")` };
+    case "u64": return { expr: gte(r.name, u64(0n)), code: `gte(${name}, u64(0n))` };
+    case "i32": return { expr: gte(r.name, i32(-2_147_483_648)), code: `gte(${name}, i32(-2147483648))` };
+    default: throw new Error(`No presence check for ${r.type} attributes.`);
+  }
+}
+
+/**
+ * The query that reads a dataset back from Arkiv, as SDK code and as the query string the node
+ * parses (rendered by the SDK itself, so it is exact): its label or wallet, then its discriminator
+ * or the attributes its records have and lack. Empty for a dataset no single query can read back.
+ */
+export function datasetPredicates(d: Pick<Dataset, "project" | "discriminator" | "shape" | "unqueryable">): Predicate[] {
+  if (d.unqueryable) return [];
   const out: Predicate[] = [];
   const { project } = d;
   if (project.method === "label" && project.labelAttr) {
@@ -22,18 +38,23 @@ export function datasetPredicates(d: Pick<Dataset, "project" | "discriminator" |
   if (owner) out.push({ expr: eq("$owner", addr(owner as `0x${string}`)), code: `eq("$owner", addr(${JSON.stringify(owner)}))` });
   if (d.discriminator) {
     out.push({ expr: eq(d.discriminator.name, str(d.discriminator.value)), code: `eq(${JSON.stringify(d.discriminator.name)}, str(${JSON.stringify(d.discriminator.value)}))` });
-  } else {
-    const always = d.schema.filter((f) => f.presence === 1 && !f.name.includes("*") && f.name !== project.labelAttr).slice(0, 2);
-    for (const f of always) out.push({ expr: exists(f.name), code: `exists(${JSON.stringify(f.name)})` });
+  } else if (d.shape) {
+    for (const r of d.shape.has) out.push(presence(r));
+    for (const r of d.shape.lacks) {
+      const p = presence(r);
+      out.push({ expr: not(p.expr), code: `not(${p.code})` });
+    }
   }
   return out;
 }
 
 export function datasetSnippet(d: Parameters<typeof datasetPredicates>[0]): { typescript: string; query: string } {
+  // The reason quotes a label from the chain: one line, so it can't leave the comment.
+  if (d.unqueryable) return { typescript: `// One query can't read this dataset back yet: ${d.unqueryable.replace(/\s+/g, " ")}`, query: "" };
   return querySnippet(datasetPredicates(d));
 }
 
-const QUERY_FNS = ["and", "or", "not", "eq", "ne", "gt", "gte", "lt", "lte", "exists", "startsWith"];
+const QUERY_FNS = ["and", "or", "not", "eq", "ne", "gt", "gte", "lt", "lte", "startsWith"];
 const VALUE_FNS = ["str", "addr", "i32", "u64", "u256", "dec", "key", "bytes32"];
 
 /** Read-only SDK code and the node's query string for predicates that must all hold. */

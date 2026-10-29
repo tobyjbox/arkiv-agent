@@ -1,6 +1,7 @@
 import { AskPlanSchema, compile, runAsk } from "@arkiv-agent/ask";
 import { z } from "zod";
 import { arkiv, askContext, explorerUrl } from "../../../../lib/ask";
+import { indexNotReady } from "../../../../lib/db";
 import { refuseCrossSite } from "../../../../lib/guard";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ const Body = z.object({
  * compiled here with the SDK builders, so an edited chip can't smuggle in anything else.
  */
 export async function POST(request: Request) {
-  const refused = refuseCrossSite(request);
+  const refused = refuseCrossSite(request) ?? indexNotReady();
   if (refused) return refused;
   const body = Body.safeParse(await request.json().catch(() => null));
   if (!body.success) return Response.json({ error: "Expected { plan, cursor?, block? }." }, { status: 400 });
