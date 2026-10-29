@@ -16,7 +16,7 @@
 - [x] UI
 
 ## Acceptance criteria
-- [ ] calculator within its stated error of observed fees
+- [x] calculator within its stated error of observed fees (232 of 254 held-out fees, 91%, inside the stated range)
 
 ## Progress log
 - 2026-10-29T02:44:13Z Claimed and in-progress (fac4b42, 0603427).
@@ -34,3 +34,37 @@
   Waiting for the 1,500-receipt sample to finish before the handoff numbers.
 
 ## Handoff
+
+**Candidate:** `cd71f52` on `feat/cost` (worktree `worktrees/arkiv-agent-cost`). Not merged. Increments: ingestion
+(8614013), model (9603e07), page (cd71f52). Paused once for T18 at a clean commit (5b4f434); this handoff resumes it.
+
+**Fee data:** `pnpm fees --limit 1500` stored 1,500 receipts with 0 failures: 90% of creates from real projects,
+10% from load generators, plus some update-only transactions. TxFee is in the shared index. Re-runs add new
+samples and skip known transactions.
+
+**Model (fitted on the 1,500):**
+- gas = 18,933 + 45.07 × calldata bytes (R² 0.97, 1,246 transactions).
+- calldata = 2,084 + 0.99 × payload bytes (R² 0.99, 1,018 single-record creates).
+- Median price 1 gwei.
+- Range: observed fees are 0.86× to 1.06× the estimate. **Acceptance:** 232 of 254 held-out single-record creates
+  (91%) fall inside the stated range.
+- Lifetime explains 3% of the residual over 0–400 days (976 creates), so lifetime still doesn't change the fee.
+- The intercept and slope differ from T01's spike fit (66,110 + 20.95 × calldata, 240 create-only transactions from
+  6 senders). This fit covers more senders and transaction shapes; the page states its own.
+
+**Page:**
+- `/cost` calculator: a 1,000 writes/day × 200 B app is ~3.75 GLM per 30 days. About 77% of each write's fee is
+  encoding and attributes, not payload.
+- Estimated spend, last 30 days, load generators excluded: 11.0 GLM (9.5–11.7), with a per-project table.
+- The model chart shows the formula, the fit, the held-out coverage and the lifetime finding.
+- Pulse has a "GLM spent (est.)" tile.
+- Fiat is off by default and labelled "illustrative"; ArkivAgent never fetches a price.
+
+**Deviations:**
+- Spend is estimated (model × each write's payload), not summed from receipts: exact fees would need one receipt
+  per transaction (~1.6M). The page says so, with the range.
+- Applying the TxFee migration needed a brief restart of the shared watch indexer (Prisma's migrate can't wait on
+  its write lock). It now runs from this worktree.
+- Lifetime is an input but doesn't change the estimate today. The calculator says so.
+
+**Verify:** `pnpm test` (509), `pnpm build && pnpm test:e2e` with 3101 free (11), `pnpm fees --limit 100` (re-run safe).
