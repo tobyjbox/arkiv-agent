@@ -32,6 +32,9 @@ importers:
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@arkiv-agent/pulse':
+        specifier: workspace:*
+        version: link:../../packages/pulse
       '@fontsource-variable/inter':
         specifier: ^5.3.0
         version: 5.3.0
