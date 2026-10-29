@@ -17,6 +17,7 @@
 - 2026-10-29T17:15Z change (498ae65).
   - Every saved page and API answer is byte-identical after.
   - `pnpm test` 628/628, typecheck, build, prod e2e on 3114 21/21.
+- 2026-10-29T17:15:34Z notify intent: T34 review candidate=498ae65 to Orchestrator local_<session> via ccd send_message; key 2026-10-28-arkiv-agent:T34@498ae65:review; attempt 1.
 
 ## Handoff
 Branch refactor/b5-b6 (local only, not pushed), candidate 498ae65, base local main 9286606. One commit.
