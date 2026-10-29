@@ -25,6 +25,7 @@
     - `pnpm index --watch` (ARKIV_RPS=2) stores them at start and 30 s later while sync keeps up.
   - Pending state checked in the browser.
   - `pnpm test` 624/624, typecheck, build, prod e2e on 3113 21/21.
+- 2026-10-29T17:07:07Z notify intent: T33 review candidate=9b86d20 to Orchestrator local_<session> via ccd send_message; key 2026-10-28-arkiv-agent:T33@9b86d20:review; attempt 1.
 
 ## Handoff
 Branch refactor/b4-aggregates (local only, not pushed), candidate 9b86d20, base local main fd83a3c. One commit.
