@@ -24,4 +24,4 @@
 | T19 | Stretch: Security review of T10/T11 (pulse, cost, fees sampler) | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T11 | 2026-10-29T02:58:36Z |
 | T20 | Fix T12 S1-S3 + T19 L1 (SSR sync label, deterministic hold-out, out-of-range widening, cross-site aggregation guard) | coder | fast | merged | 2/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T12, T19 | 2026-10-29T03:30:00Z |
 | T21 | Full QA review of ArkivAgent (pre-publish) | qa | fast | ready | 0/3 | | T20 | 2026-10-29T10:00:00Z |
-| T22 | Full security review of ArkivAgent (pre-publish) | security_whitehat | alt-frontier | in-progress | 0/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T20 | 2026-10-29T09:45:37Z |
+| T22 | Full security review of ArkivAgent (pre-publish) | security_whitehat | alt-frontier | review | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T20 | 2026-10-29T09:48:22Z |
