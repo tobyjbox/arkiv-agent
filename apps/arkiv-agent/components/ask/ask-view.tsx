@@ -15,11 +15,13 @@ type Turn = {
 };
 
 const HISTORY_KEY = "arkiv-agent.ask.history";
+/** Where history was kept before the project was renamed; read while the new key is empty. */
+const LEGACY_HISTORY_KEY = "arkiv-agent.ask.history";
 const HISTORY_SIZE = 10;
 const EMPTY_RUN: RunState = { status: "querying", rows: [], block: null, cursor: null, ms: null, failure: null, isLoadingMore: false };
 
 function readHistory(): string[] {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as string[]; } catch { return []; }
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) ?? localStorage.getItem(LEGACY_HISTORY_KEY) ?? "[]") as string[]; } catch { return []; }
 }
 function remember(q: string) {
   try { localStorage.setItem(HISTORY_KEY, JSON.stringify([q, ...readHistory().filter((x) => x !== q)].slice(0, HISTORY_SIZE))); } catch { /* private mode: history is optional */ }
