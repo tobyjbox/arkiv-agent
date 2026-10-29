@@ -54,7 +54,18 @@ Do this as one task, with no other change mixed in, so the diff can be reviewed 
 
 ## Part C — QA (T21) and security (T22) findings
 
-_Pending. Each finding goes here with its severity and a decision: fix before publishing, fix in Part A or B, or accept and document._
+### Security (T22, accepted): NO-GO to publish until H1 is fixed; the code itself is publishable
+
+| # | Severity | Finding | Decision |
+|---|---|---|---|
+| H1 | High | GitHub still serves commits from before both rewrites by their hashes (orchestrator spot-check: `0194123` is still served, with the owner's real email). They hold home paths, the real email and job-application details, and MISSION_LOG names some old hashes. | **Fix before publishing, owner's action:** publish from a **new GitHub repo** that has only the rewritten `main` (recommended), or ask GitHub Support to purge the old commits. In the same change, remove the old hashes from MISSION_LOG. Re-check by fetching the old hashes from the public repo. |
+| L1 | Low | `pnpm audit`: 2 high and 2 moderate in `postcss` pulled in by `next`; no exploit path today. | Fix in step C1: override to `postcss>=8.5.23`. |
+| L2 | Low | The T19 guard on the heavy pages relies on Origin/Referer; it should also check `Sec-Fetch-Site`/`Sec-Fetch-Mode`. | Fix in C1; B4 removes the underlying cost. |
+| Info | — | No secrets in any commit; the GLM price fetch is safe; the T07 and T19 fixes still hold. | — |
+
+### QA (T21)
+
+_Pending._
 
 ---
 
