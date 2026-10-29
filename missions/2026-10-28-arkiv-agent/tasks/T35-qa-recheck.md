@@ -3,7 +3,7 @@
 - **Persona:** qa
 - **Model tier:** fast
 - **Depends on:** T34 (base: local main 151cffc)
-- **Workspace:** worktrees/arkiv-agent-qa-recheck, branch review/qa-recheck (from local main; never push)
+- **Workspace:** <worktrees>/arkiv-agent-qa-recheck, branch review/qa-recheck (from local main; never push)
 - **Port:** 3102 (3101 is the owner's running app)
 
 ## Inputs

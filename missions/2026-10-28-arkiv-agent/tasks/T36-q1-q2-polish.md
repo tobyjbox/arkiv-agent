@@ -3,7 +3,7 @@
 - **Persona:** coder
 - **Model tier:** fast
 - **Depends on:** T35 (base: local main b80823f)
-- **Workspace:** worktrees/arkiv-agent-t36, branch fix/q1-q2 (from local main; never push)
+- **Workspace:** <worktrees>/arkiv-agent-t36, branch fix/q1-q2 (from local main; never push)
 - **Port:** 3115 (3101 is the owner's running app)
 
 ## Inputs

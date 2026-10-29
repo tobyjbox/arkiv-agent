@@ -138,3 +138,6 @@
 - 2026-10-29T19:52:57Z HANDOFF detected T35 review candidate=6aaf187 (QA message)
 - 2026-10-29T19:52:57Z HANDOFF adjudicated T35 accept: report only (mission files); verdict ready to publish; T21 findings all fixed; new low Q1 (chart range not in URL), Q2 (decode progressbar no accessible name) pending owner decision; merged
 - 2026-10-29T19:53:47Z RELEASE T36 (Q1, Q2 polish; owner: fix before final rewrite) -> ready; DISPATCH -> arkiv-agent_coder_claude-code_opus-5.5-extra
+- 2026-10-29T20:02:14Z HANDOFF detected T36 review candidate=7038622 (coder message)
+- 2026-10-29T20:02:14Z HANDOFF adjudicated T36 accept: Q1 range in URL; Q2 already labelled (aria-labelledby verified); 632 tests (excl. stray worktrees), build OK; merged
+- 2026-10-29T20:02:14Z NOTE T35/T36 worktrees landed inside the repo (task files said worktrees/ without <dev>/); moved to <worktrees>, task files corrected
