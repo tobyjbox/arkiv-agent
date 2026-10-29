@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { GlmPrice } from "../../lib/glm-price";
-import type { History, RangeDays } from "../../lib/glm-history";
+import type { GlmPrice, History, RangeDays } from "@arkiv-agent/cost";
 
 const RANGE_OPTIONS: RangeDays[] = [7, 30, 90];
 const W = 600;

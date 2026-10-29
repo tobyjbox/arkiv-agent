@@ -1,25 +1,19 @@
-/** Mainnet GLM price in USD, for showing testnet fees in dollars. Server-side only; cached so pages never wait on it. GLM_PRICE=off turns it off. */
+// Mainnet GLM price in USD, for showing testnet fees in dollars. Server-side only; cached so pages
+// never wait on it. GLM_PRICE=off turns it off.
+import { type Fetch, type PriceSource, SPOT_SOURCES } from "./sources.ts";
+
 /** `source` names where it came from: a spot price API, or the chart history's newest close. */
 export type GlmPrice = { usd: number; source: string; at: string };
-
-type Fetch = (url: string, init: { signal: AbortSignal }) => Promise<{ ok: boolean; json(): Promise<unknown> }>;
 
 const TTL_MS = 10 * 60_000;
 const TIMEOUT_MS = 3_000;
 
-const SOURCES: { source: string; url: string; read: (body: any) => number }[] = [
-  { source: "CoinGecko", url: "https://api.coingecko.com/api/v3/simple/price?ids=golem&vs_currencies=usd", read: (b) => Number(b?.golem?.usd) },
-  { source: "Binance GLM/USDT", url: "https://api.binance.com/api/v3/ticker/price?symbol=GLMUSDT", read: (b) => Number(b?.price) },
-];
-
 /** First source that answers with a positive number, or null when none do. */
-export async function fetchGlmPrice(fetcher: Fetch = fetch as unknown as Fetch, now = () => new Date()): Promise<GlmPrice | null> {
-  for (const s of SOURCES) {
+export async function fetchGlmPrice(fetcher: Fetch = fetch as unknown as Fetch, now = () => new Date(), sources: readonly PriceSource[] = SPOT_SOURCES): Promise<GlmPrice | null> {
+  for (const s of sources) {
     try {
-      const res = await fetcher(s.url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
-      if (!res.ok) continue;
-      const usd = s.read(await res.json());
-      if (Number.isFinite(usd) && usd > 0) return { usd, source: s.source, at: now().toISOString() };
+      const usd = await s.spot(fetcher, AbortSignal.timeout(TIMEOUT_MS));
+      if (usd !== null && Number.isFinite(usd) && usd > 0) return { usd, source: s.name, at: now().toISOString() };
     } catch {
       // try the next source
     }
@@ -63,10 +57,6 @@ export function priceCache(fetcher: Fetch = fetch as unknown as Fetch, now = () 
   };
 }
 
-const shared = priceCache();
+let shared: ReturnType<typeof priceCache> | null = null;
 /** The mainnet GLM price as cached now; never waits for the price APIs. */
-export const glmPrice = () => shared.read();
-
-/** USD amounts: cents for normal values, up to 3 significant digits below a cent. */
-export const usd = (x: number) =>
-  x === 0 ? "$0" : x >= 0.01 ? `$${x.toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : `$${x.toLocaleString("en", { maximumSignificantDigits: 3 })}`;
+export const glmPrice = () => (shared ??= priceCache()).read();

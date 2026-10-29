@@ -3,8 +3,8 @@
 import { estimate, type FeeModel } from "@arkiv-agent/cost/model";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { glm } from "../../lib/glm";
-import { type GlmPrice, usd } from "../../lib/glm-price";
+import type { GlmPrice } from "@arkiv-agent/cost";
+import { glm, usd } from "../../lib/glm";
 import { CopyButton } from "../ui/copy-button";
 
 const LIMITS = { writes: [1, 1_000_000], payload: [1, 100_000] } as const;

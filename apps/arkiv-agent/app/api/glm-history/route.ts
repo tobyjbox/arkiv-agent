@@ -1,4 +1,4 @@
-import { glmHistory, RANGES, type RangeDays } from "../../../lib/glm-history";
+import { glmHistory, RANGES, type RangeDays } from "@arkiv-agent/cost";
 
 export const dynamic = "force-dynamic";
 
