@@ -4,11 +4,10 @@
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
 /**
- * Only answer to local host names (plus ARKIV_AGENT_ALLOWED_HOSTS, comma-separated; the pre-rename
- * ARKIV_AGENT_ALLOWED_HOSTS still works for one release, see next.config.ts). A DNS-rebinding page
+ * Only answer to local host names (plus ARKIV_AGENT_ALLOWED_HOSTS, comma-separated). A DNS-rebinding page
  * reaches 127.0.0.1 under its own name, so its Origin matches its Host: the host name gives it away.
  */
-export function isAllowedHost(host: string | null, extra = process.env.ARKIV_AGENT_ALLOWED_HOSTS ?? process.env.ARKIV_AGENT_ALLOWED_HOSTS): boolean {
+export function isAllowedHost(host: string | null, extra = process.env.ARKIV_AGENT_ALLOWED_HOSTS): boolean {
   if (!host) return false;
   const name = host.toLowerCase().replace(/:\d+$/, "");
   const allowed = (extra ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);

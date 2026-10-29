@@ -7,6 +7,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { databasePath } from "@arkiv-agent/db";
 import Database from "better-sqlite3";
+import type { GlmPrice } from "./glm-price";
 
 /** One close per interval, `t` = the interval's start (UTC ms). */
 export type Candle = { t: number; close: number };
@@ -75,10 +76,12 @@ export async function fetchCandles(interval: Interval, count: number, fetcher: F
   return null;
 }
 
-/** Where candles are kept between restarts. */
+/** Where candles are kept between restarts, with which source answered each interval's last fetch, and when. */
 export type CandleStore = {
   read(interval: Interval, since: number): Candle[];
-  write(interval: Interval, candles: Candle[]): void;
+  write(interval: Interval, candles: Candle[], fetched: { source: string; at: number }): void;
+  /** The newest candle of the most recently fetched interval: its close was the price at that fetch. */
+  latest(): { close: number; interval: Interval; source: string; at: number } | null;
 };
 
 /** A small SQLite file next to the index (the index itself stays the indexer's). */
@@ -90,14 +93,22 @@ export function sqliteStore(path = join(dirname(databasePath()), "glm-prices.db"
     db = new Database(path);
     db.pragma("journal_mode = WAL");
     db.exec(`CREATE TABLE IF NOT EXISTS "GlmCandle" (interval TEXT NOT NULL, t INTEGER NOT NULL, close REAL NOT NULL, PRIMARY KEY (interval, t))`);
+    db.exec(`CREATE TABLE IF NOT EXISTS "GlmFetch" (interval TEXT PRIMARY KEY, source TEXT NOT NULL, at INTEGER NOT NULL)`);
     return db;
   };
   return {
     read: (interval, since) => open().prepare(`SELECT t, close FROM "GlmCandle" WHERE interval = ? AND t >= ? ORDER BY t`).all(interval, since) as Candle[],
-    write: (interval, candles) => {
+    write: (interval, candles, fetched) => {
       const upsert = open().prepare(`INSERT INTO "GlmCandle" (interval, t, close) VALUES (?, ?, ?) ON CONFLICT (interval, t) DO UPDATE SET close = excluded.close`);
-      open().transaction(() => { for (const c of candles) upsert.run(interval, c.t, c.close); })();
+      const note = open().prepare(`INSERT INTO "GlmFetch" (interval, source, at) VALUES (?, ?, ?) ON CONFLICT (interval) DO UPDATE SET source = excluded.source, at = excluded.at`);
+      open().transaction(() => {
+        for (const c of candles) upsert.run(interval, c.t, c.close);
+        note.run(interval, fetched.source, fetched.at);
+      })();
     },
+    latest: () => (open().prepare(`
+      SELECT c.close, f.interval, f.source, f.at FROM "GlmFetch" f JOIN "GlmCandle" c ON c.interval = f.interval
+      ORDER BY f.at DESC, c.t DESC LIMIT 1`).get() as { close: number; interval: Interval; source: string; at: number } | undefined) ?? null,
   };
 }
 
@@ -134,7 +145,7 @@ export function historyCache(store: CandleStore = sqliteStore(), fetcher: Fetch 
         if (got) {
           const merged = new Map([...s.fetched, ...got.candles].map((c) => [c.t, c]));
           s.fetched = [...merged.values()].sort((a, b) => a.t - b.t);
-          try { store.write(interval, got.candles); } catch { /* stored() falls back to s.fetched */ }
+          try { store.write(interval, got.candles, { source: got.source, at: now() }); } catch { /* stored() falls back to s.fetched */ }
           Object.assign(s, { source: got.source, refreshedAt: now(), retryAt: 0 });
         } else s.retryAt = now() + RETRY_MS;
       }).finally(() => { s.pending = null; });
@@ -146,6 +157,19 @@ export function historyCache(store: CandleStore = sqliteStore(), fetcher: Fetch 
   };
 }
 
+let sharedStore: CandleStore | null = null;
 let shared: ReturnType<typeof historyCache> | null = null;
+const store = () => (sharedStore ??= sqliteStore());
 /** The process-wide history cache, created on first use. */
-export const glmHistory = (days: RangeDays) => (shared ??= historyCache())(days);
+export const glmHistory = (days: RangeDays) => (shared ??= historyCache(store()))(days);
+
+/** The newest stored close as a price, labelled with its source and fetch time. Never fetches. */
+export function latestHistoryPrice(from: () => CandleStore = store, isOff = () => process.env.GLM_PRICE === "off"): GlmPrice | null {
+  if (isOff()) return null;
+  try {
+    const l = from().latest();
+    return l ? { usd: l.close, source: `${l.source}, latest ${l.interval === "4h" ? "4-hour" : "daily"} close`, at: new Date(l.at).toISOString() } : null;
+  } catch {
+    return null;
+  }
+}

@@ -1,12 +1,13 @@
 /** Mainnet GLM price in USD, for showing testnet fees in dollars. Server-side only; cached so pages never wait on it. GLM_PRICE=off turns it off. */
-export type GlmPrice = { usd: number; source: "CoinGecko" | "Binance GLM/USDT"; at: string };
+/** `source` names where it came from: a spot price API, or the chart history's newest close. */
+export type GlmPrice = { usd: number; source: string; at: string };
 
 type Fetch = (url: string, init: { signal: AbortSignal }) => Promise<{ ok: boolean; json(): Promise<unknown> }>;
 
 const TTL_MS = 10 * 60_000;
 const TIMEOUT_MS = 3_000;
 
-const SOURCES: { source: GlmPrice["source"]; url: string; read: (body: any) => number }[] = [
+const SOURCES: { source: string; url: string; read: (body: any) => number }[] = [
   { source: "CoinGecko", url: "https://api.coingecko.com/api/v3/simple/price?ids=golem&vs_currencies=usd", read: (b) => Number(b?.golem?.usd) },
   { source: "Binance GLM/USDT", url: "https://api.binance.com/api/v3/ticker/price?symbol=GLMUSDT", read: (b) => Number(b?.price) },
 ];

@@ -31,4 +31,4 @@
 | T26 | Build decode progress bar (design/07) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T25, T24 | 2026-10-29T14:00:00Z |
 | T27 | GLM/USDT price chart on /financials | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T24 | 2026-10-29T14:40:00Z |
 | T28 | Part A: remove arkiv-agent everywhere -> arkiv-agent (mechanical) | coder | fast | merged | 1/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T27 | 2026-10-29T15:20:00Z |
-| T29 | Drop pre-rename compatibility; seed spot price from chart history | coder | fast | ready | 0/1 | | T28 | 2026-10-29T15:30:00Z |
+| T29 | Drop pre-rename compatibility; seed spot price from chart history | coder | fast | in-progress | 0/1 | arkiv-agent_coder_claude-code_opus-5.5-extra | T28 | 2026-10-29T14:29:43Z |

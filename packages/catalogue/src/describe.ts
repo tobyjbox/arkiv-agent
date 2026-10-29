@@ -4,12 +4,11 @@
 import { createHash } from "node:crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import { env } from "@arkiv-agent/core";
 import { z } from "zod";
 import type { RecordView } from "./detail.ts";
 import type { Dataset } from "./types.ts";
 
-export const DESCRIBE_MODEL = env("ARKIV_AGENT_DESCRIBE_MODEL", "ARKIV_AGENT_DESCRIBE_MODEL") ?? "claude-opus-5-5";
+export const DESCRIBE_MODEL = process.env.ARKIV_AGENT_DESCRIBE_MODEL ?? "claude-opus-5-5";
 export const SAMPLE_COUNT = 5;
 const VALUE_CHARS = 60;
 const PAYLOAD_CHARS = 120;

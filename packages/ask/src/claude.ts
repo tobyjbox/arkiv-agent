@@ -4,12 +4,12 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { cleanModelText, type Dataset } from "@arkiv-agent/catalogue";
-import { env, type Result, err, ok } from "@arkiv-agent/core";
+import { type Result, err, ok } from "@arkiv-agent/core";
 import { z } from "zod";
 import { type AskContext, rankDatasets } from "./interpret.ts";
 import { type AskPlan, AskPlanSchema, type AskQuery, type AttrType, MAX_RESULTS, SYSTEM_ATTRS } from "./query.ts";
 
-export const ASK_MODEL = env("ARKIV_AGENT_ASK_MODEL", "ARKIV_AGENT_ASK_MODEL") ?? "claude-opus-5-5";
+export const ASK_MODEL = process.env.ARKIV_AGENT_ASK_MODEL ?? "claude-opus-5-5";
 const CANDIDATES = 12;
 const EXAMPLE_CHARS = 40;
 const NAME_CHARS = 64;
