@@ -12,6 +12,7 @@
 - [ ] data from Binance klines GLMUSDT (1d / 4h) with CoinGecko market_chart fallback (both checked live 2026-10-29); same price module, cached, never blocks the page (render without the chart, fill it in later), behind the existing PriceSource shape
 - [ ] chart follows design/01 tokens and the dataviz rules already used (sparkline, cost scatter); hover shows date + price; works at 375 px; accessible summary text
 - [ ] history comes from the APIs, not collected over time: on a fresh start (empty DB) the chart shows the full last 30 days straight away (90 days for the 90 d toggle). Store fetched candles in a small table so restarts and offline periods still show history; refresh only the latest candle
+- [ ] loading state: while history loads, the chart area shows a skeleton/shimmer animation at the final size (no layout shift), using the 02-feels-live loading pattern with a prefers-reduced-motion fallback; data loads client-side or streamed (Suspense), so the rest of /cost renders and stays interactive meanwhile; CSS-only animation, no main-thread work
 - [ ] no-price state: chart hidden with a one-line note
 - [ ] unit tests for parsing/fallback; tests, build, prod e2e pass. Don't rename "arkiv-agent"; don't push
 
