@@ -37,6 +37,26 @@ export function refuseCrossSite(request: Request): Response | null {
   return null;
 }
 
+/**
+ * True when another site loads a page as an embed, fetch or frame rather than by following a link
+ * (T19 L1). Fetch Metadata says so directly. Browsers that don't send it (Safari before 16.4, some
+ * webviews) fall back to Origin or Referer: from another host, anything not asking for HTML counts as
+ * an embed. Their cross-site frames still ask for HTML; frame-ancestors keeps those from showing.
+ */
+export function isCrossSiteEmbed(headers: Headers): boolean {
+  const site = headers.get("sec-fetch-site");
+  if (site) {
+    const isTopLevel = headers.get("sec-fetch-mode") === "navigate" && headers.get("sec-fetch-dest") !== "iframe";
+    return (site === "cross-site" || site === "same-site") && !isTopLevel;
+  }
+  const from = headers.get("origin") ?? headers.get("referer");
+  if (from === null) return false;
+  let fromHost: string | null = null;
+  try { fromHost = new URL(from).host; } catch { /* "null" or malformed */ }
+  if (fromHost !== null && fromHost.toLowerCase() === headers.get("host")?.toLowerCase()) return false;
+  return !(headers.get("accept") ?? "").includes("text/html");
+}
+
 /** A small per-process budget for model calls, so a runaway client can't spend the key quickly. */
 export function createRateLimit(perMinute: number, now = () => Date.now()) {
   const recent: number[] = [];

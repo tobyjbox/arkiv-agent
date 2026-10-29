@@ -8,3 +8,7 @@ allowBuilds:
   better-sqlite3: true
   prisma: true
   "@prisma/engines": true
+
+# next pins postcss 8.4.31, which has known advisories (security review T22 L1). Same major, patched.
+overrides:
+  postcss: ^8.5.23

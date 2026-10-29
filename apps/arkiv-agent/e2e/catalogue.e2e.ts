@@ -35,12 +35,25 @@ test("dataset detail shows schema, activity, records and a runnable snippet", as
   const href = await page.locator("#main tbody tr").first().locator("a").first().getAttribute("href");
   await page.goto(href!);
   await expect(page).toHaveURL(/\/catalogue\/[0-9a-f]{12}$/);
+  const datasetName = (await page.getByRole("heading", { level: 1 }).textContent())!.trim();
+  await expect(page).toHaveTitle(`${datasetName} · ArkivAgent`);
   for (const name of ["Schema", "Activity", "Recent records", "Read this dataset"]) {
     await expect(page.getByRole("heading", { level: 2, name })).toBeVisible();
   }
   await page.getByRole("tab", { name: "Query string" }).click();
   await expect(page.locator("pre code")).toContainText(/=|EXISTS|STARTSWITH/);
   expect(errors).toEqual([]);
+});
+
+test("on a 375 px screen the nav stays on one line and the sync indicator keeps its words", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/catalogue");
+  for (const link of await page.getByRole("navigation", { name: "Main" }).getByRole("link").all()) {
+    const box = (await link.boundingBox())!;
+    expect(box.height).toBeLessThan(48);
+  }
+  await expect(page.locator("header").getByText(/^(Synced|Retrying ·|Not updating ·) .+ ago$|^Sync paused|blocks behind$/)).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
 test("unknown dataset shows the not-found panel", async ({ page }) => {
