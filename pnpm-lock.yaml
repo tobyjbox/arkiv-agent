@@ -29,6 +29,9 @@ importers:
       '@arkiv-agent/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@arkiv-agent/cost':
+        specifier: workspace:*
+        version: link:../../packages/cost
       '@arkiv-agent/db':
         specifier: workspace:*
         version: link:../../packages/db
