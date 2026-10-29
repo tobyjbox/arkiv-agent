@@ -181,7 +181,7 @@ function RunFailure({ failure, onRetry }: { failure: Failure; onRetry: () => voi
   if (failure.kind === "invalid") return <p className="px-4 py-5 text-danger">This query can't run: {failure.message}</p>;
   return (
     <div className="m-4 flex flex-wrap items-center gap-3 rounded-md px-4 py-3 tint-danger">
-      <span>{failure.kind === "timeout" ? failure.message : `Arkiv returned an error: ${failure.message}`} The Query and TypeScript tabs still work.</span>
+      <span>{failure.kind === "rpc" ? `Arkiv returned an error: ${failure.message}` : failure.message} The Query and TypeScript tabs still work.</span>
       <button type="button" onClick={onRetry} className="ml-auto inline-flex items-center gap-1.5 rounded-sm border border-danger/40 px-2.5 py-1 hover:bg-danger/10"><RotateCw size={13} aria-hidden /> Retry</button>
     </div>
   );

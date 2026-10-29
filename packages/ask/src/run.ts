@@ -17,7 +17,9 @@ export type AskRow = {
 };
 
 export type AskPage = { rows: AskRow[]; block: string; cursor: string | null; ms: number };
-export type RunError = { kind: "timeout" | "rpc"; message: string };
+export type RunError = { kind: "timeout" | "rate-limited" | "rpc"; message: string };
+
+const RATE_LIMITED = "Arkiv's free query budget is used up for now (HTTP 429). Try again in a few minutes, or set ARKIV_API_KEY for a monthly quota.";
 
 type SdkEntity = {
   key?: string;
@@ -52,14 +54,20 @@ const toRow = (e: SdkEntity): AskRow => ({
  * `connect` builds a client bound to an abort signal: on timeout the read is aborted, not abandoned.
  */
 export async function runAsk(
-  connect: (signal: AbortSignal) => ArkivClient,
+  connect: (signal: AbortSignal, onResponse: (response: Response) => void) => ArkivClient,
   expression: Expression,
   opts: { limit?: number; cursor?: string | null; block?: string | null; timeoutMs?: number } = {},
 ): Promise<Result<AskPage, RunError>> {
   const started = performance.now();
   const timeoutMs = opts.timeoutMs ?? ASK_TIMEOUT_MS;
   const controller = new AbortController();
-  const client = connect(controller.signal);
+  // A 429 is an answer, not silence: stop at once and say so, instead of retrying into the timeout.
+  let isRateLimited = false;
+  const client = connect(controller.signal, (response) => {
+    if (response.status !== 429) return;
+    isRateLimited = true;
+    controller.abort(new Error("Arkiv rate limit"));
+  });
   let timer: NodeJS.Timeout | undefined;
   const timeout = new Promise<"timeout">((resolve) => {
     timer = setTimeout(() => { controller.abort(new Error("Ask timeout")); resolve("timeout"); }, timeoutMs);
@@ -85,6 +93,7 @@ export async function runAsk(
       ms: Math.round(performance.now() - started),
     });
   } catch (cause) {
+    if (isRateLimited) return err({ kind: "rate-limited", message: RATE_LIMITED });
     return err({ kind: "rpc", message: cause instanceof Error ? cause.message.split("\n")[0]! : String(cause) });
   } finally {
     clearTimeout(timer);
