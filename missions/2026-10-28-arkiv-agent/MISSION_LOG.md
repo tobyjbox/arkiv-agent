@@ -93,3 +93,4 @@
 - 2026-10-29T03:30:00Z HANDOFF T20@46df60d detected: row review 2/2 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/stretch-fixes@46df60d:missions/2026-10-28-arkiv-agent/tasks/T20-stretch-fixes.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T03:30:00Z HANDOFF T20@46df60d adjudicated: accepted (513 tests verified; S1-S3, L1 fixed; S2 coverage now reproducible 238/254; S4-S6 in README Known gaps); integrated fc572e8; row -> merged.
 - 2026-10-29T03:30:00Z HANDOFF T20@46df60d dispatched: none; all 20 tasks merged
+- 2026-10-29T10:00:00Z OWNER request: full security + QA review of the whole app. T21 (qa), T22 (security) created ready on main@94b12a5
