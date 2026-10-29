@@ -77,3 +77,4 @@
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-fixes-3@c13296c:missions/2026-10-28-arkiv-agent/tasks/T18-ask-fixes-3.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c adjudicated: accepted (506 tests verified; EXISTS confirmed unsupported live, now Not used); integrated 5dcc1e8; row -> merged f645e9f. Must-ship slice complete (T01-T08, T13-T18).
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c dispatched: none eligible (T11 already ready, in progress)
+- 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/cost@cd71f52:missions/2026-10-28-arkiv-agent/tasks/T11-cost.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
