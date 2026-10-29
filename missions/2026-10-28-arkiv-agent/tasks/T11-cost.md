@@ -3,7 +3,7 @@
 - **Persona:** coder
 - **Model tier:** frontier
 - **Depends on:** T10
-- **Workspace:** feat/cost (created at release)
+- **Workspace:** worktrees/arkiv-agent-cost, branch feat/cost
 - **Port:** 3101
 
 ## Inputs
