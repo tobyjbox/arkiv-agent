@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { GlmPrice, History, RangeDays } from "@arkiv-agent/cost";
+import { RANGE_OPTIONS, rangeParam } from "../../lib/price-range";
+import { replaceQuery } from "../../lib/url-query";
 
-const RANGE_OPTIONS: RangeDays[] = [7, 30, 90];
 const W = 600;
 const H = 140;
 
@@ -24,10 +25,11 @@ export function ticks(lo: number, hi: number): number[] {
 
 /**
  * GLM in USD over 7, 30 or 90 days (T27). Loads after the page, from /api/glm-history; until then a
- * skeleton holds its final size. Hover or arrow keys move a crosshair with the date and price.
+ * skeleton holds its final size. Hover or arrow keys move a crosshair with the date and price. The range
+ * is kept in the URL (`?range=90`), like the page's other controls, so a reload or a shared link keeps it.
  */
-export function PriceChart({ spot }: { spot: GlmPrice | null }) {
-  const [days, setDays] = useState<RangeDays>(30);
+export function PriceChart({ spot, initialDays }: { spot: GlmPrice | null; initialDays: RangeDays }) {
+  const [days, setDays] = useState<RangeDays>(initialDays);
   const [loaded, setLoaded] = useState<Partial<Record<RangeDays, History | "failed">>>({});
   const [focus, setFocus] = useState<number | null>(null);
   const data = loaded[days];
@@ -79,7 +81,7 @@ export function PriceChart({ spot }: { spot: GlmPrice | null }) {
         )}
         <div role="group" aria-label="Price range" className="ml-auto flex rounded-md border border-border-default p-0.5">
           {RANGE_OPTIONS.map((d) => (
-            <button key={d} type="button" aria-pressed={d === days} onClick={() => { setDays(d); setFocus(null); }}
+            <button key={d} type="button" aria-pressed={d === days} onClick={() => { setDays(d); setFocus(null); replaceQuery({ range: rangeParam(d) }); }}
               className={`rounded-sm px-3 py-1 caption ${d === days ? "bg-raised text-text-primary" : "text-text-secondary hover:text-text-primary"}`}>{d}d</button>
           ))}
         </div>

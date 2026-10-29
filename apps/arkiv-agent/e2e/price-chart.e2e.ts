@@ -2,8 +2,8 @@ import { expect, type Page, test } from "@playwright/test";
 import { open, SERVER_RENDER } from "./open";
 
 const DAY = 86_400_000;
-const history = (days: 7 | 30, now = Date.UTC(2026, 9, 29)) => {
-  const [interval, count, step] = days === 7 ? ["4h", 42, DAY / 6] : ["1d", 30, DAY];
+const history = (days: 7 | 30 | 90, now = Date.UTC(2026, 9, 29)) => {
+  const [interval, count, step] = days === 7 ? ["4h", 42, DAY / 6] : ["1d", days, DAY];
   return { days, interval, source: "Binance GLM/USDT", at: new Date(now).toISOString(), candles: Array.from({ length: count as number }, (_, i) => ({ t: now - ((count as number) - 1 - i) * (step as number), close: 0.1 + (i % 5) / 1000 })) };
 };
 
@@ -13,7 +13,7 @@ async function stubHistory(page: Page, opts: { fail?: boolean } = {}) {
   const held = new Promise<void>((r) => { release = r; });
   const asked: string[] = [];
   await page.route("**/api/glm-history**", async (route) => {
-    const days = Number(new URL(route.request().url()).searchParams.get("days")) as 7 | 30;
+    const days = Number(new URL(route.request().url()).searchParams.get("days")) as 7 | 30 | 90;
     asked.push(String(days));
     if (asked.length === 1) await held;
     try {
@@ -51,6 +51,32 @@ test("the price chart loads after the page, holding its size, then reads and swi
   await card(page).getByRole("button", { name: "7d" }).click();
   await expect(card(page).getByRole("img", { name: /last 7 days/ })).toBeVisible();
   expect(stub.asked).toEqual(["30", "7"]);
+});
+
+test("the range is kept in the URL: a reload or shared link restores it, and 30d leaves no param", async ({ page }) => {
+  const stub = await stubHistory(page);
+  await open(page, "/financials?range=7");
+  stub.release();
+  await expect(card(page).getByRole("img", { name: /last 7 days/ })).toBeVisible();
+  await expect(card(page).getByRole("button", { name: "7d" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page).toHaveURL(/writes=1000/); // the calculator writes its inputs on load and keeps the range
+  expect(new URL(page.url()).searchParams.get("range")).toBe("7");
+
+  await card(page).getByRole("button", { name: "90d" }).click();
+  await expect(card(page).getByRole("img", { name: /last 90 days/ })).toBeVisible();
+  await page.locator("#main").getByLabel("Writes per day", { exact: true }).fill("4000");
+  await expect(page).toHaveURL(/writes=4000/, SERVER_RENDER);
+  expect(new URL(page.url()).searchParams.get("range")).toBe("90");
+
+  await page.reload();
+  await expect(card(page).getByRole("img", { name: /last 90 days/ })).toBeVisible();
+  await expect(card(page).getByRole("button", { name: "90d" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#main").getByLabel("Writes per day", { exact: true })).toHaveValue("4000");
+  expect(stub.asked).toEqual(["7", "90", "90"]);
+
+  await card(page).getByRole("button", { name: "30d" }).click();
+  await expect(card(page).getByRole("img", { name: /last 30 days/ })).toBeVisible();
+  expect(new URL(page.url()).searchParams.has("range")).toBe(false);
 });
 
 test("reduced motion: the loading sweep doesn't move", async ({ page }) => {

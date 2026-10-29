@@ -78,6 +78,7 @@ test("at 375 px: short label and percent, then decoded / total", async ({ page }
   await open(page, "/catalogue");
   await expect(bar(page)).toHaveAttribute("data-phase", "decoding");
   await expect(bar(page).getByText("Decoding", { exact: true })).toBeVisible();
+  await expect(bar(page).getByRole("progressbar", { name: "Decoding", exact: true })).toHaveAttribute("aria-valuenow", "36200");
   await expect(bar(page).getByText("36,200 / 37,000", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
