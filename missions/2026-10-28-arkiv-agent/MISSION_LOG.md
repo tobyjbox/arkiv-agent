@@ -86,3 +86,6 @@
 - 2026-10-29T02:58:36Z HANDOFF T19@90551bf detected: row review 3/3 by arkiv-agent_security-whitehat_claude-code_opus-5.5-low; handoff review/security-stretch@90551bf:missions/2026-10-28-arkiv-agent/tasks/T19-security-stretch.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
 - 2026-10-29T02:58:36Z HANDOFF T19@90551bf adjudicated: accepted (0 High/Med, 1 Low, 4 Info; fixtures OK to publish); integrated 489e0d2; row -> merged 5c8cb0b. L1 (cross-site requests trigger aggregation) to be bundled with T12 QA findings into one final coder task.
 - 2026-10-29T02:58:36Z HANDOFF T19@90551bf dispatched: none (L1 held for bundling with T12 findings)
+- 2026-10-29T03:10:00Z HANDOFF T12@c73901c detected: row review 3/3 by arkiv-agent_QA_claude-code_opus-5.5-low; handoff review/qa-stretch@c73901c:missions/2026-10-28-arkiv-agent/tasks/T12-review-stretch.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-29T03:10:00Z HANDOFF T12@c73901c adjudicated: accepted (T10/T11 acceptance met; out-of-sample 92.6%; e2e 11/11 x3 prod; 0 High/Med, 6 Low); integrated 78641d1. Design calls: S1-S3 fix; S4/S5 accepted as documented known gaps; S6 doc only.
+- 2026-10-29T03:10:00Z HANDOFF T12@c73901c dispatched: T20 (new, ready; bundles T12 S1-S3 + T19 L1) -> coder

@@ -1,4 +1,4 @@
-**Mission progress:** 19 tasks — 18 merged, 1 ready · updated 2026-10-29T02:58:36Z
+**Mission progress:** 20 tasks — 19 merged, 1 ready · updated 2026-10-29T03:10:00Z
 **Monitoring:** notify=granted; mode=event · declared 2026-10-28T17:02:27Z
 
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
@@ -14,7 +14,7 @@
 | T09 | Stretch: pulse + cost specs | ux_designer | fast | merged | 3/3 | arkiv-agent_ux_designer_claude-code_opus-5.5-med | T02 | 2026-10-28T17:10:46Z |
 | T10 | Stretch: ecosystem pulse | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T08, T09 | 2026-10-29T02:43:06Z |
 | T11 | Stretch: cost view | coder | frontier | merged | 4/4 | arkiv-agent_coder_claude-code_opus-5.5-extra | T10 | 2026-10-29T02:56:12Z |
-| T12 | Stretch: QA review of T10/T11 (pulse, cost) | qa | fast | ready | 0/3 | | T11 | 2026-10-29T02:56:12Z |
+| T12 | Stretch: QA review of T10/T11 (pulse, cost) | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T11 | 2026-10-29T03:10:00Z |
 | T13 | Fix T07 findings: M1 /api/ask origin+content-type check, bind 127.0.0.1; L1 untrusted-text framing; L2 abort chain read on timeout; L3 cache failed descriptions | coder | fast | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T07 | 2026-10-28T22:41:56Z |
 | T14 | Fix T06 findings: F1 Ask rules drop conditions, F2 'is false' negation, F3 owner-only binds wrong project; F5 e2e port/reuse, F6 time-dependent e2e, F7 verify values | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T06, T13 | 2026-10-28T22:55:53Z |
 | T15 | QA re-check: fresh blind Ask set (>= 80%) + T13/T14 fixes | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T14 | 2026-10-28T23:01:56Z |
@@ -22,3 +22,4 @@
 | T17 | QA final blind Ask check (>= 80%) + R1-R6 confirm | qa | fast | merged | 3/3 | arkiv-agent_QA_claude-code_opus-5.5-low | T16 | 2026-10-29T02:47:33Z |
 | T18 | Fix T17 findings: N1 EXISTS plans rejected by RPC (-32002) - never emit EXISTS the RPC can't serve, list as Not used; Q6 'not between' negation; Q5 description words binding an unrelated dataset; N4 detail e2e flake | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T17 | 2026-10-29T02:55:18Z |
 | T19 | Stretch: Security review of T10/T11 (pulse, cost, fees sampler) | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T11 | 2026-10-29T02:58:36Z |
+| T20 | Fix T12 S1-S3 + T19 L1 (SSR sync label, deterministic hold-out, out-of-range widening, cross-site aggregation guard) | coder | fast | ready | 0/2 | | T12, T19 | 2026-10-29T03:10:00Z |
