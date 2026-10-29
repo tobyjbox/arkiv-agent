@@ -142,3 +142,4 @@
 - 2026-10-29T20:02:14Z HANDOFF adjudicated T36 accept: Q1 range in URL; Q2 already labelled (aria-labelledby verified); 632 tests (excl. stray worktrees), build OK; merged
 - 2026-10-29T20:02:14Z NOTE T35/T36 worktrees landed inside the repo (task files said worktrees/ without <dev>/); moved to <worktrees>, task files corrected
 - 2026-10-29T20:04:21Z PUBLISH-PREP final rewrite on a scratch mirror of main@43830f3: path renames + arkiv-agent->arkiv-agent + session IDs + username patterns in blobs and messages; 351 commits; all greps empty; fresh clone 632 tests, build OK. Not pushed; awaiting owner.
+- 2026-10-29T20:07:52Z PUBLISH rewritten main (352 commits, tip 261cc2d) pushed to tobyjbox/arkiv-agent (private) on owner's go; checks all empty; fresh clone 632 tests, build OK. Old hashes not served by the new repo. Owner flips visibility.
