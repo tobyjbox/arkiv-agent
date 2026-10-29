@@ -10,6 +10,7 @@ Dark mode only. Specs, not code: Coder lifts the token tables into the theme con
 | [04-ask-arkiv.md](04-ask-arkiv.md) | Ask Arkiv flow, interpretation chips, results tabs, all states, responsive |
 | [05-pulse.md](05-pulse.md) | Stretch (T09): ecosystem pulse, hackathon retention, activity, states, responsive |
 | [06-cost.md](06-cost.md) | Stretch (T09): cost calculator, observed spend, fee model charts, states, responsive |
+| [07-decode-progress.md](07-decode-progress.md) | T25: catalogue decode progress bar (replaces the amber banner), states, data needs, motion, 375 px, a11y |
 
 ## Rationale in brief
 
