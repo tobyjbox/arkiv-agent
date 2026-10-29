@@ -78,3 +78,5 @@
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c adjudicated: accepted (506 tests verified; EXISTS confirmed unsupported live, now Not used); integrated 5dcc1e8; row -> merged f645e9f. Must-ship slice complete (T01-T08, T13-T18).
 - 2026-10-29T02:55:18Z HANDOFF T18@c13296c dispatched: none eligible (T11 already ready, in progress)
 - 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 detected: row review 4/4 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/cost@cd71f52:missions/2026-10-28-arkiv-agent/tasks/T11-cost.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-low
+- 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 adjudicated: accepted (509 tests verified; 91% held-out fees inside stated range; model-estimated spend deviation accepted, disclosed on page); integrated 43eb88f; row -> merged fa431a0. T12 split: QA (T12) + Security (T19).
+- 2026-10-29T02:56:12Z HANDOFF T11@cd71f52 dispatched: T12 (qa), T19 (security) draft -> ready, both messaged
