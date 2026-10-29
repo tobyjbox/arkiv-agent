@@ -32,6 +32,7 @@
   explains 7% of the residual over 0-365 days. /cost: calculator (1,000 writes/day x 200 B = 3.753 GLM / 30 d, range 3.185-3.854),
   estimated spend (30 d, load generators excluded: 12.65 GLM), model chart; pulse GLM tile. Vitest 509, Playwright 11.
   Waiting for the 1,500-receipt sample to finish before the handoff numbers.
+- 2026-10-29T02:55:27Z Sample complete (1,500 stored, 0 failed); final model and coverage in the Handoff. Flipped to review, candidate cd71f52. Notification intent: key `2026-10-28-arkiv-agent:T11@cd71f52:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
 
 ## Handoff
 
