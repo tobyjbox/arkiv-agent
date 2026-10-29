@@ -23,5 +23,5 @@
 | T18 | Fix T17 findings: N1 EXISTS plans rejected by RPC (-32002) - never emit EXISTS the RPC can't serve, list as Not used; Q6 'not between' negation; Q5 description words binding an unrelated dataset; N4 detail e2e flake | coder | frontier | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | T17 | 2026-10-29T02:55:18Z |
 | T19 | Stretch: Security review of T10/T11 (pulse, cost, fees sampler) | security_whitehat | alt-frontier | merged | 3/3 | arkiv-agent_security-whitehat_claude-code_opus-5.5-low | T11 | 2026-10-29T02:58:36Z |
 | T20 | Fix T12 S1-S3 + T19 L1 (SSR sync label, deterministic hold-out, out-of-range widening, cross-site aggregation guard) | coder | fast | merged | 2/2 | arkiv-agent_coder_claude-code_opus-5.5-extra | T12, T19 | 2026-10-29T03:30:00Z |
-| T21 | Full QA review of ArkivAgent (pre-publish) | qa | fast | in_progress | 0/3 | qa (Claude Code, opus-5.5) | T20 | 2026-10-29T09:45:34Z |
+| T21 | Full QA review of ArkivAgent (pre-publish) | qa | fast | review | 3/3 | qa (Claude Code, opus-5.5) | T20 | 2026-10-29T09:57:14Z |
 | T22 | Full security review of ArkivAgent (pre-publish) | security_whitehat | alt-frontier | ready | 0/3 | | T20 | 2026-10-29T10:00:00Z |
