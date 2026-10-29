@@ -109,3 +109,4 @@
 - 2026-10-29T13:11:00Z DISPATCH T26, T27 -> arkiv-agent_coder_claude-code_opus-5.5-extra delivered <id>
 - 2026-10-29T13:30:00Z RECONCILE 8 refs, 1 changed (rollup timestamp), 0 decisions
 - 2026-10-29T14:00:00Z HANDOFF T26@b605069 adjudicated: accepted (542 tests + build verified on merged main; design/07 in full; feed adds undecodedLive; offline/stale split, 50-record re-show threshold accepted); integrated 810c4a9; row -> merged. Repaired malformed T27 row (orchestrator regex error). Note: anonymous Arkiv RPC budget hit 429 during coder e2e.
+- 2026-10-29T14:40:00Z HANDOFF T27@69b9d26 adjudicated: accepted (547 tests + build verified on merged main; 90d backfill Binance->CoinGecko, separate app-owned data/glm-prices.db accepted to avoid an index migration; guard covers /api/glm-history); integrated; row -> merged. T28 Part A rename ready -> coder.
