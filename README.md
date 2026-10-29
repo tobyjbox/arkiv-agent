@@ -199,7 +199,7 @@ the price and the history lookups.
 | `apps/arkiv-agent` | Next.js app: catalogue, dataset pages, Ask Arkiv, pulse, cost, APIs, Playwright tests. |
 | `packages/core` | Arkiv client (retries, optional access key, abortable reads). |
 | `packages/db` | Prisma schema and migrations for the SQLite index. |
-| `packages/indexer` | Event sync, attribute decoding, change feed, stored Insights and Financials results, `index:verify`, `pnpm fees`, Phase 0 spike scripts. |
+| `packages/indexer` | Event sync, attribute decoding, change feed, stored Insights and Financials results, `index:verify`, `pnpm fees`. |
 | `packages/catalogue` | Dataset inference, schemas, ownership, SDK snippets, AI summaries, index value lookup. |
 | `packages/ask` | Question to query: rules, Claude path, compiler, live runner, question sets. |
 | `packages/projects` | Which project each wallet writes for, and which wallets are load generators. |

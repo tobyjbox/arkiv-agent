@@ -2,9 +2,9 @@
 // price APIs, not from collecting prices over time, so a fresh start shows the full range at once.
 // They are kept in a small SQLite file next to the index, so restarts and offline periods still have
 // history, and afterwards only the latest candle is refreshed. GLM_PRICE=off turns it off.
-
 import { type Candle, type CandleStore, type Interval, openCandleStore } from "@arkiv-agent/db";
-import type { GlmPrice } from "./glm-price";
+import { type Fetch, HISTORY_SOURCES, INTERVAL_MS, type PriceSource } from "./sources.ts";
+import { type GlmPrice, glmPrice, type PriceState } from "./spot.ts";
 
 export type { Candle, Interval };
 export type RangeDays = 7 | 30 | 90;
@@ -12,58 +12,17 @@ export type History = { days: RangeDays; interval: Interval; candles: Candle[]; 
 
 /** 7 d in 4 h candles, 30 and 90 d in daily ones. */
 export const RANGES: Record<RangeDays, { interval: Interval; count: number }> = { 7: { interval: "4h", count: 42 }, 30: { interval: "1d", count: 30 }, 90: { interval: "1d", count: 90 } };
-const INTERVAL_MS: Record<Interval, number> = { "4h": 4 * 3_600_000, "1d": 86_400_000 };
 /** The latest candle is refreshed at most this often; older candles never change. */
 const LATEST_TTL_MS = 10 * 60_000;
 const RETRY_MS = 60_000;
 const TIMEOUT_MS = 3_000;
 
-type Fetch = (url: string, init: { signal: AbortSignal }) => Promise<{ ok: boolean; json(): Promise<unknown> }>;
-
-/** Same shape as the spot price sources in glm-price.ts: a name, a URL, and a reader for the reply. */
-type HistorySource = { source: string; url: (interval: Interval, count: number) => string; read: (body: unknown, interval: Interval) => Candle[] };
-
-/** Binance klines: [openTime, open, high, low, close, …]. */
-export function readKlines(body: unknown): Candle[] {
-  if (!Array.isArray(body)) return [];
-  return body.flatMap((k) => {
-    const t = Number(Array.isArray(k) ? k[0] : NaN), close = Number(Array.isArray(k) ? k[4] : NaN);
-    return Number.isFinite(t) && Number.isFinite(close) && close > 0 ? [{ t, close }] : [];
-  });
-}
-
-/** CoinGecko market_chart: hourly [ms, price] points up to 90 days, resampled to the last price per interval. */
-export function readMarketChart(body: unknown, interval: Interval): Candle[] {
-  const prices = (body as { prices?: unknown })?.prices;
-  if (!Array.isArray(prices)) return [];
-  const step = INTERVAL_MS[interval];
-  const last = new Map<number, { ms: number; close: number }>();
-  for (const p of prices) {
-    const ms = Number(Array.isArray(p) ? p[0] : NaN), close = Number(Array.isArray(p) ? p[1] : NaN);
-    if (!Number.isFinite(ms) || !Number.isFinite(close) || close <= 0) continue;
-    const t = Math.floor(ms / step) * step;
-    if (ms >= (last.get(t)?.ms ?? -Infinity)) last.set(t, { ms, close });
-  }
-  return [...last].map(([t, { close }]) => ({ t, close })).sort((a, b) => a.t - b.t);
-}
-
-const SOURCES: HistorySource[] = [
-  { source: "Binance GLM/USDT", url: (interval, count) => `https://api.binance.com/api/v3/klines?symbol=GLMUSDT&interval=${interval}&limit=${count}`, read: (b) => readKlines(b) },
-  {
-    source: "CoinGecko",
-    url: (interval, count) => `https://api.coingecko.com/api/v3/coins/golem/market_chart?vs_currency=usd&days=${Math.min(90, Math.ceil((count * INTERVAL_MS[interval]) / 86_400_000))}`,
-    read: (b, interval) => readMarketChart(b, interval),
-  },
-];
-
 /** The last `count` candles from the first source that answers with any, or null. */
-export async function fetchCandles(interval: Interval, count: number, fetcher: Fetch = fetch as unknown as Fetch): Promise<{ candles: Candle[]; source: string } | null> {
-  for (const s of SOURCES) {
+export async function fetchCandles(interval: Interval, count: number, fetcher: Fetch = fetch as unknown as Fetch, sources: readonly PriceSource[] = HISTORY_SOURCES): Promise<{ candles: Candle[]; source: string } | null> {
+  for (const s of sources) {
     try {
-      const res = await fetcher(s.url(interval, count), { signal: AbortSignal.timeout(TIMEOUT_MS) });
-      if (!res.ok) continue;
-      const candles = s.read(await res.json(), interval).slice(-count);
-      if (candles.length) return { candles, source: s.source };
+      const candles = (await s.candles(interval, count, fetcher, AbortSignal.timeout(TIMEOUT_MS)))?.slice(-count) ?? [];
+      if (candles.length) return { candles, source: s.name };
     } catch {
       // try the next source
     }
@@ -131,4 +90,16 @@ export function latestHistoryPrice(from: () => CandleStore = store, isOff = () =
   } catch {
     return null;
   }
+}
+
+/**
+ * The GLM price to show with fees: the live spot price when one is cached, else the chart history's
+ * newest stored close, so the USD figures and the chart never disagree. The status stays as the live
+ * lookup reports it ("loading"), so the page keeps refreshing until the live price replaces the close.
+ */
+export function glmPriceOrClose(live: () => PriceState = glmPrice, history: () => GlmPrice | null = latestHistoryPrice): PriceState {
+  const state = live();
+  if (state.price || state.status === "off") return state;
+  const close = history();
+  return close ? { ...state, price: close } : state;
 }

@@ -5,10 +5,11 @@ Versions: `@arkiv-network/sdk` **0.8.1**, `viem` **2.57.13**, Node **22.22.0**, 
 public RPC with no access key. Nothing was written to the chain (no wallet).
 
 Items 1–9 come from the Phase 0 spike (T01); items 10–14 were found while building the indexer, the
-catalogue and Ask Arkiv (T03–T05, T14–T16, T24), with the same versions and access. Spike numbers come from a
-script in `packages/indexer/src/spike/` (`pnpm spike:read`,
-`spike:history`, `spike:logs`, `spike:decode`, `spike:fees`). Each writes its raw result to
-`data/spike/*.json`, which is gitignored because it holds third-party chain data.
+catalogue and Ask Arkiv (T03–T05, T14–T16, T24), with the same versions and access. Spike numbers came from
+Phase 0 scripts (`pnpm spike:read`, `spike:history`, `spike:logs`, `spike:decode`, `spike:fees`),
+removed once the indexer covered the same ground (T34); a **Steps** line names the script a finding
+came from. They wrote their raw results to `data/spike/*.json`, kept out of git because it holds
+third-party chain data.
 
 Items marked **Issue** cost us time or would mislead a builder; **Worked** items behaved as documented;
 **Observation** items are findings either way.

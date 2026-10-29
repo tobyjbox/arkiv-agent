@@ -1,11 +1,11 @@
-import { estimatedSpend, feeSummary } from "@arkiv-agent/cost";
+import { estimatedSpend, feeSummary, glmPriceOrClose } from "@arkiv-agent/cost";
 import Link from "next/link";
 import { Calculator } from "../../components/cost/calculator";
 import { PriceChart } from "../../components/cost/price-chart";
+import { FeeScatter } from "../../components/cost/fee-scatter";
+import { SpendTable } from "../../components/cost/spend-table";
 import { RefreshForPrice } from "../../components/cost/refresh-for-price";
-import { glm } from "../../lib/glm";
-import { financialsPrice } from "../../lib/financials-price";
-import { usd } from "../../lib/glm-price";
+import { glm, usd } from "../../lib/glm";
 import { formatCount } from "../../lib/format";
 import { isIndexReady } from "../../lib/db";
 import { ResultsPending } from "../../components/ui/results-pending";
@@ -30,13 +30,12 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   const includeLoad = q.load === "1";
   const fees = feeSummary();
   if (!fees) return <ResultsPending title="Financials" />;
-  const { model, fittedAt, receipts, points: dots, maxCalldataBytes: maxX, maxGasUsed: maxY } = fees;
+  const { model, fittedAt, receipts } = fees;
   const spend = estimatedSpend(30, includeLoad);
-  const { price, status: priceStatus } = financialsPrice();
+  const { price, status: priceStatus } = glmPriceOrClose();
   const $ = (x: number) => (price ? usd(x * price.usd) : null);
   const unit = (["hours", "days", "months"] as const).find((u) => u === q.unit) ?? "days";
   const initial = { writes: int(q.writes, 1, 1_000_000, 1_000), payload: int(q.payload, 1, 100_000, 200), lifetime: int(q.lifetime, 1, 100_000, 7), unit };
-  const X = (v: number) => 40 + (Math.log10(Math.max(1, v)) / Math.log10(maxX)) * 540, Y = (v: number) => 190 - (Math.log10(Math.max(1, v)) / Math.log10(maxY)) * 180;
 
   return (
     <div className="mx-auto max-w-[1280px] space-y-10 px-4 pb-16 pt-8 sm:px-6">
@@ -64,23 +63,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
               <div className="rounded-md bg-surface p-5"><div className="label text-text-tertiary">Writes</div><div className="stat mt-1">{formatCount(spend.writes)}</div><div className="caption text-text-secondary">{includeLoad ? "load generators included" : "load generators excluded"}</div></div>
               <div className="rounded-md bg-surface p-5"><div className="label text-text-tertiary">GLM per write</div><div className="stat mt-1">{glm(spend.writes ? spend.glm / spend.writes : 0)}</div><div className="caption text-text-secondary">average{$(spend.writes ? spend.glm / spend.writes : 0) && <> · ≈ {$(spend.writes ? spend.glm / spend.writes : 0)}</>}</div></div>
             </div>
-            <div className="overflow-x-auto rounded-md border border-border-subtle bg-surface">
-              <table className="w-full text-left">
-                <thead className="caption text-text-tertiary"><tr className="border-b border-border-subtle">
-                  <th scope="col" className="px-4 py-2 font-medium">Project</th><th scope="col" className="px-3 py-2 text-right font-medium">GLM (est.)</th>{price && <th scope="col" className="px-3 py-2 text-right font-medium">USD (est.)</th>}
-                  <th scope="col" className="px-3 py-2 font-medium">Share</th><th scope="col" className="px-3 py-2 text-right font-medium">Writes</th><th scope="col" className="px-3 py-2 text-right font-medium">GLM per write</th>
-                </tr></thead>
-                <tbody>{spend.projects.map((p) => (
-                  <tr key={p.project} className="border-b border-border-subtle last:border-0">
-                    <td className="max-w-[28ch] truncate px-4 py-2">{p.isLabel ? <a href={`/catalogue?q=${encodeURIComponent(p.project)}`} className="font-mono text-[13px] hover:underline">{p.project}</a> : <span className="font-mono text-[13px] text-text-secondary">{`${p.project.slice(0, 8)}…${p.project.slice(-4)}`}</span>}</td>
-                    <td className="px-3 py-2 text-right" style={{ fontVariantNumeric: "tabular-nums" }}>{glm(p.glm)}</td>
-                    {price && <td className="px-3 py-2 text-right text-text-secondary" style={{ fontVariantNumeric: "tabular-nums" }}>{$(p.glm)}</td>}
-                    <td className="px-3 py-2"><span className="block h-1.5 w-[60px] rounded-full bg-raised"><span className="block h-1.5 rounded-full bg-accent" style={{ width: `${Math.max(2, (p.glm / (spend.glm || 1)) * 100)}%` }} /></span></td>
-                    <td className="px-3 py-2 text-right" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCount(p.writes)}</td>
-                    <td className="px-3 py-2 text-right" style={{ fontVariantNumeric: "tabular-nums" }}>{glm(p.perWrite)}</td>
-                  </tr>))}</tbody>
-              </table>
-            </div>
+            <SpendTable spend={spend} price={price} />
             <p className="caption text-text-tertiary">Estimated: each create priced by the fee model from its payload size, each update at the median observed fee per update. Exact fees need one receipt per transaction; ArkivAgent has sampled {formatCount(spend.receipts)}.</p>
           </>
         ) : <p className="text-text-secondary">Needs the fee model (above).</p>}
@@ -90,23 +73,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
         <section aria-labelledby="model" className="space-y-3">
           <h2 id="model" className="text-[20px] font-semibold">The fee model</h2>
           <p className="rounded-md px-4 py-2 tint-info">Finding: on today's Tiramisu a record's lifetime doesn't change its fee. Across {model.lifetime.n} sampled creates with lifetimes of {Math.round(model.lifetime.spanDays[0])} to {Math.round(model.lifetime.spanDays[1])} days, lifetime explains {Math.round(model.lifetime.r2 * 100)}% of what's left after calldata. Arkiv plans storage rent, which would change this.</p>
-          <figure className="rounded-md border border-border-subtle bg-surface p-4">
-            <svg viewBox="0 0 600 210" className="h-[240px] w-full" role="img" aria-label="Gas used against calldata size, log scales">
-              <path d={`M${X(model.observed.calldataBytes[0])},${Y((model.gas.intercept + model.gas.slope * model.observed.calldataBytes[0]) * model.band.high)} ` +
-                [model.observed.calldataBytes[0], model.observed.calldataBytes[1]].map((c) => `L${X(c)},${Y((model.gas.intercept + model.gas.slope * c) * model.band.high)}`).join(" ") + " " +
-                [model.observed.calldataBytes[1], model.observed.calldataBytes[0]].map((c) => `L${X(c)},${Y((model.gas.intercept + model.gas.slope * c) * model.band.low)}`).join(" ") + " Z"}
-                fill="color-mix(in srgb, var(--color-accent) 16%, transparent)" />
-              {dots.map((r, i) => <circle key={i} cx={X(r.calldataBytes)} cy={Y(r.gasUsed)} r="2" fill="var(--color-text-tertiary)" opacity="0.4" />)}
-              <line x1={X(model.observed.calldataBytes[0])} y1={Y(model.gas.intercept + model.gas.slope * model.observed.calldataBytes[0])} x2={X(model.observed.calldataBytes[1])} y2={Y(model.gas.intercept + model.gas.slope * model.observed.calldataBytes[1])} stroke="var(--color-accent)" strokeWidth="1.5" />
-              <text x="40" y="205" className="fill-[var(--color-text-tertiary)] text-[10px]">calldata bytes (log)</text>
-              <text x="4" y="12" className="fill-[var(--color-text-tertiary)] text-[10px]">gas (log)</text>
-            </svg>
-            <figcaption className="caption text-text-secondary">
-              gas = {Math.round(model.gas.intercept).toLocaleString("en")} + {model.gas.slope.toFixed(2)} × calldata bytes (R² {model.gas.r2.toFixed(2)}, {model.gas.n} transactions); calldata = {Math.round(model.calldata.intercept).toLocaleString("en")} + {model.calldata.slope.toFixed(2)} × payload bytes (R² {model.calldata.r2.toFixed(2)}, {model.calldata.n} single-record creates); price {(model.gasPrice * 1e9).toPrecision(3)} gwei (median).
-              {" "}Range: observed fees are {model.band.low.toFixed(2)}× to {model.band.high.toFixed(2)}× the estimate for 90% of fitted creates; on {model.coverage.of} held-out creates, {model.coverage.inside} ({Math.round((model.coverage.inside / Math.max(1, model.coverage.of)) * 100)}%) fell inside it.
-              {dots.length < receipts ? ` Showing ${formatCount(dots.length)} of ${formatCount(receipts)} transactions.` : ""} Fitted {fittedAt.slice(0, 16).replace("T", " ")} UTC.
-            </figcaption>
-          </figure>
+          <FeeScatter fees={{ ...fees, model }} />
         </section>
       )}
     </div>

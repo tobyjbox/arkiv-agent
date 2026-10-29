@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { financialsPrice } from "./financials-price";
 import { openCandleStore } from "@arkiv-agent/db";
-import { fetchCandles, historyCache, latestHistoryPrice, readKlines, readMarketChart } from "./glm-history";
+import { fetchCandles, glmPriceOrClose, historyCache, latestHistoryPrice } from "../src/price/history.ts";
+import { readKlines, readMarketChart } from "../src/price/sources.ts";
 
 const DAY = 86_400_000;
 const reply = (body: unknown, ok = true) => Promise.resolve({ ok, json: () => Promise.resolve(body) });
@@ -92,9 +92,9 @@ describe("the Financials price seed (T29)", () => {
   it("uses the live price when cached, else the newest close while the lookup runs, and nothing when off", () => {
     const live = { usd: 0.107, source: "CoinGecko", at: "2026-10-29T12:00:00.000Z" };
     const close = { usd: 0.108, source: "Binance GLM/USDT, latest daily close", at: "2026-10-29T11:55:00.000Z" };
-    expect(financialsPrice(() => ({ price: live, status: "ok" }), () => close)).toEqual({ price: live, status: "ok" });
-    expect(financialsPrice(() => ({ price: null, status: "loading" }), () => close)).toEqual({ price: close, status: "loading" });
-    expect(financialsPrice(() => ({ price: null, status: "failed" }), () => null)).toEqual({ price: null, status: "failed" });
-    expect(financialsPrice(() => ({ price: null, status: "off" }), () => close)).toEqual({ price: null, status: "off" });
+    expect(glmPriceOrClose(() => ({ price: live, status: "ok" }), () => close)).toEqual({ price: live, status: "ok" });
+    expect(glmPriceOrClose(() => ({ price: null, status: "loading" }), () => close)).toEqual({ price: close, status: "loading" });
+    expect(glmPriceOrClose(() => ({ price: null, status: "failed" }), () => null)).toEqual({ price: null, status: "failed" });
+    expect(glmPriceOrClose(() => ({ price: null, status: "off" }), () => close)).toEqual({ price: null, status: "off" });
   });
 });
