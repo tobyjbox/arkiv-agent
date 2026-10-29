@@ -28,6 +28,7 @@
   Purulia, parent_key, "at most ten" and "not between" questions all return rows. Question sets unchanged (20/20, 15/15,
   15/15, 10/10).
 - 2026-10-29T02:54:40Z Flipped to review (220b63b), candidate c13296c. Notification intent: key `2026-10-28-arkiv-agent:T18@c13296c:review`; recipient Orchestrator thread local_<session>; route Claude Code SendMessage; send once.
+- 2026-10-29T02:54:59Z Notification result for `2026-10-28-arkiv-agent:T18@c13296c:review`: sent once via SendMessage to local_<session>; tool reported delivered, message_id <id>. Do not resend.
 
 ## Handoff
 
