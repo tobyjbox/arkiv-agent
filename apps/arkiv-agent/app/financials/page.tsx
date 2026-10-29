@@ -4,7 +4,8 @@ import { Calculator } from "../../components/cost/calculator";
 import { PriceChart } from "../../components/cost/price-chart";
 import { RefreshForPrice } from "../../components/cost/refresh-for-price";
 import { glm } from "../../lib/glm";
-import { glmPrice, usd } from "../../lib/glm-price";
+import { financialsPrice } from "../../lib/financials-price";
+import { usd } from "../../lib/glm-price";
 import { formatCount } from "../../lib/format";
 import { isIndexReady } from "../../lib/db";
 
@@ -28,7 +29,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   const includeLoad = q.load === "1";
   const { rows, model, fittedAt } = feeModel();
   const spend = estimatedSpend(30, includeLoad);
-  const { price, status: priceStatus } = glmPrice();
+  const { price, status: priceStatus } = financialsPrice();
   const $ = (x: number) => (price ? usd(x * price.usd) : null);
   const unit = (["hours", "days", "months"] as const).find((u) => u === q.unit) ?? "days";
   const initial = { writes: int(q.writes, 1, 1_000_000, 1_000), payload: int(q.payload, 1, 100_000, 200), lifetime: int(q.lifetime, 1, 100_000, 7), unit };

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchCandles, historyCache, readKlines, readMarketChart, sqliteStore } from "./glm-history";
+import { financialsPrice } from "./financials-price";
+import { fetchCandles, historyCache, latestHistoryPrice, readKlines, readMarketChart, sqliteStore } from "./glm-history";
 
 const DAY = 86_400_000;
 const reply = (body: unknown, ok = true) => Promise.resolve({ ok, json: () => Promise.resolve(body) });
@@ -60,7 +61,7 @@ describe("historyCache", () => {
   it("serves stored candles when both sources fail, retries after a minute, and does nothing when off", async () => {
     let t = 100 * DAY;
     const store = sqliteStore(":memory:");
-    store.write("1d", klines(t, 30).map((k) => ({ t: k[0] as number, close: Number(k[4]) })));
+    store.write("1d", klines(t, 30).map((k) => ({ t: k[0] as number, close: Number(k[4]) })), { source: "Binance GLM/USDT", at: t });
     let calls = 0;
     const history = historyCache(store, () => { calls++; return reply({}, false); }, () => t, () => false);
     expect((await history(30))?.candles).toHaveLength(30); // served at once; the refresh runs behind it
@@ -72,5 +73,27 @@ describe("historyCache", () => {
     await history(30);
     await vi.waitFor(() => expect(calls).toBe(4));
     expect(await historyCache(store, () => reply({}), () => t, () => true)(30)).toBeNull();
+  });
+});
+
+describe("the Financials price seed (T29)", () => {
+  const H = 3_600_000;
+  it("remembers which source answered and when, and reads back the newest close", () => {
+    const store = sqliteStore(":memory:");
+    expect(store.latest()).toBeNull();
+    store.write("1d", [{ t: 0, close: 0.1 }, { t: DAY, close: 0.11 }], { source: "Binance GLM/USDT", at: DAY + H });
+    store.write("4h", [{ t: DAY + 4 * H, close: 0.112 }], { source: "CoinGecko", at: DAY + 5 * H });
+    expect(store.latest()).toEqual({ close: 0.112, interval: "4h", source: "CoinGecko", at: DAY + 5 * H });
+    expect(latestHistoryPrice(() => store, () => false)).toEqual({ usd: 0.112, source: "CoinGecko, latest 4-hour close", at: new Date(DAY + 5 * H).toISOString() });
+    expect(latestHistoryPrice(() => store, () => true)).toBeNull();
+  });
+
+  it("uses the live price when cached, else the newest close while the lookup runs, and nothing when off", () => {
+    const live = { usd: 0.107, source: "CoinGecko", at: "2026-10-29T12:00:00.000Z" };
+    const close = { usd: 0.108, source: "Binance GLM/USDT, latest daily close", at: "2026-10-29T11:55:00.000Z" };
+    expect(financialsPrice(() => ({ price: live, status: "ok" }), () => close)).toEqual({ price: live, status: "ok" });
+    expect(financialsPrice(() => ({ price: null, status: "loading" }), () => close)).toEqual({ price: close, status: "loading" });
+    expect(financialsPrice(() => ({ price: null, status: "failed" }), () => null)).toEqual({ price: null, status: "failed" });
+    expect(financialsPrice(() => ({ price: null, status: "off" }), () => close)).toEqual({ price: null, status: "off" });
   });
 });
