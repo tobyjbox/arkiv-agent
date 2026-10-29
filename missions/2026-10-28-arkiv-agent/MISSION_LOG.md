@@ -124,3 +124,4 @@
 - 2026-10-29T16:26:41Z HANDOFF detected T31 review candidate=2d91abc (coder message)
 - 2026-10-29T16:26:41Z HANDOFF adjudicated T31 accept: pulse/cost depend only on db+projects, no cross import; busy-owner rule kept in catalogue build (accepted, avoids a cycle); 553 tests, build OK on merged main; merged
 - 2026-10-29T16:26:41Z RELEASE T32, T33 -> ready (T31 merged)
+- 2026-10-29T16:26:50Z DISPATCH T32, T33 -> arkiv-agent_coder_claude-code_opus-5.5-extra (T32 first)
