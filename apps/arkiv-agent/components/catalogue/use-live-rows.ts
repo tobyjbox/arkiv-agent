@@ -13,7 +13,8 @@ const isChanged = (a: DatasetRow, b: DatasetRow) => a.liveCount !== b.liveCount 
 
 /**
  * Keeps the list in step with the index: refetches when the change feed moves, flashes what
- * changed, and holds updates while the pointer or focus is in the list (no reorder under the hand).
+ * changed, and holds updates while the pointer or focus is in the list, or it is scrolled (no
+ * reorder under the hand). `list` is the list's scroll pane.
  */
 export function useLiveRows(initial: CatalogueData, version: number, list: RefObject<HTMLElement | null>) {
   const [data, setData] = useState(initial);
@@ -54,7 +55,7 @@ export function useLiveRows(initial: CatalogueData, version: number, list: RefOb
           tally.current = { datasets: 0, at: Date.now() };
         }
         const el = list.current;
-        const isUserInList = !!el && (el.matches(":hover") || el.contains(document.activeElement) || window.scrollY > el.offsetTop);
+        const isUserInList = !!el && (el.matches(":hover") || el.contains(document.activeElement) || el.scrollTop > 0);
         if (isUserInList && diff.size) setHeld({ next, diff });
         else apply(next, diff);
       })
@@ -68,7 +69,7 @@ export function useLiveRows(initial: CatalogueData, version: number, list: RefOb
     applyPending: () => {
       if (!held) return;
       apply(held.next, held.diff);
-      window.scrollTo({ top: (list.current?.offsetTop ?? 0) - 80, behavior: "smooth" });
+      list.current?.scrollTo({ top: 0, behavior: "smooth" });
     },
   };
 }

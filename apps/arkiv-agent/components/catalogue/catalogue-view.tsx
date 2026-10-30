@@ -74,28 +74,31 @@ export function CatalogueView({ initial }: { initial: CatalogueData }) {
         <span className="ml-auto">{formatCount(rows.length)} datasets</span>
       </div>
 
-      <div ref={list} className="relative overflow-x-auto rounded-md bg-surface">
-        {isRefreshing && <div className="absolute inset-x-0 top-0 h-0.5 overflow-hidden" aria-hidden><div className="h-full w-1/3 bg-accent [animation:progress_1.2s_linear_infinite]" /></div>}
+      <div className="relative overflow-hidden rounded-md bg-surface">
+        {isRefreshing && <div className="absolute inset-x-0 top-0 z-20 h-0.5 overflow-hidden" aria-hidden><div className="h-full w-1/3 bg-accent [animation:progress_1.2s_linear_infinite]" /></div>}
         {pending > 0 && (
-          <button type="button" onClick={applyPending} className="sticky top-0 z-10 w-full border-b border-border-subtle bg-raised px-4 py-2 text-left text-accent">
+          <button type="button" onClick={applyPending} className="w-full border-b border-border-subtle bg-raised px-4 py-2 text-left text-accent">
             ↑ {pending > 8 ? `${pending} updates` : `${pending} updated dataset${pending === 1 ? "" : "s"}`} · Show
           </button>
         )}
-        {rows.length ? (
-          <table className="w-full min-w-[720px] border-collapse">
-            <thead>
-              <tr className="label border-b border-border-subtle text-left text-text-secondary">
-                <th className="px-3 py-2.5">Dataset</th><th className="px-3 py-2.5">Project</th><th className="px-3 py-2.5 text-right">Live</th>
-                <th className="px-3 py-2.5 text-right">Writers</th><th className="hidden px-3 py-2.5 text-right md:table-cell">Lifetime</th><th className="px-3 py-2.5 text-right">Last write</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => <DatasetRow key={r.id} row={r} ageSeconds={ageOf(r)} description={r.description ?? undefined} flash={flashes.get(r.id) ?? null} onPrefetch={() => router.prefetch(`/catalogue/${r.id}`)} />)}
-            </tbody>
-          </table>
-        ) : (
-          <NoResults view={view} onClear={() => router.replace(path, { scroll: false })} isEmpty={data.rows.length === 0} />
-        )}
+        {/* Its own scroll pane, about a screen tall, so the page doesn't grow with the number of datasets. */}
+        <div ref={list} role="region" aria-label="Datasets" tabIndex={0} className="max-h-[max(20rem,calc(100dvh-7rem))] overflow-auto focus-visible:outline-offset-[-2px]">
+          {rows.length ? (
+            <table className="w-full min-w-[720px] border-collapse">
+              <thead>
+                <tr className="label text-left text-text-secondary [&>th]:sticky [&>th]:top-0 [&>th]:z-10 [&>th]:bg-surface [&>th]:shadow-[inset_0_-1px_0_var(--color-border-subtle)]">
+                  <th className="px-3 py-2.5">Dataset</th><th className="px-3 py-2.5">Project</th><th className="px-3 py-2.5 text-right">Live</th>
+                  <th className="px-3 py-2.5 text-right">Writers</th><th className="hidden px-3 py-2.5 text-right md:table-cell">Lifetime</th><th className="px-3 py-2.5 text-right">Last write</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => <DatasetRow key={r.id} row={r} ageSeconds={ageOf(r)} description={r.description ?? undefined} flash={flashes.get(r.id) ?? null} onPrefetch={() => router.prefetch(`/catalogue/${r.id}`)} />)}
+              </tbody>
+            </table>
+          ) : (
+            <NoResults view={view} onClear={() => router.replace(path, { scroll: false })} isEmpty={data.rows.length === 0} />
+          )}
+        </div>
       </div>
     </div>
   );
