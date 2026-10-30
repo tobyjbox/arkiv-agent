@@ -7,3 +7,4 @@ Done criteria: T01 merged to main and pushed (publish hygiene: noreply email, no
 Approval: owner answers in chat (2026-10-30T10:37:07Z).
 
 ## Amendments
+- 2026-10-30T10:38:02Z: A04 owner adds T02 catalogue table scrolling pane (coder, after T01).
