@@ -40,35 +40,3 @@ export async function interpretQuestion(question: string, ctx: AskContext, opts:
   const r = interpret(question, ctx);
   return r.ok ? finish(r.value, ctx.datasets, "rules") : { ok: false, engine: "rules", ...r.error };
 }
-
-const plural = (w: string) =>
-  /ed$/.test(w) ? `${w} records` : /[^aeiou]y$/.test(w) ? `${w.slice(0, -1)}ies` : /(s|x|ch|sh)$/.test(w) ? `${w}es` : `${w}s`;
-/** A value a person would type: words, not ids or codes. */
-const WORDY = /^[A-Za-z][A-Za-z -]{2,18}$/;
-
-/**
- * Example questions from datasets that exist now, each checked to interpret back to its own
- * dataset, so a clicked example never misfires. One per project.
- */
-export function exampleQuestions(ctx: AskContext, n = 3): string[] {
-  const out: string[] = [];
-  const projects = new Set<string>();
-  const datasets = ctx.datasets.filter((d) => !d.isLoadGenerator && d.project.method === "label" && d.discriminator && /^[a-z]+(_[a-z]+)?$/.test(d.discriminator.value));
-  for (const d of datasets.sort((a, b) => b.liveCount - a.liveCount)) {
-    if (out.length >= n) break;
-    if (projects.has(d.project.label)) continue;
-    const skip = new Set([d.project.labelAttr, d.discriminator!.name]);
-    const field = d.schema.find((f) => f.type === "str" && !skip.has(f.name) && f.presence > 0.9 && f.examples.some((e) => WORDY.test(e)));
-    if (!field) continue;
-    const value = field.examples.find((e) => WORDY.test(e))!;
-    const words = d.discriminator!.value.split("_");
-    const label = d.project.label.replace(/[-_.]?\*$/, "");
-    const q = `${label} ${[...words.slice(0, -1), plural(words[words.length - 1]!)].join(" ")} with ${field.name} ${value}`;
-    const check = interpret(q, { ...ctx, scope: null, previous: null });
-    if (check.ok && check.value.datasetId === d.id && check.value.where) {
-      out.push(q);
-      projects.add(d.project.label);
-    }
-  }
-  return out;
-}

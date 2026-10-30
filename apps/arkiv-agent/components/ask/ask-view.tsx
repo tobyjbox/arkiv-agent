@@ -59,14 +59,14 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
   }, [update]);
 
   /** A new question starts fresh; a follow-up (the box under the results) narrows the last answer. */
-  const ask = useCallback(async (question: string, isFollowUp = false) => {
+  const ask = useCallback(async (question: string, isFollowUp = false, inScope = scope) => {
     const q = question.trim();
     if (!q) return;
     remember(q);
     const id = nextId.current++;
     const previous = [...turns].reverse().find((t) => t.result)?.result?.plan ?? null;
     setTurns((ts) => [...ts, { id, question: q, result: null, failure: null, run: null }]);
-    const r = await askApi({ question: q, scope, previous: isFollowUp ? previous : null });
+    const r = await askApi({ question: q, scope: inScope, previous: isFollowUp ? previous : null });
     if (!r.ok) {
       update(id, () => ({ failure: { kind: r.kind, message: r.message, examples: r.examples } }));
       setAnnouncement("Not understood. Example questions are shown below.");
@@ -96,7 +96,8 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
   return (
     <div className="space-y-8">
       <p className="sr-only" aria-live="polite">{announcement}</p>
-      <QuestionBox onAsk={(q) => ask(q)} isBusy={isBusy} examples={turns.length === 0 ? examples : []} variant="main" />
+      {/* Examples are built across all datasets, so one runs there whatever the scope was. */}
+      <QuestionBox onAsk={(q) => ask(q)} onExample={(q) => { setScope(null); void ask(q, false, null); }} isBusy={isBusy} examples={turns.length === 0 ? examples : []} variant="main" />
 
       <div className="mx-auto flex max-w-[760px] flex-wrap items-center gap-x-4 gap-y-2 caption text-text-tertiary">
         <label className="flex min-w-0 items-center gap-1.5">
@@ -169,7 +170,16 @@ function NotUnderstood({ failure, onAsk }: { failure: Failure & { examples: stri
   );
 }
 
-function QuestionBox({ onAsk, isBusy, examples, variant }: { onAsk: (q: string) => void; isBusy: boolean; examples: string[]; variant: "main" | "follow-up" }) {
+/** Wallet addresses in a chip, middle-truncated: the full question still runs. */
+const shortAddresses = (q: string) => q.replace(/\b(0x[0-9a-fA-F]{4})[0-9a-fA-F]{32}([0-9a-fA-F]{4})\b/g, "$1…$2");
+
+function QuestionBox({ onAsk, onExample, isBusy, examples, variant }: {
+  onAsk: (q: string) => void;
+  onExample?: (q: string) => void;
+  isBusy: boolean;
+  examples: string[];
+  variant: "main" | "follow-up";
+}) {
   const isFirst = variant === "main";
   const [text, setText] = useState("");
   const [isFocused, setFocused] = useState(false);
@@ -229,11 +239,15 @@ function QuestionBox({ onAsk, isBusy, examples, variant }: { onAsk: (q: string) 
           className="inline-flex size-7 shrink-0 items-center justify-center rounded-sm bg-accent text-on-accent disabled:bg-overlay disabled:text-text-disabled"><ArrowUp size={16} /></button>
       </form>
       {isFirst && examples.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 caption [scrollbar-width:none] md:flex-wrap md:justify-center md:overflow-visible">
-          <span className="shrink-0 text-text-tertiary">Try:</span>
-          {examples.map((e) => (
-            <button key={e} type="button" disabled={isBusy} onClick={() => submit(e)} className="shrink-0 rounded-full border border-border-default px-3 py-1 text-text-secondary hover:border-ai/50 hover:text-text-primary">{e}</button>
-          ))}
+        <div className="space-y-1.5">
+          <div role="group" aria-labelledby="ask-try" className="flex items-center gap-2 overflow-x-auto pb-1 caption [scrollbar-width:none] md:flex-wrap md:justify-center md:overflow-visible">
+            <span id="ask-try" className="shrink-0 text-text-tertiary">Try asking</span>
+            {examples.map((e) => (
+              <button key={e} type="button" title={e} disabled={isBusy} onClick={() => (onExample ?? submit)(e)}
+                className="shrink-0 rounded-full border border-border-default px-3 py-1 text-text-secondary hover:border-ai/50 hover:text-text-primary">{shortAddresses(e)}</button>
+            ))}
+          </div>
+          <p className="caption text-center text-text-tertiary">Name a kind of data, then narrow it by a value, a number (over, under), a recent time window, or an owner address.</p>
         </div>
       )}
     </div>

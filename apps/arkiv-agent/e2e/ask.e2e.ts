@@ -1,5 +1,7 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { open } from "./open";
+
+const tryAsking = (main: Locator) => main.getByRole("group", { name: "Try asking" });
 
 function watchErrors(page: Page): string[] {
   const errors: string[] = [];
@@ -15,7 +17,7 @@ test("an example question shows chips, then live results, the query and the code
   await open(page, "/ask");
   const main = page.locator("#main");
   await expect(main.getByRole("heading", { level: 1, name: "Ask Arkiv" })).toBeVisible();
-  const example = main.getByText("Try:").locator("..").getByRole("button").first();
+  const example = tryAsking(main).getByRole("button").first();
   await expect(example).toBeVisible();
   await example.click();
 
@@ -61,7 +63,7 @@ test("the ask APIs refuse cross-site requests (T07 M1)", async ({ request }) => 
 test("words ArkivAgent can't use are reported, not dropped (T06 F1)", async ({ page }) => {
   await open(page, "/ask");
   const main = page.locator("#main");
-  const example = (await main.getByText("Try:").locator("..").getByRole("button").first().textContent())!.trim();
+  const example = (await tryAsking(main).getByRole("button").first().textContent())!.trim();
   const input = main.getByLabel("Ask a question about data on Arkiv");
   await input.fill(`${example} zebrafish`);
   await input.press("Enter");
@@ -81,4 +83,52 @@ test("a dataset named by its attribute shape runs live without EXISTS (T21 M1)",
   await main.getByRole("tab", { name: "Query" }).click();
   await expect(main.locator("pre code")).toContainText("project = str('nazar-in-batch-alerts')");
   await expect(main.locator("pre code")).not.toContainText("EXISTS");
+});
+
+test("Try asking offers 4 to 6 examples; each is read back with every word used and finds records live (A03)", async ({ page, request }) => {
+  test.setTimeout(120_000);
+  await open(page, "/ask");
+  const main = page.locator("#main");
+  const chips = tryAsking(main).getByRole("button");
+  await expect(chips.first()).toBeVisible();
+  const questions = await chips.evaluateAll((els) => els.map((e) => e.getAttribute("title")!));
+  expect(questions.length).toBeGreaterThanOrEqual(4);
+  expect(questions.length).toBeLessThanOrEqual(6);
+  await expect(main.getByText(/^Name a kind of data, then narrow it/)).toBeVisible();
+  for (const question of questions) {
+    const r = await (await request.post("/api/ask", { data: { question } })).json();
+    expect(r, question).toMatchObject({ ok: true, plan: { ignored: [] } });
+    const run = await (await request.post("/api/ask/run", { data: { plan: r.plan } })).json();
+    // Live: when Arkiv answers, the example has records. A timeout or rate limit is not the example's fault.
+    if (run.ok) expect(run.rows.length, question).toBeGreaterThan(0);
+  }
+});
+
+test("an example runs from the keyboard across all datasets, and the examples go once asked (A03)", async ({ page }) => {
+  await open(page, "/ask");
+  const main = page.locator("#main");
+  const scope = main.getByLabel("Scope");
+  await scope.selectOption({ index: 1 });
+  const chip = tryAsking(main).getByRole("button").nth(1);
+  const question = (await chip.getAttribute("title"))!;
+  await chip.focus();
+  await page.keyboard.press("Enter");
+  await expect(main.getByText(`“${question}”`)).toBeVisible();
+  await expect(scope).toHaveValue("");
+  await expect(main.getByRole("region", { name: "Interpretation" }).getByText("Interpreted as")).toBeVisible();
+  await expect(tryAsking(main)).toHaveCount(0);
+  await expect(main.getByText(/^Name a kind of data, then narrow it/)).toHaveCount(0);
+});
+
+test("Try asking at 375 px: one scrolling row, addresses shortened, nothing wider than the screen (A03)", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await open(page, "/ask");
+  const main = page.locator("#main");
+  const chips = tryAsking(main).getByRole("button");
+  await expect(chips.first()).toBeVisible();
+  for (const text of await chips.allTextContents()) expect(text).not.toMatch(/0x[0-9a-fA-F]{40}/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+  await chips.last().scrollIntoViewIfNeeded();
+  await chips.last().click();
+  await expect(main.getByRole("region", { name: "Interpretation" }).getByText("Interpreted as")).toBeVisible();
 });

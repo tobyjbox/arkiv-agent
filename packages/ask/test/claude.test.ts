@@ -1,6 +1,6 @@
 import type { Dataset } from "@arkiv-agent/catalogue";
 import { describe, expect, it } from "vitest";
-import { exampleQuestions, interpretQuestion } from "../src/ask.ts";
+import { interpretQuestion } from "../src/ask.ts";
 import { type AskClient, catalogueInput } from "../src/claude.ts";
 import { evalContext } from "./eval-set.ts";
 import fixture from "./fixtures/catalogue.json" with { type: "json" };
@@ -57,13 +57,5 @@ describe("Claude path (fake client)", () => {
     const input = JSON.parse(catalogueInput([{ ...datasets[0]!, schema: [{ name: "note", type: "str", presence: 1, examples: ["x".repeat(100)] }] }], ctx));
     expect(input.datasets[0].attributes[0].examples[0]).toHaveLength(41);
     expect(input.datasets[0]).not.toHaveProperty("soleOwner");
-  });
-});
-
-describe("exampleQuestions", () => {
-  it("builds questions from real datasets that interpret back to them", () => {
-    const qs = exampleQuestions(ctx);
-    expect(qs).toHaveLength(3);
-    for (const q of qs) expect(q).toMatch(/ with /);
   });
 });

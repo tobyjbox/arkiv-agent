@@ -1,6 +1,6 @@
-import { AskPlanSchema, exampleQuestions, hasAskKey, interpretQuestion } from "@arkiv-agent/ask";
+import { AskPlanSchema, hasAskKey, interpretQuestion } from "@arkiv-agent/ask";
 import { z } from "zod";
-import { askContext, brief, explorerUrl } from "../../../lib/ask";
+import { askContext, askExamples, brief, explorerUrl } from "../../../lib/ask";
 import { indexNotReady } from "../../../lib/db";
 import { createRateLimit, refuseCrossSite } from "../../../lib/guard";
 
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   if (!body.success) return Response.json({ error: "Expected { question, scope?, previous? }." }, { status: 400 });
   const ctx = askContext(body.data.scope ?? null, body.data.previous ?? null);
   const r = await interpretQuestion(body.data.question, ctx);
-  if (!r.ok) return Response.json({ ...r, examples: exampleQuestions(ctx, 2) });
+  if (!r.ok) return Response.json({ ...r, examples: askExamples(ctx).slice(0, 2) });
   const d = ctx.datasets.find((x) => x.id === r.plan.datasetId);
   return Response.json({ ...r, dataset: d ? brief(d) : null, explorerUrl: explorerUrl(r.query) });
 }
