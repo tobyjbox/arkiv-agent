@@ -22,6 +22,7 @@
 
 ## Progress log
 - 2026-10-30T10:54:30Z coder: all three milestones done on feat/ask-examples, candidate fac014b. Checks: pnpm test 637/637, typecheck, build, prod e2e 27/27 three of three on 3117. Live on 3117 (rules only): all 5 examples read back with no unused words and returned rows from Arkiv (4 to 50+).
+- 2026-10-30T10:54:40Z notify intent: T01 review, candidate fac014b, to the verified Orchestrator <session> (ak-orch.sh thread arkiv-agent) via ccd send_message; one attempt.
 
 ## Handoff
 **Candidate:** fac014b9e21306340091d0b9b1d2e649aed84abe on `feat/ask-examples` (worktree ~/dev/worktrees/arkiv-agent-ask-examples, base main 59eb07e). Not pushed.
