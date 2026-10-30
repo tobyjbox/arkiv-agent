@@ -8,3 +8,4 @@
 - 2026-10-30T10:54:51Z HANDOFF T01@fac014b detected: row review 3/3 by arkiv-agent_coder_claude-code_opus-5.5-extra; handoff feat/ask-examples@fac014b:tasks/T01-ask-examples.md; reviewer arkiv-agent_orchestrator_claude-code_opus-5.5-med
 - 2026-10-30T10:55:21Z HANDOFF T01@fac014b adjudicated: accepted; integrated 6ae0f69; 637 tests, typecheck OK. Deviations accepted: no expiry example (interpreter limit, out of scope); click resets Scope to All; examples cached 10 min; README Ask shot unchanged (answered state). Example generator moved from packages/ask/src/ask.ts to examples.ts, not an interpreter change. Row -> merged
 - 2026-10-30T10:55:21Z HANDOFF T01@fac014b dispatched: T02 already released; coder confirmed to start
+- 2026-10-30T10:55:30Z NUDGE T02 -> arkiv-agent_coder_claude-code_opus-5.5-extra queued (go after T01 merge)
