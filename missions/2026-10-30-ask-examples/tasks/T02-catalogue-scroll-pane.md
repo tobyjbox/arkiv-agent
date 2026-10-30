@@ -23,6 +23,7 @@
 ## Progress log
 - 2026-10-30T11:00:39Z coder: all three milestones done on feat/catalogue-pane, candidate c6eb017. Page height at 1280 x 800 with 752 rows: 49,637 px on the owner's 3101 app (main, read-only page load), 1,408 px on this build (3118). Checks: pnpm test 637/637, typecheck, build, prod e2e 29/29 three of three on 3118.
 - 2026-10-30T11:00:39Z notify intent: T02 review, candidate c6eb017, to the verified Orchestrator <session> (ak-orch.sh thread arkiv-agent) via ccd send_message; one attempt.
+- 2026-10-30T11:00:51Z notify result: delivered (send_message reported its turn started), message_id 31c2b76d-28f7-4564-a53c-689091d09d54. Not a review verdict.
 
 ## Handoff
 **Candidate:** c6eb017b82b4b538f7591ded61f6e81acbb7520a on `feat/catalogue-pane` (worktree ~/dev/worktrees/arkiv-agent-catalogue-pane, base main 1a30903, which includes T01). Not pushed.
