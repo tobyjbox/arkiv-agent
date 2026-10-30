@@ -1,6 +1,6 @@
-import { exampleQuestions, hasAskKey } from "@arkiv-agent/ask";
+import { hasAskKey } from "@arkiv-agent/ask";
 import { AskView } from "../../components/ask/ask-view";
-import { askContext } from "../../lib/ask";
+import { askContext, askExamples } from "../../lib/ask";
 import { isIndexReady } from "../../lib/db";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
           <p className="text-text-secondary">Ask in plain English. See the query, the results, and the code.</p>
           <p className="caption text-text-tertiary">Experimental: answers can be wrong or miss conditions. Always check the query shown before relying on a result.</p>
         </header>
-        <AskView examples={exampleQuestions(ctx)} scopes={scopes} initialScope={scoped?.id ?? null} initialQuestion={q?.slice(0, 500) ?? null} engine={hasAskKey() ? "claude" : "rules"} />
+        <AskView examples={askExamples(ctx)} scopes={scopes} initialScope={scoped?.id ?? null} initialQuestion={q?.slice(0, 500) ?? null} engine={hasAskKey() ? "claude" : "rules"} />
       </div>
     </div>
   );

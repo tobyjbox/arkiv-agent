@@ -4,3 +4,4 @@ export * from "./query.ts";
 export * from "./run.ts";
 export * from "./ask.ts";
 export * from "./claude.ts";
+export * from "./examples.ts";
