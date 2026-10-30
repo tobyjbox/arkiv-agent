@@ -4,4 +4,4 @@
 | ID | Task | Persona | Model tier | Status | Progress | Claimed-by (identity) | Depends | Updated |
 |---|---|---|---|---|---|---|---|---|
 | T01 | Ask Arkiv: example question chips from the live catalogue | coder | fast | merged | 3/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-30T10:55:13Z |
-| T02 | Catalogue: dataset table in its own scrolling pane | coder | fast | ready | 0/3 | | — | 2026-10-30T10:38:02Z |
+| T02 | Catalogue: dataset table in its own scrolling pane | coder | fast | claimed | 0/3 | arkiv-agent_coder_claude-code_opus-5.5-extra | — | 2026-10-30T10:55:45Z |
