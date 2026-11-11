@@ -1,4 +1,4 @@
-import { BUSY_OWNER_CREATES } from "./entities.ts";
+import { BUSY_OWNER_CREATES, DECODE_GRACE_BLOCKS } from "./entities.ts";
 import type { Prisma } from "./prisma.ts";
 
 /** Feed rows kept behind the indexed block (~1 h of 2 s blocks); older cursors get `reset`. */
@@ -49,11 +49,15 @@ async function busyOwners(prisma: Prisma, indexed: bigint): Promise<string[]> {
 /** Changes after cursor `since`, plus the numbers every page header needs. */
 export async function readFeed(prisma: Prisma, since: number | null): Promise<FeedResponse> {
   const state = await prisma.syncState.findUnique({ where: { id: 1 } });
-  const owners = await busyOwners(prisma, state?.indexedBlock ?? 0n);
+  const indexedBlock = state?.indexedBlock ?? 0n;
+  const owners = await busyOwners(prisma, indexedBlock);
   const [liveCount, undecodedLive, bounds] = await Promise.all([
     prisma.entity.count({ where: { status: "live" } }),
-    // Only what the decoder will get to: it samples load generators 1 in 16 (decode-store.ts).
-    prisma.entity.count({ where: { status: "live", decodedBlock: null, ...(owners.length ? { OR: [{ key: { endsWith: "0" } }, { owner: { notIn: owners } }] } : {}) } }),
+    // Only what the decoder will get to (it samples load generators 1 in 16, decode-store.ts), past the grace period.
+    prisma.entity.count({ where: {
+      status: "live", decodedBlock: null, createdAtBlock: { lte: indexedBlock - BigInt(DECODE_GRACE_BLOCKS) },
+      ...(owners.length ? { OR: [{ key: { endsWith: "0" } }, { owner: { notIn: owners } }] } : {}),
+    } }),
     prisma.change.aggregate({ _min: { seq: true }, _max: { seq: true } }),
   ]);
   const indexed = state?.indexedBlock ?? 0n;

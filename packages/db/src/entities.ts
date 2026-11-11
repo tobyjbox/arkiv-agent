@@ -33,10 +33,16 @@ export const decodeWaitingScope = (busyOwners: Iterable<string>) => {
   return list ? `(e.key LIKE '%0' OR e.owner NOT IN (${list}))` : "1";
 };
 
-/** Live records, and how many of them the decoder still has to decode. */
-export function liveCounts(busyOwners: Iterable<string> = [], db: Sqlite = readDb()): { live: number; undecoded: number } {
-  const c = db.prepare(`SELECT COUNT(*) AS live, SUM(e.decodedBlock IS NULL AND ${decodeWaitingScope(busyOwners)}) AS undecoded
-    FROM "Entity" e WHERE e.status = 'live'`).get() as { live: number; undecoded: number | null };
+/**
+ * New records take a few seconds to decode, and the load generators write every few seconds, so one is
+ * nearly always in flight. Records younger than this (30 s of 2 s blocks) don't count as waiting yet.
+ */
+export const DECODE_GRACE_BLOCKS = 15;
+
+/** Live records, and how many of them the decoder still has to decode (older than the grace period at `indexedBlock`). */
+export function liveCounts(busyOwners: Iterable<string> = [], indexedBlock = Number.MAX_SAFE_INTEGER, db: Sqlite = readDb()): { live: number; undecoded: number } {
+  const c = db.prepare(`SELECT COUNT(*) AS live, SUM(e.decodedBlock IS NULL AND ${decodeWaitingScope(busyOwners)} AND e.createdAtBlock <= ?) AS undecoded
+    FROM "Entity" e WHERE e.status = 'live'`).get(indexedBlock - DECODE_GRACE_BLOCKS) as { live: number; undecoded: number | null };
   return { live: c.live, undecoded: c.undecoded ?? 0 };
 }
 

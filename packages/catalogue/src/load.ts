@@ -60,7 +60,7 @@ function build(): Loaded {
   const busyOwnerSet = busyOwners(since);
   const { datasets, membersById } = buildDatasets(members, { indexedBlock: indexed, busyOwners: busyOwnerSet });
 
-  const counts = liveCounts(busyOwnerSet);
+  const counts = liveCounts(busyOwnerSet, indexed);
   const recent = createBlocksSince(indexed - 24 * 1_800, busyOwnerSet);
   const hourlyWrites24h = hourlySeries(recent, indexed, 24);
   const value: Loaded = {

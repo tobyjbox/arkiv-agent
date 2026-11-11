@@ -37,7 +37,19 @@ describe("readFeed", () => {
     const feed = await readFeed(prisma, null);
     expect(feed.liveCount).toBe(BUSY_OWNER_CREATES + 2);
     expect(feed.undecodedLive).toBe(312 + 1);
-    expect(liveCounts([BUSY], db)).toEqual({ live: BUSY_OWNER_CREATES + 2, undecoded: 312 + 1 });
+    expect(liveCounts([BUSY], 100, db)).toEqual({ live: BUSY_OWNER_CREATES + 2, undecoded: 312 + 1 });
+    await prisma.$disconnect();
+  });
+
+  it("doesn't count records still within the decode grace period as waiting", async () => {
+    const { db, path } = tempDb();
+    const store = createIndexStore(db);
+    const at = (n: number, block: bigint) => ({ kind: "created" as const, block, logIndex: n, tx: key(9), op: n, key: key(n), owner: OWNER, expiresAt: 500n, flags: 0 });
+    // Indexed to 100: block 80 is past the 15-block grace period, block 90 is still inside it.
+    store.applySpan([at(1, 80n), at(2, 90n)], 100n, 0n, state);
+    const prisma = createPrisma(`file:${path}`);
+    expect((await readFeed(prisma, null)).undecodedLive).toBe(1);
+    expect(liveCounts([], 100, db).undecoded).toBe(1);
     await prisma.$disconnect();
   });
 });
