@@ -1,3 +1,4 @@
+import { BUSY_OWNER_CREATES } from "./entities.ts";
 import type { Prisma } from "./prisma.ts";
 
 /** Feed rows kept behind the indexed block (~1 h of 2 s blocks); older cursors get `reset`. */
@@ -26,12 +27,33 @@ export type FeedResponse = {
   changes: { seq: number; block: string; kind: ChangeKind; entityKey: string; owner: string }[];
 };
 
+/** The decoder's history window (7 days of 2 s blocks), over which load generators are counted. */
+const DECODE_HISTORY_BLOCKS = 7n * 43_200n;
+/** Finding load generators scans a week of creates, so the feed (polled every 5 s) reuses it for a minute. */
+const BUSY_TTL_MS = 60_000;
+const busyByClient = new WeakMap<Prisma, { at: number; owners: string[] }>();
+
+async function busyOwners(prisma: Prisma, indexed: bigint): Promise<string[]> {
+  let busy = busyByClient.get(prisma);
+  if (!busy || Date.now() - busy.at > BUSY_TTL_MS) {
+    const since = indexed > DECODE_HISTORY_BLOCKS ? indexed - DECODE_HISTORY_BLOCKS : 0n;
+    const rows = await prisma.entity.groupBy({
+      by: ["owner"], where: { createdAtBlock: { gte: since } }, having: { owner: { _count: { gt: BUSY_OWNER_CREATES } } },
+    });
+    busy = { at: Date.now(), owners: rows.map((r) => r.owner) };
+    busyByClient.set(prisma, busy);
+  }
+  return busy.owners;
+}
+
 /** Changes after cursor `since`, plus the numbers every page header needs. */
 export async function readFeed(prisma: Prisma, since: number | null): Promise<FeedResponse> {
-  const [state, liveCount, undecodedLive, bounds] = await Promise.all([
-    prisma.syncState.findUnique({ where: { id: 1 } }),
+  const state = await prisma.syncState.findUnique({ where: { id: 1 } });
+  const owners = await busyOwners(prisma, state?.indexedBlock ?? 0n);
+  const [liveCount, undecodedLive, bounds] = await Promise.all([
     prisma.entity.count({ where: { status: "live" } }),
-    prisma.entity.count({ where: { status: "live", decodedBlock: null } }),
+    // Only what the decoder will get to: it samples load generators 1 in 16 (decode-store.ts).
+    prisma.entity.count({ where: { status: "live", decodedBlock: null, ...(owners.length ? { OR: [{ key: { endsWith: "0" } }, { owner: { notIn: owners } }] } : {}) } }),
     prisma.change.aggregate({ _min: { seq: true }, _max: { seq: true } }),
   ]);
   const indexed = state?.indexedBlock ?? 0n;

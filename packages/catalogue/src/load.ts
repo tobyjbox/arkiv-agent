@@ -5,7 +5,7 @@ import type { Catalogue } from "./types.ts";
 
 /** History window that carries attributes in the index (T03 decodes 7 days). */
 export const HISTORY_BLOCKS = 7 * 43_200;
-/** High-volume owners, as in the indexer (packages/indexer/src/enrich.ts). */
+/** High-volume owners, as in the indexer (packages/indexer/src/enrich.ts) and the db package. */
 const BUSY_OWNER_CREATES = 5_000;
 const I64_MAX = 2n ** 63n - 1n;
 /** Rebuild at most this often; the UI polls every 5 s and shows the index block it is from. */
@@ -60,7 +60,7 @@ function build(): Loaded {
   const busyOwnerSet = busyOwners(since);
   const { datasets, membersById } = buildDatasets(members, { indexedBlock: indexed, busyOwners: busyOwnerSet });
 
-  const counts = liveCounts();
+  const counts = liveCounts(busyOwnerSet);
   const recent = createBlocksSince(indexed - 24 * 1_800, busyOwnerSet);
   const hourlyWrites24h = hourlySeries(recent, indexed, 24);
   const value: Loaded = {

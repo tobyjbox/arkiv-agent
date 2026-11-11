@@ -21,9 +21,22 @@ export function busyOwners(sinceBlock: number | bigint, minCreates: number, db: 
   return db.prepare(`SELECT owner FROM "Entity" WHERE createdAtBlock >= ? GROUP BY owner HAVING COUNT(*) > ?`).pluck().all(sinceBlock, minCreates) as string[];
 }
 
-/** Live records, and how many of them aren't decoded yet. */
-export function liveCounts(db: Sqlite = readDb()): { live: number; undecoded: number } {
-  const c = db.prepare(`SELECT COUNT(*) AS live, SUM(decodedBlock IS NULL) AS undecoded FROM "Entity" WHERE status = 'live'`).get() as { live: number; undecoded: number | null };
+/** Owners above this many creates in the decode window are load generators (the indexer's enrich.ts). */
+export const BUSY_OWNER_CREATES = 5_000;
+
+/**
+ * Live records the decoder will get to, as its own queue sees them (decode-store.ts): load
+ * generators' records count only for the 1 in 16 it samples (keys ending in 0), since it skips the rest.
+ */
+export const decodeWaitingScope = (busyOwners: Iterable<string>) => {
+  const list = [...busyOwners].map((o) => `'${o.replace(/[^0-9a-fA-Fx]/g, "")}'`).join(",");
+  return list ? `(e.key LIKE '%0' OR e.owner NOT IN (${list}))` : "1";
+};
+
+/** Live records, and how many of them the decoder still has to decode. */
+export function liveCounts(busyOwners: Iterable<string> = [], db: Sqlite = readDb()): { live: number; undecoded: number } {
+  const c = db.prepare(`SELECT COUNT(*) AS live, SUM(e.decodedBlock IS NULL AND ${decodeWaitingScope(busyOwners)}) AS undecoded
+    FROM "Entity" e WHERE e.status = 'live'`).get() as { live: number; undecoded: number | null };
   return { live: c.live, undecoded: c.undecoded ?? 0 };
 }
 
