@@ -101,14 +101,10 @@
 .decode-fill-active, .decode-fill-done { background: linear-gradient(90deg, var(--color-accent), var(--color-ai)); }
 .decode-fill-stalled { background: var(--color-warn); }
 .decode-fill-paused { background: var(--color-text-disabled); }
-.decode-collapse { grid-template-rows: 1fr; transition: grid-template-rows 240ms var(--ease-decel), opacity 240ms var(--ease-decel); }
-.decode-collapse.is-collapsed { grid-template-rows: 0fr; opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .decode-spin, .decode-breathe, .decode-flash { animation: none; }
   .decode-flash { opacity: 0; }
   .decode-sheen { display: none; }
   .decode-indeterminate { animation: none; transform: none; }
   .decode-move { transition: none; }
-  .decode-collapse { transition: opacity 160ms linear; }
-  .decode-collapse.is-collapsed { grid-template-rows: 1fr; }
 }

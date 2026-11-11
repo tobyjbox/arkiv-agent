@@ -55,8 +55,8 @@ Same slot as the banner: between the stat tiles and the search/filter bar, full 
 | **Decoding** | `undecodedLive > 0`, recent syncs OK, waiting count falling or steady | As drawn. Glyph: `accent` ring rotating (1.6 s). Sheen runs. |
 | **Keeping pace** | `undecodedLive > 0` but not falling over the last 60 s (new writes arrive as fast as they decode) | Bar as normal. Rate text becomes "keeping pace with new writes". No ETA. Not a warning: busy chains do this. |
 | **Nearly done** | under 0.5% waiting or under 50 records | Same, ETA reads "under a minute". |
-| **Caught up** | `undecodedLive` goes to 0 | Bar fills to 100% over 600 ms, the cap flashes `live` once, label changes to "ALL RECORDS DECODED" with a `live` check. Holds 3 s, then the panel collapses (height and opacity, 240 ms) and is removed. The stat tiles move up smoothly; no jump. |
-| **Hidden** | `undecodedLive = 0` on page load | Not rendered at all (no empty slot reserved). |
+| **Caught up** | `undecodedLive` goes to 0 | Bar fills to 100% over 600 ms, the cap flashes `live` once, label changes to "ALL RECORDS DECODED" with a `live` check. Stays on screen at 100% (owner, 2026-11-11). New records waiting take it below 100% (99.9% for a small backlog) until they are decoded. |
+| **Caught up on load** | `undecodedLive = 0` on page load | Rendered in the caught-up state at 100%. |
 | **Stalled** | waiting count unchanged for 2 min while syncs keep succeeding and `undecodedLive > 0` | Fill and cap switch to `warn`; sheen stops; glyph becomes a static `warn` pause icon. Row 3: "Decoding paused · no progress for 2 min". Info tooltip: "The indexer is running but not decoding. Check the indexer logs." |
 | **Indexer offline** | sync indicator is in its Offline state (02 Pattern 1) | Fill desaturates to `text.disabled`, cap and sheen off, glyph static `danger` dot. Row 3: "Paused while the index is unreachable" plus the same Retry action as the sync indicator. Keeps the last known numbers (labelled "as of 14:02"). |
 | **Delayed sync** | sync indicator Delayed | No change to the bar; the top-bar indicator already says it. Avoid two warnings for one cause. |
@@ -101,7 +101,6 @@ All per 01 Motion tokens; animate transform and opacity only.
 | Status glyph ring | Rotates, 1.6 s per turn | Static ring |
 | Indeterminate shimmer (first run) | 1.8 s slide | Static 25% accent block at the left, plus the text "Starting" |
 | Counters | Roll per Pattern 3 | Instant swap |
-| Caught-up collapse | 3 s hold, then 240 ms collapse | 3 s hold, then removed with a 160 ms fade, no height animation |
 
 Respect the 8-elements rule (01): the bar counts as one animated element.
 

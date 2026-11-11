@@ -49,7 +49,7 @@ test("reduced motion: no spin, no sheen, instant fill", async ({ page }) => {
   expect(await bar(page).locator(".decode-move").first().evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0s");
 });
 
-test("first run, paused, and caught up (announced, then removed)", async ({ page }) => {
+test("first run, paused, caught up (announced, and stays), then a new backlog", async ({ page }) => {
   let waiting = 37_000;
   let ageS = 0;
   await feed(page, { waiting: () => waiting, get ageS() { return ageS; } });
@@ -69,7 +69,16 @@ test("first run, paused, and caught up (announced, then removed)", async ({ page
   ageS = 0;
   await expect(bar(page).getByText("All records decoded", { exact: true })).toBeVisible(NEXT_POLL);
   await expect(page.locator("#main [aria-live=polite]")).toHaveText("All records decoded.");
-  await expect(bar(page)).toHaveCount(0, NEXT_POLL); // 3 s hold, then the collapse
+  // It stays at 100% rather than collapsing (it used to go after a 3 s hold).
+  await page.waitForTimeout(4_000);
+  await expect(bar(page)).toHaveAttribute("data-phase", "caught-up");
+  await expect(bar(page).getByText("100%", { exact: true })).toBeVisible();
+
+  waiting = 3; // new records arrive: below 100% until they're decoded, then full again
+  await expect(bar(page).getByText("99.9%", { exact: true })).toBeVisible(NEXT_POLL);
+  await expect(bar(page)).toHaveAttribute("data-phase", "decoding");
+  waiting = 0;
+  await expect(bar(page)).toHaveAttribute("data-phase", "caught-up", NEXT_POLL);
 });
 
 test("at 375 px: short label and percent, then decoded / total", async ({ page }) => {

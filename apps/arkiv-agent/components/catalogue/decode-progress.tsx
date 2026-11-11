@@ -7,13 +7,8 @@ import { formatCount } from "../../lib/format";
 import { useLive, useSyncState } from "../live/live-provider";
 import { RollingNumber } from "../ui/rolling-number";
 
-/** Caught up: hold the full bar this long, then collapse. */
-const HOLD_MS = 3_000;
-const COLLAPSE_MS = 240;
-/** After it has collapsed, only a real backlog brings the bar back (new writes wait a moment for decoding). */
-const REAPPEAR_AT = 50;
-
-type Visibility = "shown" | "caught-up" | "collapsing" | "gone";
+/** Always on screen: decoding, or caught up at 100% until new records arrive. */
+type Visibility = "shown" | "caught-up";
 
 /**
  * design/07: how far the indexer is with decoding live records, how fast, and whether it's moving.
@@ -26,7 +21,7 @@ export function DecodeProgress({ onAnnounce }: { onAnnounce: (text: string) => v
   const total = live.liveCount;
   const waiting = Math.min(live.undecodedLive, total);
   const decoded = total - waiting;
-  const [visibility, setVisibility] = useState<Visibility>(() => (waiting > 0 && total > 0 ? "shown" : "gone"));
+  const [visibility, setVisibility] = useState<Visibility>(() => (waiting > 0 ? "shown" : "caught-up"));
   const [tracker, setTracker] = useState<Tracker | null>(null);
   const spoken = useRef<Spoken | null>(null);
   const labelId = useId();
@@ -36,34 +31,28 @@ export function DecodeProgress({ onAnnounce }: { onAnnounce: (text: string) => v
     if (live.lastOkAt !== null) setTracker((t) => track(t, { at: live.lastOkAt!, waiting }));
   }, [live.lastOkAt, waiting]);
 
-  // Caught up: full bar, hold, collapse, gone. A real backlog later brings it back.
+  // Caught up: the bar stays full; new records waiting take it back below 100% until they're decoded.
   useEffect(() => {
     if (visibility === "shown" && waiting === 0 && total > 0) setVisibility("caught-up");
     if (visibility === "caught-up" && waiting > 0) setVisibility("shown");
-    if (visibility === "gone" && waiting >= REAPPEAR_AT) { setTracker(null); spoken.current = null; setVisibility("shown"); }
   }, [visibility, waiting, total]);
-  useEffect(() => {
-    if (visibility !== "caught-up" && visibility !== "collapsing") return;
-    const t = setTimeout(() => setVisibility(visibility === "caught-up" ? "collapsing" : "gone"), visibility === "caught-up" ? HOLD_MS : COLLAPSE_MS);
-    return () => clearTimeout(t);
-  }, [visibility]);
 
   // The server render has no samples, so it shows the plain decoding (or first-run) state.
   const now = tracker ? tracker.samples.at(-1)!.at : 0;
   const phase: Phase = tracker ? phaseOf(tracker, now, total, sync) : sync === "offline" ? "offline" : waiting >= total ? "first-run" : "decoding";
-  const isDone = visibility === "caught-up" || visibility === "collapsing";
+  const isDone = visibility === "caught-up";
   const percent = isDone ? "100%" : formatPercent(decoded, total);
   const pace = tracker && !isDone ? paceText(phase, tracker) : null;
   const { rate, eta } = tracker && !isDone ? paceParts(phase, tracker) : { rate: null, eta: null };
 
   useEffect(() => {
-    if (visibility === "gone" || (!tracker && !isDone)) return;
+    if (!tracker && !isDone) return;
     const cur: Spoken = { phase: isDone ? "caught-up" : phase, quarter: quarter(isDone ? 100 : (decoded / Math.max(1, total)) * 100), at: Date.now() };
     const text = announcement(spoken.current, cur, percent);
     if (text) { spoken.current = cur; onAnnounce(text); }
   }, [visibility, tracker, isDone, phase, decoded, total, percent, onAnnounce]);
 
-  if (visibility === "gone" || total === 0) return null;
+  if (total === 0) return null;
 
   const isPaused = phase === "offline" || phase === "stale";
   const isFirstRun = phase === "first-run" && !isDone;
@@ -87,9 +76,8 @@ export function DecodeProgress({ onAnnounce }: { onAnnounce: (text: string) => v
   const tone = isDone ? "done" : phase === "stalled" ? "stalled" : isPaused ? "paused" : "active";
 
   return (
-    <div className={`decode-collapse grid ${visibility === "collapsing" ? "is-collapsed" : ""}`}>
-      {/* Clipped only while collapsing, so the info tooltip can overhang the panel. */}
-      <section aria-labelledby={labelId} data-phase={isDone ? "caught-up" : phase} className={`min-h-0 ${visibility === "collapsing" ? "overflow-hidden" : ""}`}>
+    <div>
+      <section aria-labelledby={labelId} data-phase={isDone ? "caught-up" : phase}>
         <div className="rounded-md border border-border-default bg-surface px-3 py-3 sm:px-4">
           <div className="flex items-center gap-2">
             <Glyph tone={tone} phase={phase} />
