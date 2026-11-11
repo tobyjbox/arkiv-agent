@@ -6,6 +6,12 @@ import { RecordDialog } from "./record-dialog";
 
 type Row = { key: string; createdAtBlock: number; attributes: { name: string; value: string }[] };
 type Loaded = { total: number; records: Row[] };
+/** Records asked for per request, and the most the table holds (the API's own cap). */
+const PAGE = 200;
+const MAX = 2_000;
+/** The first answer's share of the progress bar, and the fastest the bar may cross its whole length. */
+const FIRST = 0.35;
+const FULL_MS = 900;
 
 /**
  * Every live record of one dataset as a table: one row per record, one column per attribute name.
@@ -17,14 +23,52 @@ export function DatasetRecords({ id, live }: { id: string; live: number }) {
   // The record whose full detail is open in a window.
   const [open, setOpen] = useState<string | null>(null);
 
+  // Read a page at a time, so a large dataset shows how far the read has got.
+  const [progress, setProgress] = useState({ read: 0, of: Math.min(live, MAX) });
   useEffect(() => {
     const stop = new AbortController();
-    fetch(`/api/datasets/${encodeURIComponent(id)}?records=live`, { cache: "no-store", signal: stop.signal })
-      .then((r) => (r.ok ? (r.json() as Promise<Loaded>) : Promise.reject(new Error(String(r.status)))))
-      .then(setData)
-      .catch(() => { if (!stop.signal.aborted) setFailed(true); });
+    void (async () => {
+      const records: Row[] = [];
+      let total = 0;
+      do {
+        const r = await fetch(`/api/datasets/${encodeURIComponent(id)}?records=live&offset=${records.length}&limit=${PAGE}`, { cache: "no-store", signal: stop.signal });
+        if (!r.ok) throw new Error(String(r.status));
+        const page = (await r.json()) as Loaded;
+        total = page.total;
+        records.push(...page.records);
+        setProgress({ read: records.length, of: Math.min(total, MAX) });
+        if (page.records.length < PAGE) break;
+      } while (records.length < Math.min(total, MAX));
+      setData({ total, records });
+    })().catch(() => { if (!stop.signal.aborted) setFailed(true); });
     return () => stop.abort();
   }, [id]);
+
+  // The bar's share of the whole job. The first answer carries the set-up cost (the server may be
+  // re-reading the index), so it is worth FIRST of the bar; the remaining pages split the rest. While
+  // an answer is awaited the bar keeps creeping towards that step's end, slowing as it nears it, so a
+  // long wait shows as movement and not as a stall at 0%. It never claims a step that has not landed.
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const pages = Math.max(1, Math.ceil(progress.of / PAGE));
+    const done = Math.min(pages, Math.ceil(progress.read / PAGE));
+    const at = (n: number) => (n <= 0 ? 0 : pages === 1 || n >= pages ? 1 : FIRST + (1 - FIRST) * ((n - 1) / (pages - 1)));
+    // Everything has arrived: finish the climb whatever the page arithmetic says.
+    const [from, to] = data ? [1, 1] : [at(done), at(done + 1)];
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setShown(from); return; }
+    const since = performance.now();
+    let last = since;
+    // A timer, not animation frames: frames stop while the tab is hidden, and the table must still arrive.
+    const timer = setInterval(() => {
+      const now = performance.now();
+      const target = from + (to - from) * 0.92 * (1 - Math.exp(-(now - since) / 900));
+      const gain = (now - last) / FULL_MS;
+      last = now;
+      setShown((v) => Math.min(Math.max(target, from), v + gain));
+    }, 33);
+    return () => clearInterval(timer);
+  }, [progress, data]);
+  const isCounting = progress.of > 0 && shown < 0.999;
 
   // Columns: attribute names, the ones most records carry first.
   const columns = useMemo(() => {
@@ -34,7 +78,37 @@ export function DatasetRecords({ id, live }: { id: string; live: number }) {
   }, [data]);
 
   if (hasFailed) return <p className="text-text-secondary">Its records could not be read. <a href={`/catalogue/${id}`} className="text-accent hover:underline">Open the dataset</a></p>;
-  if (!data) return <p className="text-text-secondary" aria-busy="true">Reading {formatCount(live)} records…</p>;
+  if (!data || isCounting) {
+    const share = Math.min(1, shown);
+    return (
+      // The same bar as "Decoding records" on the Catalogue: spinner and label, count and percent, a
+      // teal-to-violet fill with a moving sheen, quarter marks, and a bright marker at the leading edge.
+      <div className="rounded-md border border-border-default bg-surface px-3 py-3 sm:px-4" aria-busy="true">
+        <div className="flex items-center gap-2">
+          <span className="decode-spin size-3 rounded-full border-2 border-accent border-t-accent/25" aria-hidden />
+          <span className="label text-text-secondary">Reading records</span>
+          <span className="ml-auto whitespace-nowrap leading-4 tabular-nums">
+            <span className="font-mono text-[13px] text-text-primary">{formatCount(progress.read)} / {formatCount(progress.of)} · </span>
+            <span className="font-semibold text-text-primary">{Math.round(share * 100)}%</span>
+          </span>
+        </div>
+        <div role="progressbar" aria-label="Reading the records" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(share * 100)}
+          className="relative mt-1.5 h-1.5 rounded-full bg-raised ring-1 ring-border-subtle ring-inset">
+          <div className="absolute inset-0 overflow-hidden rounded-full">
+            <div className="decode-fill-active absolute inset-0 origin-left rounded-full" style={{ transform: `scaleX(${share})` }} />
+            <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${share * 100}%` }}>
+              <div className="decode-sheen absolute inset-0" />
+            </div>
+            {[25, 50, 75].map((p) => <span key={p} className="absolute top-1/2 h-0.5 w-px -translate-y-1/2 bg-border-subtle" style={{ left: `${p}%` }} />)}
+          </div>
+          <div className="pointer-events-none absolute inset-0" style={{ transform: `translateX(${(share - 1) * 100}%)` }}>
+            <span className="decode-breathe absolute -right-px -top-[3px] h-3 w-0.5 rounded-full bg-focus shadow-[0_0_8px_color-mix(in_srgb,var(--color-accent)_35%,transparent)]" />
+          </div>
+        </div>
+        <p className="caption mt-1.5 text-text-tertiary">{progress.read === 0 ? "Getting the dataset ready" : `${formatCount(progress.of - progress.read)} waiting`}</p>
+      </div>
+    );
+  }
   if (data.records.length === 0) return <p className="text-text-secondary">No live records right now. <a href={`/catalogue/${id}`} className="text-accent hover:underline">Open the dataset</a></p>;
 
   const isCut = data.records.length < data.total;

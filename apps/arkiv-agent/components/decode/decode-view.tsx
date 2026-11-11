@@ -12,6 +12,9 @@ import { PatternsSection } from "./patterns-section";
 import { PrivacySection } from "./privacy-section";
 import { ARCHETYPE_LABEL, ProjectPanel } from "./project-panel";
 
+/** The key's name for a privacy colour: no flags, one kind, or several. */
+const flagKey = (flags: number) => `flag:${Math.min(flags, 2)}`;
+
 type LinkKind = (typeof LINK_KINDS)[number]["kind"];
 
 export function DecodeView({ decode }: { decode: Decode }) {
@@ -51,19 +54,28 @@ export function DecodeView({ decode }: { decode: Decode }) {
   // "behind": the indexer is running and working through blocks it missed, so the map is still moving.
   const isLive = sync !== "stale" && sync !== "offline";
 
+  // Items of the key that are switched off; everything is on to begin with.
+  const [off, setOff] = useState<ReadonlySet<string>>(new Set());
+  const toggle = (key: string) => setOff((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
   // Unlabelled wallets are 1-dataset islands, mostly: shown only when linked, unless asked for.
-  const graph = useMemo(() => {
+  // Before the key's filter: what the key lists, so an item switched off stays there to switch back on.
+  const base = useMemo(() => {
     const linked = new Set(decode.links.filter((l) => l.kind !== "member").flatMap((l) => [l.source, l.target]));
     const keep = new Set(decode.projects.filter((p) => showWallets || p.isLabel || p.refs > 0 || p.datasets.some((d) => linked.has(d.id))).map((p) => p.id));
-    const nodes = decode.nodes.filter((n) => keep.has(n.project));
+    return decode.nodes.filter((n) => keep.has(n.project));
+  }, [decode, showWallets]);
+  const graph = useMemo(() => {
+    // A project goes, with its datasets, when its colour in the key is switched off.
+    const gone = new Set(base.filter((n) => n.kind === "project" && off.has(colorBy === "purpose" ? n.archetype : flagKey(n.flags))).map((n) => n.id));
+    const nodes = base.filter((n) => !gone.has(n.project));
     const ids = new Set(nodes.map((n) => n.id));
-    const links = decode.links.filter((l) => ids.has(l.source) && ids.has(l.target) && (l.kind === "member" || kinds.has(l.kind)));
+    const links = decode.links.filter((l) => ids.has(l.source) && ids.has(l.target) && (l.kind === "member" || kinds.has(l.kind)) && !(off.has("broken") && l.kind === "ref" && l.broken * 2 > l.count));
     return { nodes, links };
-  }, [decode, kinds, showWallets]);
+  }, [base, decode, kinds, off, colorBy]);
 
   const project = selected ? decode.projects.find((p) => p.id === selected) ?? null : null;
   const select = (node: GraphNode | null) => { setSelectedProject(node ? node.project : null); setDatasetId(node?.kind === "dataset" ? node.id : null); };
-  const usedArchetypes = useMemo(() => [...new Set(graph.nodes.map((n) => n.archetype))].sort((a, b) => (a === "unclear" ? 1 : b === "unclear" ? -1 : a.localeCompare(b))), [graph.nodes]);
+  const usedArchetypes = useMemo(() => [...new Set(base.filter((n) => n.kind === "project").map((n) => n.archetype))].sort((a, b) => (a === "unclear" ? 1 : b === "unclear" ? -1 : a.localeCompare(b))), [base]);
 
   const tiles = [
     { label: "Record links", value: s.refs, note: `${formatCount(s.implicit)} stored as text, not as a key`, tip: "Attributes whose value is another record's key. Arkiv has a key type for this, and no tool that shows it." },
@@ -144,13 +156,22 @@ export function DecodeView({ decode }: { decode: Decode }) {
             </button>
           )}
           <div className="pointer-events-none absolute inset-x-3 bottom-3 flex flex-wrap items-end justify-between gap-2 caption text-text-secondary">
-            <ul className="flex max-w-[62%] flex-wrap gap-x-3 gap-y-1 rounded-md bg-canvas/70 px-2.5 py-2 backdrop-blur-sm">
-              {colorBy === "purpose" ? usedArchetypes.map((a) => (
-                <li key={a} className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: ARCHETYPE_COLOR[a] }} aria-hidden />{ARCHETYPE_LABEL(a)}</li>
-              )) : [0, 1, 2].map((n) => (
-                <li key={n} className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: flagColor(n) }} aria-hidden />{n === 0 ? "No flags" : n === 1 ? "One kind of personal data" : "Several kinds"}</li>
-              ))}
-              <li className="flex items-center gap-1.5"><span className="h-0.5 w-3 rounded" style={{ background: BROKEN_COLOR }} aria-hidden />Mostly broken links</li>
+            <ul aria-label="Show or hide by colour" className="pointer-events-auto flex max-w-[62%] flex-wrap gap-x-1 gap-y-0.5 rounded-md bg-canvas/70 px-1.5 py-1.5 backdrop-blur-sm">
+              {(colorBy === "purpose"
+                ? usedArchetypes.map((a) => ({ key: a as string, label: ARCHETYPE_LABEL(a), color: ARCHETYPE_COLOR[a], isLine: false }))
+                : [0, 1, 2].map((n) => ({ key: flagKey(n), label: n === 0 ? "No flags" : n === 1 ? "One kind of personal data" : "Several kinds", color: flagColor(n), isLine: false }))
+              ).concat({ key: "broken", label: "Mostly broken links", color: BROKEN_COLOR, isLine: true }).map((item) => {
+                const isOn = !off.has(item.key);
+                return (
+                  <li key={item.key}>
+                    <button type="button" aria-pressed={isOn} onClick={() => toggle(item.key)} title={isOn ? "Click to hide these" : "Click to show these"}
+                      className={`flex items-center gap-1.5 rounded-full px-1.5 py-0.5 hover:bg-raised ${isOn ? "text-text-secondary" : "text-text-tertiary line-through opacity-60"}`}>
+                      <span className={item.isLine ? "h-0.5 w-3 rounded" : "h-2 w-2 rounded-full"} style={{ background: isOn ? item.color : "#566175" }} aria-hidden />{item.label}
+                    </button>
+                  </li>
+                );
+              })}
+              {off.size > 0 && <li><button type="button" onClick={() => setOff(new Set())} className="rounded-full px-1.5 py-0.5 text-accent hover:underline">Show all</button></li>}
             </ul>
             <span className="rounded-md bg-canvas/70 px-2 py-1 text-text-tertiary">{formatCount(graph.nodes.filter((n) => n.kind === "project").length)} projects · {formatCount(graph.nodes.filter((n) => n.kind === "dataset").length)} datasets · drag to turn, scroll to zoom, click a node</span>
           </div>

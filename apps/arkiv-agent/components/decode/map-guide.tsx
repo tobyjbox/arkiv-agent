@@ -23,6 +23,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
   { title: "Colours", items: [
     { mark: <Dot c="#ff7a7a" />, what: "Colour by purpose", means: "Each project is coloured by what its data appears to be for, such as health, agents, or identity. It is a guess from the words in its attribute and dataset names. Grey means the names gave no clue. The key at the bottom of the map lists the colours.", why: "You can see what Arkiv is being used for, and which uses cluster together." },
     { mark: <Dot c="#f5b544" />, what: "Colour by privacy flags", means: "Projects are coloured by whether attribute names suggest personal data, such as contact details, health, location, government IDs or birth dates. Only names are read, never values.", why: "Everything on Arkiv is public. This points at data that may not belong in the open." },
+    { what: "The colour key at the bottom of the map", means: "Every item in it is a switch. Click one to hide the projects of that colour, with their datasets, and click it again to bring them back. Mostly broken links hides the red lines. Show all switches everything back on.", why: "Clear away what you are not looking at, for example every project whose purpose is unclear." },
   ] },
   { title: "Controls on the map", items: [
     { what: "Record links, Same record shape, Shared wallet", means: "Switch each kind of line on or off.", why: "Look at one kind of relationship at a time." },

@@ -1,9 +1,10 @@
 "use client";
 
+import { AskSteps } from "./ask-steps";
 import { ArrowUp, ChevronDown, History, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { InterpretationCard, InterpretingCard } from "./interpretation-card";
-import { type AskPlan, type AskQuery, askApi, chipText, type Failure, type Interpreted, leafPaths, replaceAt, runApi } from "./plan";
+import { type AskPlan, type AskQuery, askApi, type Failure, type Interpreted, leafPaths, replaceAt, runApi } from "./plan";
 import { Results, type RunState } from "./results";
 
 type Turn = {
@@ -66,7 +67,13 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
     const id = nextId.current++;
     const previous = [...turns].reverse().find((t) => t.result)?.result?.plan ?? null;
     setTurns((ts) => [...ts, { id, question: q, result: null, failure: null, run: null }]);
-    const r = await askApi({ question: q, scope: inScope, previous: isFollowUp ? previous : null });
+    let r = await askApi({ question: q, scope: inScope, previous: isFollowUp ? previous : null });
+    // Typed into the top box, a follow-up such as "only for insurer hdfc-ergo" names no dataset and makes
+    // no sense alone. Before giving up, read it as a follow-up to the answer on screen.
+    if (!r.ok && r.kind === "not-understood" && !isFollowUp && previous) {
+      const asFollowUp = await askApi({ question: q, scope: inScope, previous });
+      if (asFollowUp.ok) r = asFollowUp;
+    }
     if (!r.ok) {
       update(id, () => ({ failure: { kind: r.kind, message: r.message, examples: r.examples } }));
       setAnnouncement("Not understood. Example questions are shown below.");
@@ -119,24 +126,16 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
           ArkivAgent turns your question into an Arkiv query using the catalogue's schema, then runs it live. You'll always see the query.
         </p>
       )}
+      {turns.length === 0 && <div className="mx-auto max-w-[760px]"><AskSteps engine={engine === "claude" ? "claude" : "rules"} at={1} /></div>}
 
-      {turns.map((t, i) => {
-        const isLatest = i === turns.length - 1;
-        if (!isLatest && t.result) {
-          return (
-            <details key={t.id} className="rounded-md border border-border-subtle bg-surface px-4 py-2">
-              <summary className="cursor-pointer caption text-text-secondary">
-                <span className="text-text-primary">“{t.question}”</span> · {leafPaths(t.result.plan.where).map((l) => chipText(l.leaf, l.negated)).join(" · ") || "all records"}
-              </summary>
-              <div className="mt-3 space-y-3 pb-2">
-                <InterpretationCard result={t.result} onEdit={(p, n) => edit(t, p, n)} isBusy={isBusy} />
-                {t.run && <Results result={t.result} run={t.run} onLoadMore={() => t.run?.cursor && t.run.block && void run(t.id, t.result!, { cursor: t.run.cursor, block: t.run.block })} onRetry={() => void run(t.id, t.result!)} onRemove={(p) => edit(t, p, null)} />}
-              </div>
-            </details>
-          );
-        }
+      {/* One question on screen at a time: the latest, with its answer. Earlier ones stay in memory so a
+          follow-up can build on them, and are reachable from the history button in the question box. */}
+      {turns.slice(-1).map((t) => {
+        // The numbered trail beside the latest question shows which stage it has reached.
+        const at = t.failure ? 2 : !t.result ? 2 : !t.run || t.run.status === "querying" ? 5 : t.run.status === "failed" ? 5 : 6;
         return (
-          <article key={t.id} className="space-y-3 fade-in">
+          <div key={t.id} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <article className="min-w-0 space-y-3 fade-in">
             <p className="caption text-text-tertiary">You asked: <span className="text-text-secondary">“{t.question}”</span></p>
             {!t.result && !t.failure && <InterpretingCard />}
             {t.failure && <NotUnderstood failure={t.failure} onAsk={ask} />}
@@ -147,6 +146,8 @@ export function AskView({ examples, scopes, initialScope, initialQuestion, engin
                 onRetry={() => void run(t.id, t.result!)} onRemove={(p) => edit(t, p, null)} />
             )}
           </article>
+          <div className="lg:sticky lg:top-20"><AskSteps engine={engine === "claude" ? "claude" : "rules"} at={at} hasFailed={Boolean(t.failure) || t.run?.status === "failed"} /></div>
+          </div>
         );
       })}
 

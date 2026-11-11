@@ -15,7 +15,8 @@ export function PatternsSection({ decode, onSelect }: { decode: Decode; onSelect
         <p className="text-text-secondary">Nobody set a standard, yet projects converge on the same attribute names. {conflicts} of the top {decode.conventions.length} names are typed differently by different projects, which breaks any query written across them.</p>
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
-        <div className="overflow-x-auto rounded-md border border-border-subtle bg-surface">
+        {/* Shown second: the shapes come first. */}
+        <div className="order-2 overflow-x-auto rounded-md border border-border-subtle bg-surface">
           <table className="w-full text-left">
             <caption className="label px-4 pt-3 text-left text-text-tertiary">Attribute names used by the most projects</caption>
             <thead className="caption text-text-tertiary"><tr className="border-b border-border-subtle"><th scope="col" className="px-4 py-2 font-medium">Attribute</th><th scope="col" className="px-3 py-2 text-right font-medium">Projects</th><th scope="col" className="px-3 py-2 font-medium">Typed as</th></tr></thead>
@@ -33,7 +34,7 @@ export function PatternsSection({ decode, onSelect }: { decode: Decode; onSelect
             </tbody>
           </table>
         </div>
-        <div className="rounded-md border border-border-subtle bg-surface p-4">
+        <div className="order-1 rounded-md border border-border-subtle bg-surface p-4">
           <h3 className="label text-text-tertiary">Record shapes found under more than one project</h3>
           {decode.sharedShapes.length === 0 ? <p className="mt-2 text-text-secondary">None in the current catalogue.</p> : (
             <ul className="mt-2 space-y-3">
