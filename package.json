@@ -11,6 +11,7 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
+    "live": "node scripts/live.mjs",
     "dev": "pnpm --filter arkiv-agent dev",
     "index": "pnpm --filter @arkiv-agent/indexer start",
     "index:verify": "pnpm --filter @arkiv-agent/indexer verify",

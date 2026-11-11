@@ -70,3 +70,32 @@ const BLOCK_MS = 2_000;
 const DAY_MS = 86_400_000;
 /** The UTC day of a block column, given block 0's time as the first parameter. */
 export const dayOf = (col: string) => `CAST((? + ${col} * ${BLOCK_MS}) / ${DAY_MS} AS INTEGER)`;
+
+/** Owner and status of the given entity keys (any case), for those the index holds. */
+export function entityStatuses(keys: readonly string[], db: Sqlite = readDb()): { key: string; owner: string; status: "live" | "expired" | "deleted" }[] {
+  const statement = db.prepare(`SELECT key, owner, status FROM "Entity" WHERE key IN (SELECT value FROM json_each(?))`);
+  const out: { key: string; owner: string; status: "live" | "expired" | "deleted" }[] = [];
+  for (let i = 0; i < keys.length; i += 5_000) out.push(...(statement.all(JSON.stringify(keys.slice(i, i + 5_000))) as typeof out));
+  return out;
+}
+
+export type RecordDetail = {
+  key: string; owner: string; creator: string; status: "live" | "expired" | "deleted";
+  createdAtBlock: number; createdTx: string; createdOp: number; updatedAtBlock: number; expiresAt: number; deletedAtBlock: number | null;
+  contentType: string | null; payloadBytes: number | null; payloadPreview: string | null;
+  attributes: { name: string; type: string; value: string }[];
+  /** Later transactions that changed the record, oldest first. */
+  patches: { block: number; tx: string; op: number }[];
+  /** The create transaction's receipt, when the fee sampler has fetched it. */
+  createFee: { sender: string; creates: number; updates: number; calldataBytes: number; gasUsed: number; gasPriceWei: string; feeWei: string } | null;
+};
+
+/** Everything the index holds about one record and the transaction that created it; null when it has no such record. */
+export function recordDetail(key: string, db: Sqlite = readDb()): RecordDetail | null {
+  const entity = db.prepare(`SELECT key, owner, creator, status, createdAtBlock, createdTx, createdOp, updatedAtBlock, expiresAt, deletedAtBlock, contentType, payloadBytes, payloadPreview FROM "Entity" WHERE key = ?`).get(key.toLowerCase()) as Omit<RecordDetail, "attributes" | "patches" | "createFee"> | undefined;
+  if (!entity) return null;
+  const attributes = db.prepare(`SELECT name, type, value FROM "Attribute" WHERE entityKey = ? ORDER BY name`).all(entity.key) as RecordDetail["attributes"];
+  const patches = db.prepare(`SELECT block, tx, op FROM "Patch" WHERE entityKey = ? ORDER BY block, logIndex`).all(entity.key) as RecordDetail["patches"];
+  const createFee = (db.prepare(`SELECT sender, creates, updates, calldataBytes, gasUsed, gasPriceWei, feeWei FROM "TxFee" WHERE tx = ?`).get(entity.createdTx) as RecordDetail["createFee"] | undefined) ?? null;
+  return { ...entity, attributes, patches, createFee };
+}

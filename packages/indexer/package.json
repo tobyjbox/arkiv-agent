@@ -12,11 +12,12 @@
     "aggregates": "tsx --env-file-if-exists=../../.env src/aggregates-cli.ts"
   },
   "dependencies": {
-    "@arkiv-network/sdk": "~0.8.1",
     "@arkiv-agent/core": "workspace:*",
     "@arkiv-agent/cost": "workspace:*",
     "@arkiv-agent/db": "workspace:*",
+    "@arkiv-agent/decode": "workspace:*",
     "@arkiv-agent/pulse": "workspace:*",
+    "@arkiv-network/sdk": "~0.8.1",
     "viem": "^2.57.13"
   },
   "devDependencies": {

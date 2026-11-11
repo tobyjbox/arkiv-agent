@@ -28,6 +28,9 @@ shows the level above that: **projects and datasets**.
 - **Insights.** Active wallets, active projects, writes and new projects over time, retention by
   cohort (week of first write), and the most active projects, with load generators left out unless you
   include them.
+- **Arkiv-Decode.** A 3D map of projects, their datasets and the links between records, with what each
+  project appears to be for (and the evidence), patterns shared between projects, broken links, and
+  datasets whose attribute names suggest personal data. All inferred from names, types and record keys.
 - **Financials.** What writing to Arkiv costs: a fee model fitted to sampled transaction receipts, a
   calculator for writes × payload × lifetime with its error range, and estimated GLM spend per project.
   Amounts are in GLM, with a dollar figure from the mainnet GLM price (see [Outbound calls](#outbound-calls)).
@@ -42,6 +45,7 @@ shows the level above that: **projects and datasets**.
 | Data catalogue | Built |
 | Ask Arkiv | Built |
 | Insights | Built (stretch; differences from `design/05-pulse.md` under [Known gaps](#known-gaps)) |
+| Arkiv-Decode | MVP (`/decode`; no design doc or e2e test yet) |
 | Financials | Built (stretch; needs `pnpm fees`; differences from `design/06-cost.md` under [Known gaps](#known-gaps)) |
 
 ## Screens
@@ -101,7 +105,14 @@ cp .env.example .env
 pnpm install
 ```
 
-Then, in one terminal, build the index and keep it following the chain:
+Then start everything with one command: the indexer, which keeps following the chain, and the app at
+http://localhost:3101. Ctrl-C stops both.
+
+```bash
+pnpm live
+```
+
+Or run the two parts yourself. In one terminal, build the index and keep it following the chain:
 
 ```bash
 pnpm index --watch
@@ -154,9 +165,10 @@ All optional. ArkivAgent runs with the `.env.example` defaults.
 
 | Command | What it does |
 |---|---|
+| `pnpm live` | The indexer in watch mode and the app together (`pnpm live --start` serves the production build). |
 | `pnpm index` / `pnpm index --watch` | Sync the index once / keep following the chain. |
 | `pnpm fees [--limit N]` | Sample fees from the receipts of N recent writes (default 1,500) for the Financials page. Skips transactions it already has. |
-| `pnpm aggregates` | Work out and store the Insights and Financials results now, without syncing. The indexer does this itself; this is for when it isn't running. |
+| `pnpm aggregates` | Work out and store the Insights, Financials and Arkiv-Decode results now, without syncing. The indexer does this itself; this is for when it isn't running. |
 | `pnpm index:verify --attrs 20` | Compare the index with the chain: live count, plus names, types and values of 20 random records. |
 | `pnpm dev` | App with hot reload on http://localhost:3101. |
 | `pnpm build`, `pnpm start` | Production build and server. |

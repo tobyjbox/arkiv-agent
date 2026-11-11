@@ -1,15 +1,16 @@
 import { costAggregates } from "@arkiv-agent/cost";
+import { decodeAggregates } from "@arkiv-agent/decode";
 import { readCursor, type Sqlite, writeAggregates } from "@arkiv-agent/db";
 import { pulseAggregates } from "@arkiv-agent/pulse";
 
 /**
- * Computes the Insights and Financials results and stores them; the pages only read them. Takes a few
+ * Computes the Insights, Financials and Arkiv-Decode results and stores them; the pages only read them. Takes a few
  * seconds, as it reads all of history. The fee model is refitted only when receipts were added.
  */
 export function storeAggregates(db: Sqlite): { indexedBlock: number; seconds: string } {
   const started = performance.now();
   const indexedBlock = readCursor(db)?.indexedBlock ?? 0;
-  writeAggregates([...pulseAggregates(), ...costAggregates()], indexedBlock, db);
+  writeAggregates([...pulseAggregates(), ...costAggregates(), ...decodeAggregates()], indexedBlock, db);
   return { indexedBlock, seconds: ((performance.now() - started) / 1000).toFixed(1) };
 }
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { askContext, askExamples, brief, explorerUrl } from "../../../lib/ask";
 import { indexNotReady } from "../../../lib/db";
 import { createRateLimit, refuseCrossSite } from "../../../lib/guard";
+import { json } from "../../../lib/json";
 
 export const dynamic = "force-dynamic";
 
@@ -26,5 +27,5 @@ export async function POST(request: Request) {
   const r = await interpretQuestion(body.data.question, ctx);
   if (!r.ok) return Response.json({ ...r, examples: askExamples(ctx).slice(0, 2) });
   const d = ctx.datasets.find((x) => x.id === r.plan.datasetId);
-  return Response.json({ ...r, dataset: d ? brief(d) : null, explorerUrl: explorerUrl(r.query) });
+  return json(request, { ...r, dataset: d ? brief(d) : null, explorerUrl: explorerUrl(r.query) });
 }

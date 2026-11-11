@@ -3,8 +3,9 @@ import { loadGeneratorOwners, projectsByWallet } from "@arkiv-agent/projects";
 import { type FeeModel, type FeeRow, fitFeeModel, GLM_PER_WEI } from "./model.ts";
 
 const BLOCKS_PER_DAY = 43_200;
-/** Spend periods the pages show: Insights' 7, 30 and 90 days (Financials shows 30). */
-export const SPEND_DAYS = [7, 30, 90] as const;
+/** Spend periods the pages show, in days: Insights uses 7, 30 and 90; Financials all of them. 0 is all time. */
+export const SPEND_DAYS = [1, 7, 30, 90, 0] as const;
+export type SpendDays = (typeof SPEND_DAYS)[number];
 /** The Financials scatter draws at most this many receipts, evenly picked. */
 const MAX_POINTS = 2_000;
 
@@ -102,7 +103,7 @@ export function costAggregates(): [string, FeeSummary | Spend | null][] {
   const projectOf = projectsByWallet();
   const out: [string, FeeSummary | Spend | null][] = [["fees", summarize(f)]];
   for (const days of SPEND_DAYS) {
-    const since = indexed - days * BLOCKS_PER_DAY;
+    const since = days === 0 ? 0 : indexed - days * BLOCKS_PER_DAY;
     const activity = f.model ? { creates: createsByWallet(since), updates: updatesByWallet(since), load, projectOf } : { creates: [], updates: [], load, projectOf };
     for (const includeLoad of [false, true]) out.push([spendKey(days, includeLoad), estimate(f, days, includeLoad, activity)]);
   }
@@ -112,7 +113,7 @@ export function costAggregates(): [string, FeeSummary | Spend | null][] {
 /** The fee model summary as the indexer last stored it; null until it has. */
 export const feeSummary = (): FeeSummary | null => readAggregate<FeeSummary>("fees")?.value ?? null;
 
-/** Estimated spend over `days` (7, 30 or 90) as the indexer last stored it; null until it has, or without a fee model. */
+/** Estimated spend over `days` (one of SPEND_DAYS; 0 is all time) as the indexer last stored it; null until it has, or without a fee model. */
 export const estimatedSpend = (days: number, includeLoad: boolean): Spend | null => readAggregate<Spend | null>(spendKey(days, includeLoad))?.value ?? null;
 
 const perCreateBase = (m: FeeModel) => (m.gas.intercept + m.gas.slope * m.calldata.intercept) * m.gasPrice;
