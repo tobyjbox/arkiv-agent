@@ -1,5 +1,6 @@
 import { readFeed } from "@arkiv-agent/db";
 import { indexNotReady, prisma } from "../../../lib/db";
+import { json } from "../../../lib/json";
 
 // Change feed for the "feels live" UI (design/02-feels-live.md): poll every 5 s with the last
 // `cursor`; no `since` (or a stale one) returns `reset: true` and a fresh cursor.
@@ -13,5 +14,5 @@ export async function GET(request: Request) {
   const notReady = indexNotReady();
   if (notReady) return notReady;
   const feed = await readFeed(prisma, raw === null ? null : Number(raw));
-  return Response.json(feed, { headers: { "Cache-Control": "no-store" } });
+  return json(request, feed, { headers: { "Cache-Control": "no-store" } });
 }

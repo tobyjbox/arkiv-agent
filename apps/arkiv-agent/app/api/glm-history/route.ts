@@ -1,4 +1,5 @@
 import { glmHistory, RANGES, type RangeDays } from "@arkiv-agent/cost";
+import { json } from "../../../lib/json";
 
 export const dynamic = "force-dynamic";
 
@@ -9,5 +10,5 @@ export async function GET(request: Request) {
   if (process.env.GLM_PRICE === "off") return Response.json({ error: "GLM price lookups are off (GLM_PRICE=off)." }, { status: 503 });
   const history = await glmHistory(days as RangeDays);
   if (!history) return Response.json({ error: "No GLM price history is available right now." }, { status: 503 });
-  return Response.json(history, { headers: { "Cache-Control": "no-store" } });
+  return json(request, history, { headers: { "Cache-Control": "no-store" } });
 }

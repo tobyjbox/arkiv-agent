@@ -3,6 +3,7 @@ import { z } from "zod";
 import { arkiv, askContext, explorerUrl } from "../../../../lib/ask";
 import { indexNotReady } from "../../../../lib/db";
 import { refuseCrossSite } from "../../../../lib/guard";
+import { json } from "../../../../lib/json";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +30,5 @@ export async function POST(request: Request) {
   if (!c.ok) return Response.json({ ok: false, kind: "invalid", message: c.error });
   const page = await runAsk(arkiv, c.value.expression, { limit: plan.limit, cursor: cursor ?? null, block: block ?? null });
   const compiled = { query: c.value.query, typescript: c.value.typescript, explorerUrl: explorerUrl(c.value.query) };
-  return Response.json(page.ok ? { ok: true, ...compiled, ...page.value } : { ok: false, ...compiled, ...page.error });
+  return json(request, page.ok ? { ok: true, ...compiled, ...page.value } : { ok: false, ...compiled, ...page.error });
 }

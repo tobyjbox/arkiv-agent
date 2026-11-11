@@ -1,0 +1,16 @@
+{
+  "name": "@arkiv-agent/decode",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./purpose": "./src/purpose.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@arkiv-agent/catalogue": "workspace:*",
+    "@arkiv-agent/db": "workspace:*"
+  }
+}

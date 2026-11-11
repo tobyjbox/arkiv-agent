@@ -39,4 +39,18 @@ export function recentRecords(id: string, limit = 20): RecordView[] {
   }));
 }
 
+/** Most live records a table asks for at once; a dataset with more shows its newest. */
+export const LIVE_RECORDS_MAX = 2_000;
+
+/** Every live record, newest first, with attributes only (no payload), up to `limit`. */
+export function liveRecords(id: string, limit = LIVE_RECORDS_MAX): { total: number; records: RecordView[] } {
+  const live = (loadCatalogue().membersById.get(id) ?? []).filter((m) => m.status === "live");
+  const records = live.sort((a, b) => b.createdAtBlock - a.createdAtBlock).slice(0, limit).map((m) => ({
+    key: m.key, owner: m.owner, status: m.status, createdAtBlock: m.createdAtBlock, expiresAt: m.expiresAt,
+    attributes: [...m.attrs].map(([name, a]) => ({ name, value: a.value })),
+    payloadPreview: null,
+  }));
+  return { total: live.length, records };
+}
+
 export { BLOCKS_PER_HOUR };

@@ -1,4 +1,4 @@
-import { estimatedSpend, feeSummary, glmPriceOrClose } from "@arkiv-agent/cost";
+import { estimatedSpend, feeSummary, glmPriceOrClose, SPEND_DAYS, type SpendDays } from "@arkiv-agent/cost";
 import Link from "next/link";
 import { Calculator } from "../../components/cost/calculator";
 import { PriceChart } from "../../components/cost/price-chart";
@@ -25,6 +25,15 @@ const int = (v: string | undefined, min: number, max: number, fallback: number) 
   return Number.isInteger(n) && n >= min && n <= max ? n : fallback;
 };
 
+/** The spend periods, as the `spend` query value, the button text and the heading. 30 days is the default. */
+const PERIODS: Record<SpendDays, { param: string; short: string; title: string }> = {
+  1: { param: "1d", short: "1d", title: "last 24 hours" },
+  7: { param: "7d", short: "7d", title: "last 7 days" },
+  30: { param: "30d", short: "30d", title: "last 30 days" },
+  90: { param: "90d", short: "90d", title: "last 90 days" },
+  0: { param: "all", short: "All time", title: "all time" },
+};
+
 export default async function CostPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   if (!isIndexReady()) return null;
   const q = await searchParams;
@@ -32,7 +41,15 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   const fees = feeSummary();
   if (!fees) return <ResultsPending title="Financials" />;
   const { model, fittedAt, receipts } = fees;
-  const spend = estimatedSpend(30, includeLoad);
+  const days: SpendDays = SPEND_DAYS.find((d) => PERIODS[d].param === q.spend) ?? 30;
+  const spend = estimatedSpend(days, includeLoad);
+  // Links keep the rest of the address (calculator inputs, chart range) and stay at the spend section.
+  const spendHref = (d: SpendDays, load: boolean) => {
+    const next = new URLSearchParams(Object.entries(q).filter((e): e is [string, string] => typeof e[1] === "string" && e[0] !== "spend" && e[0] !== "load"));
+    if (d !== 30) next.set("spend", PERIODS[d].param);
+    if (load) next.set("load", "1");
+    return `/financials${next.size ? `?${next}` : ""}#spend`;
+  };
   const { price, status: priceStatus } = glmPriceOrClose();
   const $ = (x: number) => (price ? usd(x * price.usd) : null);
   const unit = (["hours", "days", "months"] as const).find((u) => u === q.unit) ?? "days";
@@ -54,8 +71,16 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
 
       <section aria-labelledby="spend" className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 id="spend" className="text-[20px] font-semibold">Estimated spend, last 30 days</h2>
-          <Link href={includeLoad ? "/financials" : "/financials?load=1"} className="caption text-text-secondary hover:text-text-primary">{includeLoad ? "Exclude load generators" : "Include load generators"}</Link>
+          <h2 id="spend" className="scroll-mt-20 text-[20px] font-semibold">Estimated spend, {PERIODS[days].title}</h2>
+          <div className="flex flex-wrap items-center gap-4">
+            <nav aria-label="Spend period" className="flex rounded-md border border-border-default p-0.5">
+              {SPEND_DAYS.map((d) => (
+                <Link key={d} href={spendHref(d, includeLoad)} scroll={false} replace aria-current={d === days ? "true" : undefined}
+                  className={`rounded-sm px-3 py-1 caption ${d === days ? "bg-raised text-text-primary" : "text-text-secondary hover:text-text-primary"}`}>{PERIODS[d].short}</Link>
+              ))}
+            </nav>
+            <Link href={spendHref(days, !includeLoad)} scroll={false} replace className="caption text-text-secondary hover:text-text-primary">{includeLoad ? "Exclude load generators" : "Include load generators"}</Link>
+          </div>
         </div>
         {spend ? (
           <>
