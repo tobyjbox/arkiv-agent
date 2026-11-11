@@ -27,8 +27,11 @@ describe("applyWire", () => {
     expect([...state.attrs.keys()]).toEqual(["project"]);
   });
 
-  it("rejects an unknown typeId instead of guessing", () => {
-    expect(() => applyWire(emptyState(), [{ name: name32("x"), typeId: 99, value: "0x" }])).toThrow(/typeId 99/);
+  it("leaves out a bytes or unknown-type attribute without stopping, and drops the value it replaces", () => {
+    const state = applyWire(emptyState(), [{ ...str("payload", "old"), name: name32("payload") }, { ...u64("n", 3n), name: name32("n") }]);
+    applyWire(state, [{ name: name32("payload"), typeId: 7, value: "0x1234" }, { name: name32("x"), typeId: 99, value: "0x" }]);
+    expect(schemaSig(state.attrs)).toBe("n:u64");
+    expect(state.payload).toBeNull();
   });
 });
 

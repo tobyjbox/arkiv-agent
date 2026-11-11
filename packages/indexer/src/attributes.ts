@@ -41,8 +41,11 @@ export function applyWire(state: EntityState, wire: readonly WireAttribute[]): E
     else if (typeId === 0) state.attrs.delete(name);
     else {
       const tag = TYPE_TAGS[typeId as keyof typeof TYPE_TAGS];
-      if (!tag || tag === "bytes") throw new Error(`unknown attribute typeId ${typeId} for "${name}"`);
-      state.attrs.set(name, { type: tag, value: valueText(tag, value) });
+      // A bytes attribute, or a type this indexer does not know yet, is not indexed (same as
+      // `stateFromSdk`). It still replaces any earlier value under that name. Throwing here would
+      // stop all decoding on one record.
+      if (!tag || tag === "bytes") state.attrs.delete(name);
+      else state.attrs.set(name, { type: tag, value: valueText(tag, value) });
     }
   }
   return state;
